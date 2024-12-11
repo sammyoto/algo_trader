@@ -1,0 +1,7 @@
+Need to make something deployable to GCP that runs my code.
+- Need a container to run code and then stop at a certain time in the day
+
+Services:
+- Cloud run
+- Cloud scheduler
+- Artifact registry

@@ -1,12 +1,6 @@
 import requests
 import pandas as pd
 
-# Get "data" polygon
-# api_key_query = "?apiKey=b5Whl_ocnh5SvuqFCu1475WgICa9Hdiq"
-# api_url = "https://api.polygon.io/v2/aggs/ticker/AAPL/range/1/day/2023-01-09/2023-01-09"
-# response = requests.get(api_url + api_key_query)
-# print(response.json())
-
 # use sample for now to test algorithm
 df = pd.read_csv("data/stock_trades_sample.csv")
 print(df.head())
