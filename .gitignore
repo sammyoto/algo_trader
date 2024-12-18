@@ -1,0 +1,6 @@
+gcp_deployment/.terraform
+gcp_deployment/.terraform.lock.hcl
+gcp_deployment/terraform.tfstate.backup
+gcp_deployment/terraform.tfstate
+gcp_deployment/.terraform.tfstate.lock.hcl
+testing.py

@@ -1,8 +1,3 @@
-Need to make something deployable to GCP that runs my code.
-- Need a container to run code and then stop at a certain time in the day
-- Infrastructure is good, need to use schwab api and implement basic algo
-
-Docker Push Image Commands:
 docker image rm algo-trader
 docker image rm us-central1-docker.pkg.dev/schwab-algo-trading/algo-trading/algo-trader
 docker buildx build --platform linux/amd64 -t algo-trader ./algo_trader_deployment

@@ -14,7 +14,7 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 
 # Make port 80 available to the world outside this container
 # Uncomment the next line if your script uses networking
-# EXPOSE 80
+EXPOSE 8080
 
 # Define the command to run your script
 CMD ["python", "app.py"]
