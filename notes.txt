@@ -1,6 +1,6 @@
-Need to make something deployable to GCP that runs my code.
-- Need a container to run code and then stop at a certain time in the day
-- Infrastructure is good, need to use schwab api and implement basic algo
+Todo:
+- Implement basic algorithm and run locally DONE
+- Now make actual trades with account
 
 Docker Push Image Commands:
 docker image rm algo-trader

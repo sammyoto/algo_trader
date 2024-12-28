@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sam's Stock Trader</title>
+    <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+        canvas {
+            margin: 20px 0;
+        }
+        .message {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9f5e9;
+            border-left: 5px solid #4caf50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sam's Stock Trader</h1>
+        <table>
+            <tr>
+                <th>Ticker</th>
+                <td id="ticker">None</td>
+            </tr>
+            <tr>
+                <th>Market Price</th>
+                <td id="market_price">0</td>
+            </tr>
+            <tr>
+                <th>Last Price</th>
+                <td id="last_price">0</td>
+            </tr>
+            <tr>
+                <th>Current Holdings</th>
+                <td id="current_holdings">0</td>
+            </tr>
+            <tr>
+                <th>Account Cash</th>
+                <td id="account_cash">0</td>
+            </tr>
+            <tr>
+                <th>Trend</th>
+                <td id="trend">0</td>
+            </tr>
+            <tr>
+                <th>Session Profit</th>
+                <td id="session_profit">0</td>
+            </tr>
+            <tr>
+                <th>Last Action Price</th>
+                <td id="last_action_price">0</td>
+            </tr>
+            <tr>
+                <th>Last Action</th>
+                <td id="last_action">0</td>
+            </tr>
+            <tr>
+                <th>Last Pivot</th>
+                <td id="last_pivot">0</td>
+            </tr>
+        </table>
+        <div class="message">
+            <strong>Message:</strong> <span id="system_message">Nothing for now!</span>
+        </div>
+        <canvas id="priceChart" width="400" height="200"></canvas>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const socket = io.connect();
+            const ctx = document.getElementById('priceChart').getContext('2d');
+
+            // Initialize the chart
+            const chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [], // Time labels
+                    datasets: [
+                        {
+                            label: 'Market Price',
+                            data: [],
+                            borderColor: 'blue',
+                            fill: false,
+                            tension: 0.1,
+                        },
+                        {
+                            label: 'Buy Points',
+                            data: [],
+                            borderColor: 'green',
+                            backgroundColor: 'green',
+                            fill: false,
+                            pointStyle: 'circle',
+                            pointRadius: 6,
+                        },
+                        {
+                            label: 'Sell Points',
+                            data: [],
+                            borderColor: 'red',
+                            backgroundColor: 'red',
+                            fill: false,
+                            pointStyle: 'circle',
+                            pointRadius: 6,
+                        },
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { title: { display: true, text: 'Time' } },
+                        y: { title: { display: true, text: 'Price ($)' } },
+                    },
+                },
+            });
+
+            // Listen for updates from the server
+            socket.on("update", (data) => {
+                document.getElementById("ticker").innerText = data.ticker;
+                document.getElementById("market_price").innerText = data.market_price;
+                document.getElementById("last_price").innerText = data.last_price;
+                document.getElementById("current_holdings").innerText = data.current_holdings;
+                document.getElementById("account_cash").innerText = data.account_cash;
+                document.getElementById("trend").innerText = data.trend;
+                document.getElementById("session_profit").innerText = data.session_profit;
+                document.getElementById("last_action_price").innerText = data.last_action_price;
+                document.getElementById("last_action").innerText = data.last_action;
+                document.getElementById("last_pivot").innerText = data.last_pivot;
+                document.getElementById("system_message").innerText = data.system_message
+
+                // Update the chart
+                const time = new Date().toLocaleTimeString(); // Current time
+                chart.data.labels.push(time);
+                chart.data.datasets[0].data.push(data.market_price);
+
+                // Add buy/sell points
+                if (data.last_action === "buy") {
+                    chart.data.datasets[1].data.push(data.market_price); // Buy
+                    chart.data.datasets[2].data.push(null); // No sell
+                } else if (data.last_action === "sell") {
+                    chart.data.datasets[1].data.push(null); // No buy
+                    chart.data.datasets[2].data.push(data.market_price); // Sell
+                } else {
+                    // Neither buy nor sell
+                    chart.data.datasets[1].data.push(null);
+                    chart.data.datasets[2].data.push(null);
+                }
+
+                // Keep the chart to a max of 20 points
+                if (chart.data.labels.length > 50) {
+                    chart.data.labels.shift();
+                    chart.data.datasets.forEach((dataset) => dataset.data.shift());
+                }
+
+                chart.update();
+            });
+        });
+    </script>
+</body>
+</html>

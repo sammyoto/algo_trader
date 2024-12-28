@@ -3,4 +3,6 @@ gcp_deployment/.terraform.lock.hcl
 gcp_deployment/terraform.tfstate.backup
 gcp_deployment/terraform.tfstate
 gcp_deployment/.terraform.tfstate.lock.hcl
-testing.py
+algo_testing/testing.py
+algo_testing/tokens.json
+algo_testing/__pycache__
