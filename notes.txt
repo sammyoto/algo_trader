@@ -1,6 +1,9 @@
 Todo:
-- Implement basic algorithm and run locally DONE
-- Now make actual trades with account
+- Refactor into trader class that pivot trader inherits from
+- Always want to pull from account as single source of truth for updates
+- Figure out how to pull correct data for updates to class and make trades in real account
+- Figure out how to make floats go only to 2 decimal points
+- Figure out logging for analysis later
 
 Docker Push Image Commands:
 docker image rm algo-trader
