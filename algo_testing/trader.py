@@ -1,6 +1,9 @@
 import schwabdev
 import logging
 import json
+from time import sleep
+from two_decimal import TwoDecimal
+from api_handler import API_Handler
 from flask import Flask, render_template
 from flask_socketio import SocketIO
 
@@ -8,20 +11,19 @@ class Trader():
     def __init__(self, ticker, app_key, secret_key, callback_url = "https://127.0.0.1", debug = True):
         self.ticker = ticker
         self.debug = debug
-        self.account_cash = 500
-        self.current_holdings = 0
-        self.market_price = 0
-        self.last_price = 0
-        self.last_pivot = 0
-        self.last_action_price = 0
+
+        self.market_price = TwoDecimal("0")
+        self.last_price = TwoDecimal("0")
+        self.last_pivot = TwoDecimal("0")
+        self.last_action_price = TwoDecimal("0")
         self.last_action = "hold"
         self.trend = "none"
-        self.session_profit = 0
+        self.session_profit = TwoDecimal("0")
         self.system_message = "Nothing for now!"
 
         # for web server
-        self.app = 0
-        self.socketio = 0
+        self.app = None
+        self.socketio = None
 
         # set logging level
         logging.basicConfig(level=logging.INFO)
@@ -30,12 +32,71 @@ class Trader():
         self.client = schwabdev.Client(app_key, secret_key, callback_url)  #create a client
         self.linked_accounts = self.client.account_linked().json() # get linked account
         self.account_hash = self.linked_accounts[0].get('hashValue') # get account hash
+        self.api_handler = API_Handler(self.client, self.account_hash) # create API handler
+
+        # get from account
+        account_data = self.api_handler.get_account_data()
+        self.account_cash = TwoDecimal(account_data["account_balance"])
+        self.current_holdings = TwoDecimal(account_data["current_holdings"])
+
         self.streamer = self.client.stream # create streamer
 
     # buy sell hold
     def bsh_decision(self):
         pass
-    
+
+    def bsh(self, decision):
+        if decision["action"] == "hold":
+            self.last_action = decision["action"]
+            return
+
+        if "price" in decision.keys():
+            price = TwoDecimal(decision["price"])
+            quantity = TwoDecimal(decision["quantity"])
+
+        # assuming our order gets filled at market price
+        if self.debug:
+            if decision["action"] == "buy":
+                self.last_action_price = price
+                self.current_holdings = quantity
+                self.account_cash = self.account_cash - (price * quantity)
+            elif decision["action"] == "sell":
+                self.session_profit = self.session_profit + (price * quantity) - (self.last_action_price * quantity)
+                self.last_action_price = price
+                self.current_holdings = TwoDecimal("0")
+                self.account_cash = self.account_cash + (price * quantity)
+        # do actual orders
+        else:
+            order_id = self.api_handler.execute_order(decision)
+
+            # only do if order id gets returned
+            if order_id != "No order id, order filled.":
+                status = self.api_handler.get_order_status(order_id)
+
+                # wait until order gets filled
+                while status["status"] != "FILLED":
+                    sleep(1)
+                    status = self.api_handler.get_order_status(order_id)
+                
+                # make updates as necessary
+                fill_price = TwoDecimal(status["fill_price"])
+                if decision["action"] == "sell":
+                    self.session_profit = self.session_profit + (fill_price * quantity) - (self.last_action_price * quantity)
+                self.last_action_price = fill_price
+            # if no order id (very rare) we will have to assume the fill price was at market price
+            else:
+                if decision["action"] == "sell":
+                    self.session_profit = self.session_profit + (price * quantity) - (self.last_action_price * quantity)
+                self.last_action_price = price
+            
+            # update from account
+            updates = self.api_handler.get_account_data()
+            self.account_cash = TwoDecimal(updates["account_balance"])
+            self.current_holdings = TwoDecimal(updates["current_holdings"])
+
+        self.last_action = decision["action"]
+        self.system_message = f"Last Action: {self.last_action.upper()}, Price: {self.last_action_price}"
+        
     # update trader data every time a message is recieved from schwab
     def update_trader_data(self, message):
         # Ignore other messages
@@ -43,11 +104,12 @@ class Trader():
             content = message["data"][0]["content"][0]
 
             # 1 - bid and 2 - ask. Market price = bid + ask / 2. Or just use last price (3)
-            if "1" in content.keys() and "2" in content.keys() and "3" in content.keys():     
-                market_price = (float(content["1"]) + float(content["2"])) / 2
+            if "1" in content.keys() and "2" in content.keys() and "3" in content.keys(): 
+
+                market_price = (TwoDecimal(str(content["1"])) + TwoDecimal(str(content["2"]))) / 2
 
                 self.market_price = market_price
-                # start up the algorithm
+                # start up the trader
                 if self.last_price == 0:
                     self.last_price = self.market_price
                     self.last_pivot = self.market_price
@@ -69,15 +131,15 @@ class Trader():
     # return trader data
     def get_trader_data(self):
         return {"ticker": self.ticker, 
-                "market_price": self.market_price,
-                "last_price": self.last_price,
-                "current_holdings" : self.current_holdings,
-                "account_cash" : self.account_cash,
+                "market_price": str(self.market_price),
+                "last_price": str(self.last_price),
+                "current_holdings" : str(self.current_holdings),
+                "account_cash" : str(self.account_cash),
                 "trend" : self.trend,
-                "session_profit" : self.session_profit,
-                "last_action_price" : self.last_action_price,
+                "session_profit" : str(self.session_profit),
+                "last_action_price" : str(self.last_action_price),
                 "last_action" : self.last_action,
-                "last_pivot" : self.last_pivot,
+                "last_pivot" : str(self.last_pivot),
                 "system_message": self.system_message
                 }
     
@@ -86,7 +148,6 @@ class Trader():
         json_message = json.loads(message)
         self.update_trader_data(json_message)
         self.bsh_decision()
-
         self.socketio.emit("update", self.get_trader_data())
 
     def start(self):

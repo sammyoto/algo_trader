@@ -2,7 +2,7 @@
 "session": "NORMAL",
 "duration": "DAY",
 "orderStrategyType": "SINGLE",
-"price": 10.00,
+"price": "10.00",
 "orderLegCollection": [
     {"instruction": "BUY",
     "quantity": 1,
