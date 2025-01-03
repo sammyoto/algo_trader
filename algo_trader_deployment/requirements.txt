@@ -1,2 +1,4 @@
 schwabdev
 flask
+flask-socketio
+eventlet

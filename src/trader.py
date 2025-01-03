@@ -5,6 +5,8 @@ from time import sleep
 from two_decimal import TwoDecimal
 from api_handler import API_Handler
 from flask import Flask, render_template
+import eventlet
+import eventlet.wsgi
 from flask_socketio import SocketIO
 
 class Trader():
@@ -153,7 +155,7 @@ class Trader():
     def start(self):
         # Initialize the Flask application
         self.app = Flask(__name__)
-        self.socketio = SocketIO(self.app)
+        self.socketio = SocketIO(self.app, async_mode='eventlet')
 
         # Define a route for the root URL ('/')
         @self.app.route('/')
