@@ -4,13 +4,10 @@ import json
 from time import sleep
 from two_decimal import TwoDecimal
 from api_handler import API_Handler
-from flask import Flask, render_template
-import eventlet
-import eventlet.wsgi
-from flask_socketio import SocketIO
+from flask_socketio import SocketIO, emit
 
 class Trader():
-    def __init__(self, ticker, app_key, secret_key, callback_url = "https://127.0.0.1", debug = True):
+    def __init__(self, socketio, ticker, app_key, secret_key, callback_url = "https://127.0.0.1", debug = True):
         self.ticker = ticker
         self.debug = debug
 
@@ -23,9 +20,7 @@ class Trader():
         self.session_profit = TwoDecimal("0")
         self.system_message = "Nothing for now!"
 
-        # for web server
-        self.app = None
-        self.socketio = None
+        self.socketio: SocketIO = socketio
 
         # set logging level
         logging.basicConfig(level=logging.INFO)
@@ -153,18 +148,6 @@ class Trader():
         self.socketio.emit("update", self.get_trader_data())
 
     def start(self):
-        # Initialize the Flask application
-        self.app = Flask(__name__)
-        self.socketio = SocketIO(self.app, async_mode='eventlet')
-
-        # Define a route for the root URL ('/')
-        @self.app.route('/')
-        def main():
-            return render_template("index.html")
-
         # Start streamer, subscribe to equities
         self.streamer.start(self.data_handler)
         self.streamer.send(self.streamer.level_one_equities(self.ticker, "0,1,2,3,4,5,6,7,8"))
-
-        # Run the app
-        self.socketio.run(self.app, host="0.0.0.0", port=8080)

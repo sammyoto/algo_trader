@@ -1,6 +1,5 @@
 MVP Todo:
 - Make sure can be scheduled and grabs correct parameters necessary for running
-- Change from cloud run to app engine so we can use web sockets
 - Deploy to GCP
 Later Todo:
 - Figure out how to automate refreshing tokens.json once a week

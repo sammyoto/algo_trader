@@ -52,6 +52,11 @@ resource "google_cloud_run_v2_service" "schwab_algo_trader" {
                 google_project_iam_binding.artifact_registry_binding,
                 google_project_iam_binding.cloud_run_binding]
 
+  # Autoscaling configuration
+  scaling {
+    min_instance_count = 1
+  }
+
   template {
     service_account = google_service_account.schwab_algo_trader_sa.email
     containers {
