@@ -54,7 +54,7 @@ resource "google_cloud_run_v2_service" "schwab_algo_trader" {
 
   # Autoscaling configuration
   scaling {
-    min_instance_count = 1
+    min_instance_count = 0
   }
 
   template {
@@ -95,6 +95,84 @@ resource "google_cloud_run_v2_service" "schwab_algo_trader" {
         }
       }
     }
+  }
+}
+
+#-----------------------CLOUD SCHEDULER-------------------------#
+
+# Service account for Cloud Scheduler
+resource "google_service_account" "scheduler_updater" {
+  account_id   = "cloud-scheduler-updater"
+  display_name = "Cloud Scheduler Updater Service Account"
+}
+
+# IAM binding for Cloud Run Admin role
+resource "google_project_iam_member" "scheduler_cloud_run_admin" {
+  project = var.project_id
+  role    = "roles/run.admin"
+  member  = "serviceAccount:${google_service_account.scheduler_updater.email}"
+}
+
+# IAM binding for using the service account
+resource "google_project_iam_member" "scheduler_service_account_user" {
+  project = var.project_id
+  role    = "roles/iam.serviceAccountUser"
+  member  = "serviceAccount:${google_service_account.scheduler_updater.email}"
+}
+
+# Scheduler job for market open
+resource "google_cloud_scheduler_job" "market_open_scaler" {
+  name     = "market-open-scaler"
+  schedule = "0 13 * * 1-5"  # Adjust for market open time in UTC
+  time_zone = "UTC"
+
+  http_target {
+    http_method = "PATCH"
+    uri         = "https://run.googleapis.com/v2/projects/${var.project_id}/locations/${var.region}/services/${google_cloud_run_v2_service.schwab_algo_trader.name}"
+    
+    oidc_token {
+      service_account_email = google_service_account.scheduler_updater.email
+    }
+
+    headers = {
+      "Content-Type" = "application/json"
+    }
+
+    body = base64encode(jsonencode({
+      template = {
+        scaling = {
+          minInstanceCount = 1
+        }
+      }
+    }))
+  }
+}
+
+# Scheduler job for market close
+resource "google_cloud_scheduler_job" "market_close_scaler" {
+  name     = "market-close-scaler"
+  schedule = "0 21 * * 1-5"  # Adjust for market close time in UTC
+  time_zone = "UTC"
+
+  http_target {
+    http_method = "PATCH"
+    uri         = "https://run.googleapis.com/v2/projects/${var.project_id}/locations/${var.region}/services/${google_cloud_run_v2_service.schwab_algo_trader.name}"
+    
+    oidc_token {
+      service_account_email = google_service_account.scheduler_updater.email
+    }
+
+    headers = {
+      "Content-Type" = "application/json"
+    }
+
+    body = base64encode(jsonencode({
+      template = {
+        scaling = {
+          minInstanceCount = 0
+        }
+      }
+    }))
   }
 }
 

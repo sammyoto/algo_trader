@@ -1,6 +1,3 @@
-MVP Todo:
-- Make sure can be scheduled and grabs correct parameters necessary for running
-- Deploy to GCP
 Later Todo:
 - Figure out how to automate refreshing tokens.json once a week
 - Figure out logging for future analysis
