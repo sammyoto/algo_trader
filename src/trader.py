@@ -5,16 +5,19 @@ from time import sleep
 from two_decimal import TwoDecimal
 from api_handler import API_Handler
 from flask_socketio import SocketIO, emit
+from google.cloud import storage
 
 class Trader():
     def __init__(self, socketio, ticker, app_key, secret_key, callback_url = "https://127.0.0.1", debug = True):
         self.ticker = ticker
         self.debug = debug
 
+        # Load saved state from bucket
+        self.load_state("trader-bucket-61423", "state.json", "state.json")
+
         self.market_price = TwoDecimal("0")
         self.last_price = TwoDecimal("0")
         self.last_pivot = TwoDecimal("0")
-        self.last_action_price = TwoDecimal("0")
         self.last_action = "hold"
         self.trend = "none"
         self.session_profit = TwoDecimal("0")
@@ -90,6 +93,8 @@ class Trader():
             updates = self.api_handler.get_account_data()
             self.account_cash = TwoDecimal(updates["account_balance"])
             self.current_holdings = TwoDecimal(updates["current_holdings"])
+            # Everytime we buy or sell, save our state in a bucket for loading
+            self.save_state("trader-bucket-61423", "state.json", "state.json")
 
         self.last_action = decision["action"]
         self.system_message = f"Last Action: {self.last_action.upper()}, Price: {self.last_action_price}"
@@ -102,8 +107,8 @@ class Trader():
 
             # 1 - bid and 2 - ask. Market price = bid + ask / 2. Or just use last price (3)
             if "1" in content.keys() and "2" in content.keys() and "3" in content.keys(): 
-
                 market_price = (TwoDecimal(str(content["1"])) + TwoDecimal(str(content["2"]))) / 2
+                logging.info(market_price)
 
                 self.market_price = market_price
                 # start up the trader
@@ -127,7 +132,8 @@ class Trader():
 
     # return trader data
     def get_trader_data(self):
-        return {"ticker": self.ticker, 
+        return {
+                "ticker": self.ticker, 
                 "market_price": str(self.market_price),
                 "last_price": str(self.last_price),
                 "current_holdings" : str(self.current_holdings),
@@ -139,6 +145,35 @@ class Trader():
                 "last_pivot" : str(self.last_pivot),
                 "system_message": self.system_message
                 }
+    
+    def load_state(self, bucket_name, source_blob_name, destination_file_name):
+        """Downloads a blob from the bucket."""
+        storage_client = storage.Client()
+        bucket = storage_client.bucket(bucket_name)
+        blob = bucket.blob(source_blob_name)
+        
+        blob.download_to_filename(destination_file_name)
+        logging.info(f"Blob {source_blob_name} downloaded to {destination_file_name}.")
+
+        # Now load data from file
+        with open("state.json", "r") as file:
+            data = json.load(file)
+        self.last_action_price = TwoDecimal(data["last_action_price"])
+
+    def save_state(self, bucket_name, source_file_name, destination_blob_name):
+        """Uploads a file to the bucket."""
+        # Initialize a Cloud Storage client
+        storage_client = storage.Client()
+        
+        # Access the bucket
+        bucket = storage_client.bucket(bucket_name)
+        
+        # Create a blob (object in the bucket)
+        blob = bucket.blob(destination_blob_name)
+        
+        # Upload the file
+        blob.upload_from_filename(source_file_name)
+        logging.info(f"File {source_file_name} uploaded to {destination_blob_name}.")
     
     # gets called every time schwab sends us data
     def data_handler(self, message):

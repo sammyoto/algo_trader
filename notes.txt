@@ -1,5 +1,10 @@
-Later Todo:
+Next Todo:
+- We can only trade with settled cash
+- Document!
+- Finalize local testing script
 - Figure out how to automate refreshing tokens.json once a week
+
+Later Todo:
 - Figure out logging for future analysis
 - Make last action correct, updates to graph shouldn't include buy or sell every time
 

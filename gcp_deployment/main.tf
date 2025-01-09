@@ -34,6 +34,43 @@ resource "google_project_iam_binding" "secret_accessor_binding" {
   ]
 }
 
+# Allow Cloud Run's service account to access the bucket
+resource "google_project_iam_binding" "bucket_access" {
+  project = var.project_id
+  role   = "roles/storage.objectAdmin"
+  depends_on = [google_service_account.schwab_algo_trader_sa]
+
+  members = [
+    "serviceAccount:${google_service_account.schwab_algo_trader_sa.email}"
+  ]
+}
+
+# Create a Google Cloud Storage Bucket
+resource "google_storage_bucket" "trader_bucket" {
+  name          = "trader-bucket-61423"
+  location      = "US"
+  storage_class = "STANDARD"
+  force_destroy = true
+
+  lifecycle_rule {
+    condition {
+      age = 30
+    }
+    action {
+      type = "Delete"
+    }
+  }
+
+  uniform_bucket_level_access = true
+}
+
+# Upload the JSON file to the bucket
+resource "google_storage_bucket_object" "state_json" {
+  name   = "state.json"           # The name of the object in the bucket
+  bucket = google_storage_bucket.trader_bucket.name
+  source = "state.json"  # The local file to upload
+}
+
 resource "google_cloud_run_service_iam_member" "allow_public_access" {
   service = google_cloud_run_v2_service.schwab_algo_trader.id
   location = google_cloud_run_v2_service.schwab_algo_trader.location
@@ -50,15 +87,17 @@ resource "google_cloud_run_v2_service" "schwab_algo_trader" {
   ingress = "INGRESS_TRAFFIC_ALL"
   depends_on = [google_project_iam_binding.secret_accessor_binding, 
                 google_project_iam_binding.artifact_registry_binding,
-                google_project_iam_binding.cloud_run_binding]
+                google_project_iam_binding.cloud_run_binding,
+                google_storage_bucket_object.state_json]
 
   # Autoscaling configuration
   scaling {
-    min_instance_count = 0
+    min_instance_count = 1
   }
 
   template {
     service_account = google_service_account.schwab_algo_trader_sa.email
+    timeout = "100s"
     containers {
       image = "us-central1-docker.pkg.dev/schwab-algo-trading/algo-trading/algo-trader:latest"
       resources {
@@ -123,8 +162,8 @@ resource "google_project_iam_member" "scheduler_service_account_user" {
 # Scheduler job for market open
 resource "google_cloud_scheduler_job" "market_open_scaler" {
   name     = "market-open-scaler"
-  schedule = "0 13 * * 1-5"  # Adjust for market open time in UTC
-  time_zone = "UTC"
+  schedule = "0 7 * * 1-5"  # Adjust for market open time in MST
+  time_zone = "MST"
 
   http_target {
     http_method = "PATCH"
@@ -151,8 +190,8 @@ resource "google_cloud_scheduler_job" "market_open_scaler" {
 # Scheduler job for market close
 resource "google_cloud_scheduler_job" "market_close_scaler" {
   name     = "market-close-scaler"
-  schedule = "0 21 * * 1-5"  # Adjust for market close time in UTC
-  time_zone = "UTC"
+  schedule = "0 14 * * 1-5"  # Adjust for market close time in MST
+  time_zone = "MST"
 
   http_target {
     http_method = "PATCH"
