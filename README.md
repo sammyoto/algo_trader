@@ -19,7 +19,11 @@ To deploy to GCP you first need:
 <li>A Google Cloud account and a project</li>
 <li>Terraform CLI</li>
 </ul>
-Be sure to download and log into the GCP CLI before moving on [documentation here](https://cloud.google.com/sdk/docs/install#linux). Once you have logged in, in your GCP project navigate to the Secret Manager service. From there add 3 secrets:
+Be sure to download and log into the GCP CLI before moving on. 
+
+[GCP CLI Docs](https://cloud.google.com/sdk/docs/install#linux)
+
+Once you have logged in, in your GCP project navigate to the Secret Manager service. From there add 3 secrets:
 <ul>
 <li>schwab-app-key</li>
 <li>schwab-secret-key</li>

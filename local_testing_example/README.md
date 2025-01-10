@@ -1,4 +1,4 @@
-<h1>Schwab API Local Testing</h1>
+<h1>Local Testing</h1>
 
 <h2>Prerequisites</h2>
 From here it is assumed that you have:
@@ -7,7 +7,9 @@ From here it is assumed that you have:
 <li>Python 3.11 or newer</li>
 <li>A Schwab Developer account (status : Ready For Use)</li>
 </ul>
-If you haven't set up your developer account yet you can watch the first 3 minutes of this video [here](https://www.youtube.com/watch?v=kHbom0KIJwc) by the author of the API this bot uses to get started.
+<p>If you haven't set up your developer account yet you can watch the first 3 minutes of the video below by the author of the API this bot uses to get started.</p>
+
+[Schwab Developer Account Video](https://www.youtube.com/watch?v=kHbom0KIJwc)
 
 <h2>Setup</h2>
 <p> While it isn't necessary to have your python environment active if you're testing using docker, it's nice to have if you want to run locally without a container and we do need it to get tokens from Schwab. To get started, you first need to activate your python virtual environment and install the dependencies in algo_trader_deployment/requirements.txt.</p>
@@ -76,3 +78,4 @@ bash local_testing/local_test.sh
 ```
 <p>The script will build and run a docker image locally with your Schwab credentials as environment variables in the container. This mimics the setup that runs in google cloud and is a good indicator of whether or not the container will run when deployed or not. From here at http://127.0.0.1:8080/ you should see your bot running.</p>
 
+![Stock Trader](../assets/stock_bot.png)
