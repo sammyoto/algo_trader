@@ -12,8 +12,10 @@ class Trader():
         self.ticker = ticker
         self.debug = debug
 
-        # Load saved state from bucket
-        self.load_state("trader-bucket-61423", "state.json", "state.json")
+        self.last_action_price = TwoDecimal("0")
+        # Load saved state from bucket only if deployed live
+        if not self.debug:
+            self.load_state("trader-bucket-61423", "state.json", "state.json")
 
         self.market_price = TwoDecimal("0")
         self.last_price = TwoDecimal("0")
@@ -68,7 +70,7 @@ class Trader():
         # do actual orders
         else:
             order_id = self.api_handler.execute_order(decision)
-
+            
             # only do if order id gets returned
             if order_id != "No order id, order filled.":
                 status = self.api_handler.get_order_status(order_id)
@@ -94,7 +96,8 @@ class Trader():
             self.account_cash = TwoDecimal(updates["account_balance"])
             self.current_holdings = TwoDecimal(updates["current_holdings"])
             # Everytime we buy or sell, save our state in a bucket for loading
-            self.save_state("trader-bucket-61423", "state.json", "state.json")
+            if not self.debug:
+                self.save_state("trader-bucket-61423", "state.json", "state.json")
 
         self.last_action = decision["action"]
         self.system_message = f"Last Action: {self.last_action.upper()}, Price: {self.last_action_price}"

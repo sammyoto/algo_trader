@@ -47,7 +47,7 @@ resource "google_project_iam_binding" "bucket_access" {
 
 # Create a Google Cloud Storage Bucket
 resource "google_storage_bucket" "trader_bucket" {
-  name          = "trader-bucket-61423"
+  name          = var.bucket_name
   location      = "US"
   storage_class = "STANDARD"
   force_destroy = true
@@ -92,14 +92,14 @@ resource "google_cloud_run_v2_service" "schwab_algo_trader" {
 
   # Autoscaling configuration
   scaling {
-    min_instance_count = 1
+    min_instance_count = 0
   }
 
   template {
     service_account = google_service_account.schwab_algo_trader_sa.email
     timeout = "100s"
     containers {
-      image = "us-central1-docker.pkg.dev/schwab-algo-trading/algo-trading/algo-trader:latest"
+      image = "us-central1-docker.pkg.dev/${var.project_id}/algo-trading/algo-trader:latest"
       resources {
         limits = {
           cpu    = "2"

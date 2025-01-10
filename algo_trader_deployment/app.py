@@ -34,7 +34,7 @@ def main():
         json.dump(tokens, f)
 
     logging.info("Initializing bot...")
-    bot = Pivot_Trader(socketio, "NVDA", app_key, secret_key, debug=False)
+    bot = Pivot_Trader(socketio, "NVDA", app_key, secret_key, debug=True)
     bot_thread = Thread(target=start_bot, args=(bot,))
     bot_thread.daemon = True  # Ensure the thread stops when the main process exits
     bot_thread.start()

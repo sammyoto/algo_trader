@@ -1,4 +1,3 @@
-docker image rm algo-trader
 docker image rm us-central1-docker.pkg.dev/schwab-algo-trading/algo-trading/algo-trader
 docker buildx build --platform linux/amd64 -t algo-trader .
 docker tag algo-trader:latest \us-central1-docker.pkg.dev/schwab-algo-trading/algo-trading/algo-trader
