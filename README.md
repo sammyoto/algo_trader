@@ -19,9 +19,11 @@ To deploy to GCP you first need:
 <li>A Google Cloud account and a project</li>
 <li>Terraform CLI</li>
 </ul>
-Be sure to download and log into the GCP CLI before moving on. 
+Be sure to download the GCP CLI and Terraform CLI before moving on. 
 
 [GCP CLI Docs](https://cloud.google.com/sdk/docs/install#linux)
+
+[Terraform CLI Docs](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
 
 Once you have logged in, in your GCP project navigate to the Secret Manager service. From there add 3 secrets:
 <ul>
@@ -79,3 +81,11 @@ If everything is functioning correctly terraform should have passed the plan sta
 <br>
 <br>
 ![Stock Trader](assets/stock_bot.png)
+
+<h2>Maintenance</h2>
+
+<h3>Tokens</h3>
+Every week your Schwab tokens will expire. Once a week you will have to replace the schwab_tokens secret with a new schwab_tokens secret with the updated tokens.json. You can generate new tokens by using get_tokens.py in local_testing_example.
+
+<h3>Pricing</h3>
+With the current terraform setup, the cloud run instance will scale down to 0 minimum instances outside of market hours and up to 1 during market hours. If you leave the infrastructure up it may run you about 100 dollars per month. 
