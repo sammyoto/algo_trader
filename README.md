@@ -1,5 +1,7 @@
 <h1>Algo Trader</h1>
-This repo aims to make trades using algorithms. Currently working with Charles Schwab API. Extensible to use other APIs. Trading is hosted on GCP (or locally).
+This repo aims to make trades using algorithms. Currently working with Charles Schwab API. Makes extensive use of the Schwabdev API by tylerebowers for trading in Schwab accounts. Extensible to use other APIs. Trading is hosted on GCP (or locally).
+
+[SchwabDev API Repo](https://github.com/tylerebowers/Schwab-API-Python)
 
 <h2>Setup</h2>
 To get started you will need the following:
@@ -88,4 +90,4 @@ If everything is functioning correctly terraform should have passed the plan sta
 Every week your Schwab tokens will expire. Once a week you will have to replace the schwab_tokens secret with a new schwab_tokens secret with the updated tokens.json. You can generate new tokens by using get_tokens.py in local_testing_example.
 
 <h3>Pricing</h3>
-With the current terraform setup, the cloud run instance will scale down to 0 minimum instances outside of market hours and up to 1 during market hours. If you leave the infrastructure up it may run you about 100 dollars per month. 
+With the current terraform setup, the cloud run instance will scale down to 0 minimum instances outside of market hours and up to 1 during market hours. If you leave the infrastructure up it may run you about 100 dollars per month.
