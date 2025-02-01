@@ -1,16 +1,13 @@
-from trader import Trader
-from two_decimal import TwoDecimal
+from traders.trader import Trader
+from traders.two_decimal import TwoDecimal
 
 class Pivot_Trader(Trader):
     # buy, sell, hold
-    def bsh_decision(self):
-        if self.trend != "none":
-            # algorithm returns decision based on data and we take action based on that
-            result = self.pivot_algo()
-            # take decision and execute it
-            self.bsh(result)
-            # final updates
-            self.last_price = self.market_price
+    def bsh(self):
+        # algorithm returns decision based on data and we take action based on that
+        result = self.pivot_algo()
+        
+        return result
     
     def pivot_algo(self):
         delta = TwoDecimal("0.02")

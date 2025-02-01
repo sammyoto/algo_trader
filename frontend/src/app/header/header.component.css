@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,700;1,700&display=swap');
+
+.header {
+    font-family: 'Roboto Mono', serif;
+    position: fixed; /* Makes the header stick to the top of the page */
+    top: 0; /* Aligns the header to the very top */
+    left: 0; /* Ensures it starts from the left edge */
+    width: 100%; /* Makes the header span the full width of the page */
+    height: 60px; /* Sets the height of the header */
+    background-color: #333333; /* Background color of the header (dark gray) */
+    color: #dbdbdb; /* Text color inside the header */
+    display: flex; /* Flexbox for easy alignment */
+    align-items: center; /* Vertically center content */
+    justify-content: space-between; /* Distribute space between elements */
+    padding: 0 20px; /* Adds padding on the left and right */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow for depth */
+    z-index: 1000; /* Ensures the header stays on top of other elements */
+  }
+
+  /* Add styles for links inside the header */
+  .header a {
+    color: #dbdbdb; /* Link text color */
+    text-decoration: none; /* Remove underline from links */
+    margin: 0 300px; /* Add spacing between links */
+    font-size: 16px; /* Set link font size */
+  }
+  
+  /* Add hover effect for links */
+  .header a:hover {
+    text-decoration: underline; /* Underline links on hover */
+  }
+
+  .logo img {
+    height: 40px; /* Adjust to fit your header height */
+    object-fit: contain; /* Ensures the image scales proportionally */
+  }
+  
+  

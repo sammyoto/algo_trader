@@ -1,6 +1,6 @@
 import json
 
-class API_Handler():
+class Schwab_API_Handler():
     def __init__(self, client, account_hash):
         self.client = client
         self.account_hash = account_hash
