@@ -30,14 +30,11 @@ streamer = Data_Streamer(app_key, secret_key, tickers, websocket_manager)
 
 @app.on_event("startup")
 async def startup_event():
-    await websocket_manager.start()
     streamer.start()
 
 @app.on_event("shutdown")
 async def shutdown_event():
     streamer.stop()
-    await websocket_manager.stop()
-    await websocket_manager.broadcast_system_message("Server shutting down")
 
 @app.get("/")
 async def root():

@@ -37,8 +37,6 @@ class Data_Streamer():
         json_message = json.loads(message)
         print(json_message)
 
-        self.websocket_manager.broadcast(json_message)
-
         if "data" in json_message.keys():
             ticker_data = json_message["data"][0]["content"]
             self.trader_handler.pass_data(ticker_data)

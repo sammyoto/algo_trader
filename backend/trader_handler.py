@@ -8,7 +8,7 @@ class Trader_Handler():
     def __init__(self, websocket_manager):
         self.trader_data: list[dict] = [] # ex: {trader_type: pivot, ticker: NVDA}
         self.traders: list[Trader] = []
-        self.websocker_manager: WebSocket_Manager = websocket_manager
+        self.websocket_manager: WebSocket_Manager = websocket_manager
 
     def add_trader(self, data, debug=True):
         self.trader_data.append(data)
@@ -75,9 +75,9 @@ class Trader_Handler():
         subscriber_updates = [self.traders[trader_index].get_trader_data(), ticker_data]
 
         asyncio.run_coroutine_threadsafe(
-            self.websocker_manager.broadcast_to_subscribers(
-                self.trader_data[trader_index][0],
-                self.trader_data[trader_index][1],
+            self.websocket_manager.broadcast_to_subscribers(
+                self.trader_data[trader_index]["trader_type"],
+                self.trader_data[trader_index]["ticker"],
                 subscriber_updates
             ),
             loop=asyncio.get_event_loop()
