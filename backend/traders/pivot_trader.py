@@ -2,6 +2,10 @@ from traders.trader import Trader
 from traders.two_decimal import TwoDecimal
 
 class Pivot_Trader(Trader):
+    def __init__(self, ticker, debug=True):
+        super().__init__(ticker, debug)
+        self.trader_type = "pivot"
+
     # buy, sell, hold
     def bsh(self):
         # algorithm returns decision based on data and we take action based on that

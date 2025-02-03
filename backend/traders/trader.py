@@ -7,6 +7,7 @@ class Trader():
         logging.basicConfig(level=logging.INFO)
 
         self.ticker = ticker # The ticker we want to trade
+        self.trader_type = ""
         self.debug = debug # Set for debug mode (no real trades will be made in account)
 
         # Start all values at 0 for debug, in prod load previous values via load_state

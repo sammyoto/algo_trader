@@ -1,10 +1,10 @@
 import schwabdev
 import json
 from threading import Thread
-import queue
 from websocket_manager import WebSocket_Manager
 from api_handlers.schwab_api_handler import Schwab_API_Handler
 from trader_handler import Trader_Handler
+from schwab_data_object import Schwab_Data_Object
 
 traders = [{"trader_type": "pivot", "ticker" : "NVDA"},
            {"trader_type": "pivot", "ticker" : "AMZN"},
@@ -30,7 +30,6 @@ class Data_Streamer():
         self.streamer = None
 
         self.thread = None
-        self.result_queue = queue.Queue()
         
     # gets called every time schwab sends us data
     def data_handler(self, message):
@@ -38,21 +37,13 @@ class Data_Streamer():
         print(json_message)
 
         if "data" in json_message.keys():
-            ticker_data = json_message["data"][0]["content"]
-            self.trader_handler.pass_data(ticker_data)
-
-        self.result_queue.put(json_message)
+            schwab_data = Schwab_Data_Object(json_message["data"][0]["content"])
+            self.trader_handler.pass_data(schwab_data)
  
     def stream(self):
         self.streamer = self.client.stream
         self.streamer.start(self.data_handler)
         self.streamer.send(self.streamer.level_one_equities(self.tickers, "0,1,2,3,4,5,6,7,8"))
-
-    def get_data(self):
-        try:
-            return self.result_queue.get_nowait()  # Non-blocking get
-        except queue.Empty:
-            return None
         
     # to thread so we don't interrupt API thread
     def start(self):

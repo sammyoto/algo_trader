@@ -2,25 +2,67 @@ from traders.trader import Trader
 from traders.pivot_trader import Pivot_Trader
 from traders.two_decimal import TwoDecimal
 from websocket_manager import WebSocket_Manager
+from schwab_data_object import Schwab_Data_Object
 import asyncio
 
 class Trader_Handler():
     def __init__(self, websocket_manager):
-        self.trader_data: list[dict] = [] # ex: {trader_type: pivot, ticker: NVDA}
-        self.traders: list[Trader] = []
+        self.traders: list[Trader] = [] # ex: {trader_type: pivot, ticker: NVDA, trader: Trader()}
         self.websocket_manager: WebSocket_Manager = websocket_manager
 
     def add_trader(self, data, debug=True):
-        self.trader_data.append(data)
-
+        # don't allow traders of the same type and ticker (no duplicates)
+        if self.get_trader_by_data(data) != "Trader not found.":
+            return "Can't add duplicate traders."
         if data["trader_type"] == "pivot":
             self.add_pivot_trader(data["ticker"], debug)
 
+    def get_trader_by_data(self, data):
+        for trader in self.traders:
+            trader_metadata = {"trader_type": trader.trader_type, "ticker": trader.ticker}
+            if trader_metadata == data:
+                return trader
+        
+        return "Trader not found."
+    
+    def get_trader_by_index(self, index):
+        if index > len(self.traders) - 1 or index < 0:
+            return "Not a valid index."
+        
+        return self.traders[index]
+    
+    def get_traders_by_ticker(self, ticker):
+        traders = []
+        for trader in self.traders:
+            if trader.ticker == ticker:
+                traders.append(trader)
+        
+        return traders
+    
+    def get_traders_by_type(self, trader_type):
+        traders = []
+        for trader in self.traders:
+            if trader.trader_type == trader_type:
+                traders.append(trader)
+        
+        return traders
+
     def remove_trader(self, data):
-        for i in range(len(self.trader_data)):
-            if self.trader_data[i] == data:
-                del self.trader_data[i]
-                del self.traders[i]
+        for trader in self.traders:
+            trader_metadata = {"trader_type": trader.trader_type, "ticker": trader.ticker}
+            if trader_metadata == data:
+                self.traders.remove(trader)
+
+    def get_traders_status(self):
+        status = {}
+        for trader in self.traders:
+            trader_name = trader.trader_type + " " + trader.ticker
+            status[trader_name] = trader.get_trader_data()
+        
+        return status
+    
+    def add_pivot_trader(self, ticker, debug=True):
+        self.traders.append(Pivot_Trader(ticker=ticker, debug=debug))
 
     def execute_order(self, order, debug):
         updates = {}
@@ -47,41 +89,31 @@ class Trader_Handler():
         return updates    
 
     # passes in content from schwab
-    def pass_data(self, data):
+    def pass_data(self, schwab_data: Schwab_Data_Object):
         orders = [] 
-        for stock in data:
-            ticker = stock["key"] 
-            for i in range(len(self.trader_data)):
-                if self.trader_data[i]["ticker"] == ticker:
-                    order = (i, self.traders[i].step(stock))
-                    orders.append(order)
+        for ticker in schwab_data.get_tickers():
+            ticker_data = schwab_data.get_ticker_data(ticker)
+            for trader in self.get_traders_by_ticker(ticker):
+                order = (trader, trader.step(ticker_data))
+                orders.append(order)
             # either wait for a response that the trade was executed, or just do a debug
             for order in orders:
                 # execute the orders and wait or give the trader an update
-                trader_index = order[0]
-                updates = self.execute_order(order[1], self.traders[trader_index].debug)
-                self.traders[trader_index].update_trader_after_trade(updates)
-                self.update_subscribers(trader_index, stock)
+                trader = order[0]
 
-    def get_traders_status(self):
-        status = {}
-        for i in range(len(self.traders)):
-            trader_name = self.trader_data[i]["trader_type"] + " " + self.trader_data[i]["ticker"]
-            status[trader_name] = self.traders[i].get_trader_data()
-        
-        return status
-    
-    def update_subscribers(self, trader_index, ticker_data):
-        subscriber_updates = [self.traders[trader_index].get_trader_data(), ticker_data]
+                updates = self.execute_order(order[1], trader.debug)
+                trader.update_trader_after_trade(updates)
+                self.update_subscribers(trader, schwab_data.get_ticker_data(ticker))
+
+    def update_subscribers(self, trader, ticker_data):
+        subscriber_updates = {"trader_data": trader.get_trader_data(),
+                              "ticker_data": ticker_data}
 
         asyncio.run_coroutine_threadsafe(
             self.websocket_manager.broadcast_to_subscribers(
-                self.trader_data[trader_index]["trader_type"],
-                self.trader_data[trader_index]["ticker"],
+                trader.trader_type,
+                trader.ticker,
                 subscriber_updates
             ),
             loop=asyncio.get_event_loop()
         )
-
-    def add_pivot_trader(self, ticker, debug=True):
-        self.traders.append(Pivot_Trader(ticker=ticker, debug=debug))

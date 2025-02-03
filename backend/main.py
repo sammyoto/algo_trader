@@ -1,30 +1,23 @@
-from contextlib import asynccontextmanager
-from fastapi import FastAPI, WebSocket, Request, WebSocketDisconnect
-from fastapi.responses import JSONResponse
-from fastapi.middleware import Middleware
+from fastapi import FastAPI, WebSocket,  WebSocketDisconnect
+from fastapi.middleware.cors import CORSMiddleware
 from data_streamer import Data_Streamer
 from websocket_manager import WebSocket_Manager
 from helper_functions import valid_trader_ticker
-from starlette.middleware.base import BaseHTTPMiddleware
 
 app_key = "GAoJ8adVvh8wkIOpGe6zIIAgVmpw6ZnK"
 secret_key = "BoEhNQ1GcrMT8X4A"
 tickers = ["NVDA", "AMZN", "GOOG", "BAH"]
 
-# for allowing websocket connection to localhost
-class SecurityHeadersMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request, call_next):
-        response = await call_next(request)
-        response.headers["Content-Security-Policy"] = (
-            "connect-src 'self' ws://localhost:8000 wss://localhost:8000; "
-            "default-src 'self';"
-        )
-        response.headers["X-Content-Type-Options"] = "nosniff"
-        return response
+app = FastAPI()
 
-app = FastAPI(middleware=[
-    Middleware(SecurityHeadersMiddleware)
-])
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 websocket_manager = WebSocket_Manager()
 streamer = Data_Streamer(app_key, secret_key, tickers, websocket_manager)
 
@@ -38,11 +31,11 @@ async def shutdown_event():
 
 @app.get("/")
 async def root():
-    result = streamer.get_data()
-    return result
+    return "Hello World!"
 
 @app.websocket("/ws/{trader}/{ticker}")
 async def websocket_endpoint(websocket: WebSocket, trader: str, ticker: str):
+    await websocket.accept()
     # Validate trader/ticker combination
     if not valid_trader_ticker(trader, ticker):
         await websocket.close()
