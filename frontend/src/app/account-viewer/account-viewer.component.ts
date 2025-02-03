@@ -13,8 +13,5 @@ export class AccountViewerComponent {
 
   // -----------------------------DATA SUBSCRIPTION-----------------------------
   ngOnInit(): void {
-    this.apiService.streamAccountData().subscribe(response => {
-      console.log(response)
-    })
   }
 }

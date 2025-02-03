@@ -1,5 +1,6 @@
 import asyncio
 from fastapi import WebSocket, WebSocketDisconnect
+from starlette.websockets import WebSocket, WebSocketDisconnect
 from typing import Dict, Set
 import logging
 
@@ -11,7 +12,6 @@ class WebSocket_Manager:
         self.lock = asyncio.Lock()
 
     async def connect(self, websocket: WebSocket, trader: str, ticker: str):
-        await websocket.accept()
         key = (trader, ticker)
         async with self.lock:
             if key not in self.active_connections:

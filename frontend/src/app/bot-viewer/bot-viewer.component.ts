@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, Input} from '@angular/core';
 import { ChartConfiguration, ChartType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { ApiHandlerService } from '../services/api-handler.service';
+import { Trader_Metadata, Schwab_Trader_Data } from '../shared/backend_models';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-bot-viewer',
@@ -11,16 +13,32 @@ import { ApiHandlerService } from '../services/api-handler.service';
   styleUrl: './bot-viewer.component.css'
 })
 export class BotViewerComponent {
-  ticker: string = "NVDA";
-  algorithm: string = "pivot";
+  @Input() traderMetadata!: Trader_Metadata;
+
+  // Subscription holder for cleanup
+  private dataSubscription!: Subscription;
 
   constructor(private apiService: ApiHandlerService) { }
   
   // -----------------------------DATA SUBSCRIPTION-----------------------------
   ngOnInit(): void {
-    this.apiService.streamBotData(this.ticker, this.algorithm).subscribe(response => {
-      console.log(response)
-    })
+    this.apiService.setTraderMetadata(this.traderMetadata)
+
+    // Subscribe to the data$ observable to receive WebSocket data updates.
+    this.dataSubscription = this.apiService.data$.subscribe((data: Schwab_Trader_Data) => {
+      console.log('Received data in component:', data);
+      // Update your chart data here.
+      // For example, if your incoming data has a numeric field to add to the chart:
+      // this.lineChartData.datasets[0].data.push(data.someNumericField);
+      // Then, trigger a chart update if necessary.
+    });
+  }
+
+  // Clean up the subscription to prevent memory leaks.
+  ngOnDestroy(): void {
+    if (this.dataSubscription) {
+      this.dataSubscription.unsubscribe();
+    }
   }
 
   // --------------------------------LINE CHART---------------------------------
