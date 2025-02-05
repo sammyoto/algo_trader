@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
-import { ApiHandlerService } from '../services/api-handler.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-account-viewer',
   imports: [],
   templateUrl: './account-viewer.component.html',
-  styleUrl: './account-viewer.component.css'
+  styleUrl: './account-viewer.component.css',
+  providers: []
 })
 export class AccountViewerComponent {
 
@@ -14,9 +15,10 @@ export class AccountViewerComponent {
   settledCash: string = '-';
   unsettledCash: string = '-';
 
-  constructor(private apiService: ApiHandlerService) { }
+  constructor() { }
 
   // -----------------------------DATA SUBSCRIPTION-----------------------------
   ngOnInit(): void {
+    
   }
 }

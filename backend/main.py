@@ -33,6 +33,10 @@ async def shutdown_event():
 async def root():
     return "Hello World!"
 
+@app.get("/account_data")
+async def account_data():
+    return streamer.get_account_data()
+
 @app.websocket("/ws/{trader}/{ticker}")
 async def websocket_endpoint(websocket: WebSocket, trader: str, ticker: str):
     await websocket.accept()

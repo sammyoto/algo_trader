@@ -1,7 +1,7 @@
 import { Component, Input, ViewChild} from '@angular/core';
 import { ChartConfiguration, ChartType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
-import { ApiHandlerService } from '../services/api-handler.service';
+import { WebsocketHandlerService } from '../services/websocket-handler.service';
 import { Trader_Metadata, Schwab_Trader_Data } from '../shared/backend_models';
 import { Subscription } from 'rxjs';
 
@@ -13,7 +13,7 @@ const MAX_DATA_POINTS: number = 100;
   imports: [BaseChartDirective],
   templateUrl: './bot-viewer.component.html',
   styleUrl: './bot-viewer.component.css',
-  providers:[ApiHandlerService]
+  providers:[WebsocketHandlerService]
 })
 export class BotViewerComponent {
   @Input() traderMetadata!: Trader_Metadata;
@@ -28,12 +28,12 @@ export class BotViewerComponent {
   private dataSubscription!: Subscription;
   private title!: string;
 
-  constructor(private apiService: ApiHandlerService) { }
+  constructor(private apiService: WebsocketHandlerService) { }
   
   // -----------------------------DATA SUBSCRIPTION-----------------------------
   ngOnInit(): void {
     this.apiService.setTraderMetadata(this.traderMetadata)
-    this.title = `${this.traderMetadata.ticker} - ${this.traderMetadata.type}`;
+    this.title = `${this.traderMetadata.ticker} - ${this.traderMetadata.type.toUpperCase()}`;
     this.lineChartOptions!.plugins!.title!.text = this.title;
 
     // Subscribe to the data$ observable to receive WebSocket data updates.

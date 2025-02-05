@@ -1,5 +1,6 @@
 import schwabdev
 import json
+import asyncio
 from threading import Thread
 from websocket_manager import WebSocket_Manager
 from api_handlers.schwab_api_handler import Schwab_API_Handler
@@ -30,6 +31,20 @@ class Data_Streamer():
         self.streamer = None
 
         self.thread = None
+    
+    def get_account_data(self):
+        account_data = self.client.account_details_all().json()[0]["securitiesAccount"]
+        frontend_data = {
+            "account_value": account_data["initialBalances"]["accountValue"], # might have to change later
+            "account_cash" : account_data["currentBalances"]["cashBalance"],
+            "settled_cash" : account_data["currentBalances"]["cashBalance"] - account_data["currentBalances"]["unsettledCash"],
+            "unsettled_cash" : account_data["currentBalances"]["unsettledCash"],
+            "tradable_cash" : account_data["currentBalances"]["cashAvailableForTrading"],
+            "withdrawable_cash" : account_data["currentBalances"]["cashAvailableForWithdrawal"],
+            "short_market_value" : account_data["currentBalances"]["shortMarketValue"],
+            "long_market_value" : account_data["currentBalances"]["longMarketValue"],
+        }
+        return frontend_data
         
     # gets called every time schwab sends us data
     def data_handler(self, message):

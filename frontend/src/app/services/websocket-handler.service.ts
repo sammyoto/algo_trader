@@ -5,7 +5,7 @@ import { Trader_Metadata, Schwab_Trader_Data } from '../shared/backend_models';
 @Injectable({
   providedIn: 'root'
 })
-export class ApiHandlerService {
+export class WebsocketHandlerService {
   private traderMetadata: Trader_Metadata;
   private wsUrl = 'ws://localhost:8000/ws';  // WebSocket endpoint
   private ws!: WebSocket;
