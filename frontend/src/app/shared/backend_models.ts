@@ -32,3 +32,14 @@ export interface Schwab_Trader_Data {
                     "8"?: number,
                     }
 }
+
+export interface Schwab_Account_Data {
+    accountValue: number,
+    accountCash: number,
+    settledCash: number,
+    unsettledCash: number,
+    tradableCash: number,
+    withdrawableCash: number,
+    shortMarketValue: number,
+    longMarketValue: number
+}

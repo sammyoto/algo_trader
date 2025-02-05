@@ -44,7 +44,7 @@ class Data_Streamer():
             "short_market_value" : account_data["currentBalances"]["shortMarketValue"],
             "long_market_value" : account_data["currentBalances"]["longMarketValue"],
         }
-        return frontend_data
+        return json.dumps(frontend_data)
         
     # gets called every time schwab sends us data
     def data_handler(self, message):

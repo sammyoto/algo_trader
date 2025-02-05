@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { WebsocketHandlerService } from './websocket-handler.service';
 
-describe('ApiHandlerService', () => {
+describe('WebsocketHandlerService', () => {
   let service: WebsocketHandlerService;
 
   beforeEach(() => {

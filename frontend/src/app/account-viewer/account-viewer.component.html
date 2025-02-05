@@ -3,51 +3,35 @@
     <div class="flexbox-list">
         <div class="flexbox-item">
           <span class="flexbox-label">Account Value</span>
-          <span class="flexbox-value" id="account-value">{{ accountValue }}</span>
+          <span class="flexbox-value" id="account-value">${{ account_data.accountValue }}</span>
         </div>
         <div class="flexbox-item">
           <span class="flexbox-label">Account Cash</span>
-          <span class="flexbox-value" id="account-cash">{{ accountCash }}</span>
+          <span class="flexbox-value" id="account-cash">${{ account_data.accountCash }}</span>
         </div>
         <div class="flexbox-item">
           <span class="flexbox-label">Settled Cash</span>
-          <span class="flexbox-value" id="settled-cash">{{ settledCash }}</span>
+          <span class="flexbox-value" id="settled-cash">${{ account_data.settledCash }}</span>
         </div>
         <div class="flexbox-item">
           <span class="flexbox-label">Unsettled Cash</span>
-          <span class="flexbox-value" id="unsettled-cash">{{ unsettledCash }}</span>
+          <span class="flexbox-value" id="unsettled-cash">${{ account_data.unsettledCash }}</span>
         </div>
         <div class="flexbox-item">
-          <span class="flexbox-label">Asset Holdings</span>
-          <span class="flexbox-value">10</span>
+          <span class="flexbox-label">Tradable Cash</span>
+          <span class="flexbox-value" id="tradable-cash">${{ account_data.tradableCash }}</span>
         </div>
         <div class="flexbox-item">
-          <span class="flexbox-label">Asset Holdings</span>
-          <span class="flexbox-value">10</span>
+          <span class="flexbox-label">Withdrawable Cash</span>
+          <span class="flexbox-value" id="withdrawable-cash">${{ account_data.withdrawableCash }}</span>
         </div>
         <div class="flexbox-item">
-          <span class="flexbox-label">Asset Holdings</span>
-          <span class="flexbox-value">10</span>
+          <span class="flexbox-label">Short Market Value</span>
+          <span class="flexbox-value" id="short-market-value">${{ account_data.shortMarketValue }}</span>
         </div>
         <div class="flexbox-item">
-          <span class="flexbox-label">Asset Holdings</span>
-          <span class="flexbox-value">10</span>
-        </div>
-        <div class="flexbox-item">
-          <span class="flexbox-label">Asset Holdings</span>
-          <span class="flexbox-value">10</span>
-        </div>
-        <div class="flexbox-item">
-          <span class="flexbox-label">Asset Holdings</span>
-          <span class="flexbox-value">10</span>
-        </div>
-        <div class="flexbox-item">
-          <span class="flexbox-label">Asset Holdings</span>
-          <span class="flexbox-value">10</span>
-        </div>
-        <div class="flexbox-item">
-          <span class="flexbox-label">Asset Holdings</span>
-          <span class="flexbox-value">10</span>
+          <span class="flexbox-label">Long Market Value</span>
+          <span class="flexbox-value" id="long-markte-value">${{ account_data.longMarketValue }}</span>
         </div>
     </div>
 </div>
