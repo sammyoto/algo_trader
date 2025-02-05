@@ -9,19 +9,19 @@
         <div class="flexbox-list">
             <div class="flexbox-item">
               <span class="flexbox-label">Market Price</span>
-              <span class="flexbox-value" id="market-price">$212.78</span>
+              <span class="flexbox-value" id="market-price">{{ currentPrice }}</span>
             </div>
             <div class="flexbox-item">
                 <span class="flexbox-label">Holdings</span>
-                <span class="flexbox-value" id="holdings">10</span>
+                <span class="flexbox-value" id="holdings">{{ currentHoldings }}</span>
               </div>
             <div class="flexbox-item">
                 <span class="flexbox-label">Day P/L</span>
-                <span class="flexbox-value" id="day-pl">$12,000.00</span>
+                <span class="flexbox-value" id="day-pl">{{ sessionProfit }}</span>
             </div> 
             <div class="flexbox-item">
-                <span class="flexbox-label">Liftetime P/L</span>
-                <span class="flexbox-value" id="lifetime-pl">$123,456.00</span>
+                <span class="flexbox-label">Bot Cash</span>
+                <span class="flexbox-value" id="bot-cash">{{ botCash }}</span>
             </div>
         </div>
     </div>

@@ -9,6 +9,11 @@ import { ApiHandlerService } from '../services/api-handler.service';
 })
 export class AccountViewerComponent {
 
+  accountValue: string = '-';
+  accountCash: string = '-';
+  settledCash: string = '-';
+  unsettledCash: string = '-';
+
   constructor(private apiService: ApiHandlerService) { }
 
   // -----------------------------DATA SUBSCRIPTION-----------------------------

@@ -112,6 +112,9 @@ class Trader():
         if updates["action"] == "hold":
             return
         
+        if updates["action"] == "sell":
+            self.session_profit = self.session_profit + (updates["last_action_price"] * self.current_holdings) - (self.last_action_price * self.current_holdings)
+        
         self.last_action = updates["action"]
         self.last_action_price = updates["last_action_price"]
         self.current_holdings = updates["current_holdings"]

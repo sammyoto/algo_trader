@@ -56,11 +56,11 @@ export class ApiHandlerService {
   }
 
   // Handle incoming messages
-  handleMessage(data: JSON) {
+  handleMessage(data: any) {
     try {
-      console.log('Received data:', data);
-
-      // this.dataSubject.next(data);
+      const parsedData: Schwab_Trader_Data = JSON.parse(data)
+      console.log('Received data:', parsedData);
+      this.dataSubject.next(parsedData)
       // Add your logic here (e.g., update UI, trigger actions)
     } catch (error) {
       console.error('Failed to parse message:', error);

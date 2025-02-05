@@ -90,8 +90,8 @@ class Trader_Handler():
 
     # passes in content from schwab
     def pass_data(self, schwab_data: Schwab_Data_Object):
-        orders = [] 
         for ticker in schwab_data.get_tickers():
+            orders = [] 
             ticker_data = schwab_data.get_ticker_data(ticker)
             for trader in self.get_traders_by_ticker(ticker):
                 order = (trader, trader.step(ticker_data))
@@ -103,7 +103,7 @@ class Trader_Handler():
 
                 updates = self.execute_order(order[1], trader.debug)
                 trader.update_trader_after_trade(updates)
-                self.update_subscribers(trader, schwab_data.get_ticker_data(ticker))
+                self.update_subscribers(trader, schwab_data.get_ticker_data(ticker))   
 
     def update_subscribers(self, trader, ticker_data):
         subscriber_updates = {"trader_data": trader.get_trader_data(),
