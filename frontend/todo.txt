@@ -1,3 +1,0 @@
-- Have data come in from body.component
-- Create a way to pass data from body.component to bot-viewer components
-- Maybe we need 1 more component, a bot (algorithm) that can have stock viewers

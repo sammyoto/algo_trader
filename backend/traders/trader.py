@@ -26,61 +26,6 @@ class Trader():
     # Must return a bsh result
     def bsh(self):
         pass
-
-    # def bsh(self, decision):
-    #     # If we're holding don't do anything
-    #     if decision["action"] == "hold":
-    #         self.last_action = decision["action"]
-    #         return
-
-    #     price = TwoDecimal(decision["price"])
-    #     quantity = TwoDecimal(decision["quantity"])
-
-    #     # assuming our order gets filled at market price
-    #     if self.debug:
-    #         if decision["action"] == "buy":
-    #             self.last_action_price = price
-    #             self.current_holdings = quantity
-    #             self.account_cash = self.account_cash - (price * quantity)
-    #         elif decision["action"] == "sell":
-    #             # profit is equal to the price * quantity - last_buy price * quantity
-    #             self.session_profit = self.session_profit + (price * quantity) - (self.last_action_price * quantity)
-    #             self.last_action_price = price
-    #             self.current_holdings = TwoDecimal("0")
-    #             self.account_cash = self.account_cash + (price * quantity)
-        # # do actual orders
-        # else:
-        #     order_id = self.api_handler.execute_order(decision)
-            
-        #     # only do if order id gets returned
-        #     if order_id != "No order id, order filled.":
-        #         status = self.api_handler.get_order_status(order_id)
-
-        #         # wait until order gets filled
-        #         while status["status"] != "FILLED":
-        #             sleep(1)
-        #             status = self.api_handler.get_order_status(order_id)
-                
-        #         # make updates as necessary (only need to update profit when selling)
-        #         fill_price = TwoDecimal(status["fill_price"])
-        #         if decision["action"] == "sell":
-        #             self.session_profit = self.session_profit + (fill_price * quantity) - (self.last_action_price * quantity)
-        #         self.last_action_price = fill_price
-        #     # if no order id (very rare) we will have to assume the fill price was at market price
-        #     else:
-        #         if decision["action"] == "sell":
-        #             self.session_profit = self.session_profit + (price * quantity) - (self.last_action_price * quantity)
-        #         self.last_action_price = price
-            
-        #     # update from account
-        #     updates = self.api_handler.get_account_data()
-        #     self.account_cash = TwoDecimal(updates["account_balance"])
-        #     self.current_holdings = TwoDecimal(updates["current_holdings"])
-        #     # Everytime we buy or sell, save our state in a bucket for loading
-        #     self.save_state("trader-bucket-61423", "state.json", "state.json")
-
-        # self.last_action = decision["action"]
-        # self.system_message = f"Last Action: {self.last_action.upper()}, Price: {self.last_action_price}"
         
     # update trader data every time stream sends us data
     def update_trader_data(self, data):
