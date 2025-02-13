@@ -87,3 +87,6 @@ class Trader():
         self.last_price = self.market_price
 
         return result
+    
+    def get_name(self):
+        return self.ticker + " - " + self.trader_type
