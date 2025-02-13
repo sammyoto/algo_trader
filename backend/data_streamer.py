@@ -66,6 +66,14 @@ class Data_Streamer():
         self.thread.start()
 
     def stop(self):
+        filename = "/trader_past_data/temp"
+        try:
+            with open(filename, 'w') as f:  # 'w' for write mode (overwrites if exists)
+                json.dump(self.trader_handler.session_history, f, indent=4)  # Use json.dump for writing
+            print(f"Array successfully written to {filename}")
+        except Exception as e:
+                print(f"Error writing to {filename}: {e}")
+
         # shouldn't need since thread is daemon but just in case
         if self.thread and self.thread.is_alive():
             self.thread.join()  # Wait for the thread to finish

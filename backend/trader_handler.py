@@ -3,6 +3,7 @@ from traders.pivot_trader import Pivot_Trader
 from traders.two_decimal import TwoDecimal
 from websocket_manager import WebSocket_Manager
 from schwab_data_object import Schwab_Data_Object
+from helper_functions import get_central_timestamp
 import asyncio
 
 class Trader_Handler():
@@ -92,7 +93,7 @@ class Trader_Handler():
     # passes in content from schwab
     def pass_data(self, schwab_data: Schwab_Data_Object):
         tick_data = {
-            "timestamp": 
+            "timestamp": get_central_timestamp(),
             "schwab_data": schwab_data,
             "trader_activity": {}
         }
@@ -110,7 +111,9 @@ class Trader_Handler():
                 tick_data["trader_activity"][trader.get_name()]["order"] = order
                 updates = self.execute_order(order[1], trader.debug)
                 trader.update_trader_after_trade(updates)
-                self.update_subscribers(trader, schwab_data.get_ticker_data(ticker))   
+                self.update_subscribers(trader, schwab_data.get_ticker_data(ticker))
+                
+        self.session_history.append(tick_data)
 
     def update_subscribers(self, trader, ticker_data):
         subscriber_updates = {"trader_data": trader.get_trader_data(),
