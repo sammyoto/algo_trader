@@ -94,7 +94,6 @@ class Trader_Handler():
     def pass_data(self, schwab_data: Schwab_Data_Object):
         tick_data = {
             "timestamp": get_central_timestamp(),
-            "schwab_data": schwab_data,
             "trader_activity": {}
         }
         for ticker in schwab_data.get_tickers():
@@ -108,7 +107,7 @@ class Trader_Handler():
             for order in orders:
                 # execute the orders and wait or give the trader an update
                 trader = order[0]
-                tick_data["trader_activity"][trader.get_name()]["order"] = order
+                tick_data["trader_activity"][trader.get_name()]["order"] = order[1]
                 updates = self.execute_order(order[1], trader.debug)
                 trader.update_trader_after_trade(updates)
                 self.update_subscribers(trader, schwab_data.get_ticker_data(ticker))

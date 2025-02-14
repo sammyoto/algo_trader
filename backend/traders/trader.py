@@ -9,7 +9,7 @@ class Trader():
         self.ticker = ticker # The ticker we want to trade
         self.trader_type = ""
         self.debug = debug # Set for debug mode (no real trades will be made in account)
-
+        self.firstDataRecieved = False # For tracking our positives and negatives
         # Start all values at 0 for debug, in prod load previous values via load_state
         self.last_action_price = TwoDecimal("0") # Last price for buy or sell
         self.market_price = TwoDecimal("0") # Current market price
@@ -57,8 +57,11 @@ class Trader():
         if updates["action"] == "hold":
             return
         
+        if updates["action"] == "buy":
+            self.account_cash = self.account_cash - (updates["last_action_price"] * updates["current_holdings"]) 
         if updates["action"] == "sell":
             self.session_profit = self.session_profit + (updates["last_action_price"] * self.current_holdings) - (self.last_action_price * self.current_holdings)
+            self.account_cash = self.account_cash + (updates["last_action_price"] * self.current_holdings)
         
         self.last_action = updates["action"]
         self.last_action_price = updates["last_action_price"]

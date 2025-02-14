@@ -1,6 +1,7 @@
 import schwabdev
 import json
 import asyncio
+from helper_functions import get_date
 from threading import Thread
 from websocket_manager import WebSocket_Manager
 from api_handlers.schwab_api_handler import Schwab_API_Handler
@@ -66,7 +67,7 @@ class Data_Streamer():
         self.thread.start()
 
     def stop(self):
-        filename = "/trader_past_data/temp"
+        filename = f"trader_past_data/{get_date()}.json"
         try:
             with open(filename, 'w') as f:  # 'w' for write mode (overwrites if exists)
                 json.dump(self.trader_handler.session_history, f, indent=4)  # Use json.dump for writing

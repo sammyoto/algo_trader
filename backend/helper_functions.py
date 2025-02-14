@@ -23,3 +23,7 @@ def get_central_timestamp():
 
     # Option 2: Return a string representation (good for display)
     return central_now.strftime("%Y-%m-%d %H:%M:%S %Z%z") # Example format
+
+def get_date():
+    today = datetime.date.today()
+    return today.strftime("%Y-%m-%d")

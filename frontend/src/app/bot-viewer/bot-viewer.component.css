@@ -12,6 +12,14 @@
     flex-direction: column; /* Ensures the content inside is vertically aligned */
 }
 
+.positive {
+    color: #5efd96;
+}
+
+.negative {
+    color: #fd5e5e;
+}
+
 .graph {
     display: flex;
     width: 95%; /* Takes up the full width of the parent */
@@ -58,23 +66,10 @@
 /* Value styling */
 .flexbox-value {
     font-size: 16px;
-    color: #5efd96; /* Darker color for the value */
 }
 
 .bot-viewer:hover {
     transform: translateY(-5px); /* Lifts the component slightly */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Stronger shadow on hover */
     cursor: pointer; /* Indicates interactivity */
-}
-
-#market-price {
-    color: #dbdbdb;
-}
-
-#day-pl {
-    color: #fd5e5e;
-}
-
-#lifetime-pl {
-    color: #fd5e5e;
 }

@@ -9,19 +9,19 @@
         <div class="flexbox-list">
             <div class="flexbox-item">
               <span class="flexbox-label">Market Price</span>
-              <span class="flexbox-value" id="market-price">{{ currentPrice }}</span>
+              <span class="flexbox-value" id="market-price" [ngClass]="{'positive': pricePositive, 'negative': !pricePositive}">${{ currentPrice }}</span>
             </div>
             <div class="flexbox-item">
                 <span class="flexbox-label">Holdings</span>
-                <span class="flexbox-value" id="holdings">{{ currentHoldings }}</span>
+                <span class="flexbox-value" id="holdings" [ngClass]="{'positive': holdingsPositive, 'negative': !holdingsPositive}">{{ currentHoldings }}</span>
               </div>
             <div class="flexbox-item">
                 <span class="flexbox-label">Day P/L</span>
-                <span class="flexbox-value" id="day-pl">{{ sessionProfit }}</span>
+                <span class="flexbox-value" id="day-pl" [ngClass]="{'positive': profitPositive, 'negative': !profitPositive}">${{ sessionProfit }}</span>
             </div> 
             <div class="flexbox-item">
                 <span class="flexbox-label">Bot Cash</span>
-                <span class="flexbox-value" id="bot-cash">{{ botCash }}</span>
+                <span class="flexbox-value" id="bot-cash" [ngClass]="{'positive': botCashPositive, 'negative': !botCashPositive}">${{ botCash }}</span>
             </div>
         </div>
     </div>
