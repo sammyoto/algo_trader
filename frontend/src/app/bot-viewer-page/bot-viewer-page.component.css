@@ -1,0 +1,75 @@
+.bot-viewer {
+    background-color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Adds depth */
+    border-radius: 8px; /* Rounded corners */
+    transition: transform 0.3s, box-shadow 0.3s; /* Smooth animations */
+    aspect-ratio: 16 / 9;
+    flex-direction: column; /* Ensures the content inside is vertically aligned */
+}
+
+.positive {
+    color: #5efd96;
+}
+
+.negative {
+    color: #fd5e5e;
+}
+
+.graph {
+    display: flex;
+    width: 95%; /* Takes up the full width of the parent */
+    height: 95%; /* Takes up the full height of the parent */
+    align-items: center; /* Optional: Centers content inside graph */
+    justify-content: center; /* Optional: Centers content inside graph */
+}
+
+.bot-data {
+    display: flex;
+}
+
+/* Flexbox layout for the horizontal list */
+.flexbox-list {
+    display: flex; /* Use Flexbox for horizontal layout */
+    justify-content: space-between; /* Evenly space items horizontally */
+    align-items: center; /* Align items vertically in the center */
+    gap: 20px; /* Space between the items */
+    flex-wrap: wrap; /* Allow wrapping if necessary */
+    padding: 10px;
+}
+
+/* Each data item */
+.flexbox-item {
+    display: flex;
+    flex-direction: column; /* Stack the label and value vertically */
+    align-items: center; /* Center items horizontally */
+    text-align: center; /* Ensure text is aligned in the center */
+    padding: 5px 10px; /* Reduced padding */
+    border-radius: 8px; /* Rounded corners */
+    background-color: #444444; /* White background for the items */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+    width: 100px; /* Fixed width for the items */
+}
+
+/* Label styling */
+.flexbox-label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #dbdbdb; /* Light gray for the label */
+    margin-bottom: 5px; /* Space between the label and value */
+}
+
+/* Value styling */
+.flexbox-value {
+    font-size: 16px;
+}
+
+.bot-viewer:hover {
+    transform: translateY(-5px); /* Lifts the component slightly */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Stronger shadow on hover */
+    cursor: pointer; /* Indicates interactivity */
+}

@@ -1,1 +1,28 @@
+/* Ensure the full height of the page is used */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
 
+/* Use flexbox for layout */
+main {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Full viewport height */
+}
+
+#header {
+    height: 8vh;
+    position: fixed; /* Establishes a containing block for children */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+#body {
+    padding-top: 9vh;
+    flex: 1; /* Takes up the remaining space */
+    overflow: none; /* Allow scrolling if needed */
+}

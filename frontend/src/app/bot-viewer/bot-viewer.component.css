@@ -22,14 +22,15 @@
 
 .graph {
     display: flex;
-    width: 95%; /* Takes up the full width of the parent */
-    height: 95%; /* Takes up the full height of the parent */
+    width: 100%; /* Takes up the full width of the parent */
+    height: 80%;       /* 70% of .bot-viewer’s height */
     align-items: center; /* Optional: Centers content inside graph */
     justify-content: center; /* Optional: Centers content inside graph */
 }
 
 .bot-data {
     display: flex;
+    height: 20%;       /* 30% of .bot-viewer’s height */
 }
 
 /* Flexbox layout for the horizontal list */
@@ -37,22 +38,22 @@
     display: flex; /* Use Flexbox for horizontal layout */
     justify-content: space-between; /* Evenly space items horizontally */
     align-items: center; /* Align items vertically in the center */
-    gap: 20px; /* Space between the items */
-    flex-wrap: wrap; /* Allow wrapping if necessary */
-    padding: 10px;
+    gap: 10%; /* Space between the items */
+    padding: 2%;
 }
 
 /* Each data item */
 .flexbox-item {
     display: flex;
-    flex-direction: column; /* Stack the label and value vertically */
-    align-items: center; /* Center items horizontally */
-    text-align: center; /* Ensure text is aligned in the center */
-    padding: 5px 10px; /* Reduced padding */
-    border-radius: 8px; /* Rounded corners */
-    background-color: #444444; /* White background for the items */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
-    width: 100px; /* Fixed width for the items */
+    flex-direction: column;  /* Stack label and value vertically */
+    align-items: center;
+    text-align: center;
+    padding: 2%;             /* Percentage-based padding */
+    border-radius: 8px;
+    background-color: #444444;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    flex: 1;                 /* Grow equally */
+    margin: 0 1%;    
 }
 
 /* Label styling */
@@ -60,7 +61,6 @@
     font-size: 14px;
     font-weight: bold;
     color: #dbdbdb; /* Light gray for the label */
-    margin-bottom: 5px; /* Space between the label and value */
 }
 
 /* Value styling */

@@ -1,0 +1,75 @@
+[
+    {
+        "timestamp": "2025-02-15 16:37:02 CST-0600",
+        "trader_activity": {
+            "NVDA - pivot": {
+                "trader_data": {
+                    "ticker": "NVDA",
+                    "market_price": "0.00",
+                    "last_price": "0.00",
+                    "current_holdings": "0.00",
+                    "account_cash": "500.00",
+                    "trend": "none",
+                    "session_profit": "0.00",
+                    "last_action_price": "0.00",
+                    "last_action": "hold",
+                    "last_pivot": "0.00"
+                },
+                "order": {
+                    "action": "hold"
+                }
+            },
+            "GOOG - pivot": {
+                "trader_data": {
+                    "ticker": "GOOG",
+                    "market_price": "0.00",
+                    "last_price": "0.00",
+                    "current_holdings": "0.00",
+                    "account_cash": "500.00",
+                    "trend": "none",
+                    "session_profit": "0.00",
+                    "last_action_price": "0.00",
+                    "last_action": "hold",
+                    "last_pivot": "0.00"
+                },
+                "order": {
+                    "action": "hold"
+                }
+            },
+            "BAH - pivot": {
+                "trader_data": {
+                    "ticker": "BAH",
+                    "market_price": "0.00",
+                    "last_price": "0.00",
+                    "current_holdings": "0.00",
+                    "account_cash": "500.00",
+                    "trend": "none",
+                    "session_profit": "0.00",
+                    "last_action_price": "0.00",
+                    "last_action": "hold",
+                    "last_pivot": "0.00"
+                },
+                "order": {
+                    "action": "hold"
+                }
+            },
+            "AMZN - pivot": {
+                "trader_data": {
+                    "ticker": "AMZN",
+                    "market_price": "0.00",
+                    "last_price": "0.00",
+                    "current_holdings": "0.00",
+                    "account_cash": "500.00",
+                    "trend": "none",
+                    "session_profit": "0.00",
+                    "last_action_price": "0.00",
+                    "last_action": "hold",
+                    "last_pivot": "0.00"
+                },
+                "order": {
+                    "action": "hold"
+                }
+            }
+        }
+    }
+]

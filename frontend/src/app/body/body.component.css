@@ -1,11 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital@0;1&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
-
 .body {
     background-color: transparent;
     font-family: 'Roboto Mono', serif;
-    margin-top: 70px; /* Matches the height of the header */
-    height: 830px;
     width: 99%;
     margin-left: auto;
     margin-right: auto; /* Centers horizontally */
@@ -15,24 +12,22 @@
 .bot-viewer-container {
     display: grid;
     float: left;
-    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); /* Adjust columns dynamically */
+    grid-template-columns: repeat(2, 1fr); /* Adjust columns dynamically */
     grid-auto-rows: 1fr; /* Ensures rows stretch to fill space */
-    gap: 15px; /* Space between grid items */
-    width: 66%; /* Container width */
-    height: 830px; /* Container height */
+    gap: 2%; /* Space between grid items */
+    width: 78%; /* Container width */
     background-color: #444444; /* Light background for contrast */
-    padding: 20px; /* Padding around the grid */
+    padding: 2%; /* Padding around the grid */
     box-sizing: border-box;
     border-radius: 10px; /* Rounded corners */
     overflow: hidden; /* Prevent scrollbars when filling space */
 }
 
 .account-viewer-container {
-    width: 33%;
-    height: 830px;
+    width: 21%;
     background-color: #444444; /* Just for visualization */
     float: right;
-    padding: 20px; /* Adds some space inside the element */
+    padding: 2%; /* Adds some space inside the element */
     border-radius: 10px; /* Rounded corners */
     box-sizing: border-box; /* Includes padding and border in the element's width/height */
 }
