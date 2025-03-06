@@ -63,6 +63,13 @@ class Trader_Handler():
         
         return status
     
+    def get_traders_data(self):
+        traders = []
+        for trader in self.traders:
+            trader_data = trader.get_trader_data()
+            traders.append({"type": trader.trader_type, "ticker": trader.ticker, "holdings": trader_data["current_holdings"], "profit": trader_data["session_profit"], "cash": trader_data["account_cash"]})
+        return traders
+    
     def add_pivot_trader(self, ticker, debug=True):
         self.traders.append(Pivot_Trader(ticker=ticker, debug=debug))
 

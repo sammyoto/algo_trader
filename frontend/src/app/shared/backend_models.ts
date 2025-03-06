@@ -3,6 +3,14 @@ export interface Trader_Metadata {
     ticker: string;
 }
 
+export interface Trader_Data {
+    type: string;
+    ticker: string;
+    holdings: number;
+    profit: number;
+    cash: number;
+}
+
 export interface Schwab_Trader_Data {
     "trader_data":    {
                     "ticker": string, 
