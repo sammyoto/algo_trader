@@ -7,12 +7,17 @@ import { Observable } from 'rxjs';
 })
 export class ApiHandlerService {
 
-  private apiUrl = 'http://localhost:8000/account_data';
+  private apiUrl = 'http://localhost:8000';
 
   constructor(private http: HttpClient) { }
 
   // GET method to retrieve account data
   getAccountData(): Observable<any> {
-    return this.http.get<any>(this.apiUrl);
+    return this.http.get<any>(this.apiUrl + "/account-data");
+  }
+
+  // GET 
+  getBots(): Observable<any> {
+    return this.http.get<any>(this.apiUrl + "/bot-list");
   }
 }

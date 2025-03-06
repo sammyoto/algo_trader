@@ -1,1 +1,15 @@
-<p>bot-list works!</p>
+<table>
+    <tr>
+        <th>Ticker</th>
+        <th>Type</th>
+        <th>Link</th>
+    </tr>
+    @for (bot of botList; track bot) {
+        <tr>
+            <th>{{bot.ticker}}</th>
+            <th>{{bot.type}}</th>
+            <th><a href="">Bot Page</a></th>
+        </tr>
+    }
+</table>
+

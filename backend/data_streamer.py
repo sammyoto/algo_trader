@@ -46,6 +46,13 @@ class Data_Streamer():
             "long_market_value" : account_data["currentBalances"]["longMarketValue"],
         }
         return json.dumps(frontend_data)
+    
+    def get_bot_list(self):
+        traders = []
+        for trader in self.trader_handler.traders:
+            trader_data = trader.get_trader_data()
+            traders.append({"type": trader.trader_type, "ticker": trader.ticker, "holdings": trader_data["current_holdings"], "profit": trader_data["session_profit"], "cash": trader_data["account_cash "]})
+        return json.dumps({"bot_list" : traders})
         
     # gets called every time schwab sends us data
     def data_handler(self, message):
