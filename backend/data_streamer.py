@@ -1,6 +1,5 @@
 import schwabdev
 import json
-import asyncio
 from helper_functions import get_date
 from threading import Thread
 from websocket_manager import WebSocket_Manager
@@ -51,7 +50,7 @@ class Data_Streamer():
         traders = self.trader_handler.get_traders_data()
         return json.dumps({"bot_list" : traders})
         
-    # gets called every time schwab sends us data
+    # PUT POLYGON HERE
     def data_handler(self, message):
         json_message = json.loads(message)
         print(json_message)
@@ -59,7 +58,8 @@ class Data_Streamer():
         if "data" in json_message.keys():
             schwab_data = Schwab_Data_Object(json_message["data"][0]["content"])
             self.trader_handler.pass_data(schwab_data)
- 
+    
+    # PUT POLYGON HERE
     def stream(self):
         self.streamer = self.client.stream
         self.streamer.start(self.data_handler)

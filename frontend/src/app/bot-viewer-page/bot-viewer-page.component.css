@@ -1,15 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital@0;1&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
 .bot-viewer {
-    background-color: #333;
+    font-family: 'Roboto Mono', serif;
+    width: 98%;
+    height: 90%;
+    margin: 1%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: Arial, sans-serif;
     font-size: 16px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Adds depth */
     border-radius: 8px; /* Rounded corners */
     transition: transform 0.3s, box-shadow 0.3s; /* Smooth animations */
-    aspect-ratio: 16 / 9;
-    flex-direction: column; /* Ensures the content inside is vertically aligned */
 }
 
 .positive {
@@ -21,22 +23,30 @@
 }
 
 .graph {
+    background-color: #444444;
     display: flex;
-    width: 95%; /* Takes up the full width of the parent */
-    height: 95%; /* Takes up the full height of the parent */
+    max-width: 79%;
+    max-height: 100%;
+    border-radius: 8px; /* Rounded corners */
+    width: 79%; /* Takes up the full width of the parent */
+    height: 100%; /* Takes up the full height of the parent */
     align-items: center; /* Optional: Centers content inside graph */
     justify-content: center; /* Optional: Centers content inside graph */
+    aspect-ratio: 16 / 9;
 }
 
 .bot-data {
     display: flex;
+    border-radius: 8px; /* Rounded corners */
+    width: 20%; /* Takes up the full width of the parent */
+    height: 100%; /* Takes up the full height of the parent */
 }
 
 /* Flexbox layout for the horizontal list */
 .flexbox-list {
     display: flex; /* Use Flexbox for horizontal layout */
     justify-content: space-between; /* Evenly space items horizontally */
-    align-items: center; /* Align items vertically in the center */
+    align-items: right; /* Align items vertically in the center */
     gap: 20px; /* Space between the items */
     flex-wrap: wrap; /* Allow wrapping if necessary */
     padding: 10px;
@@ -52,7 +62,7 @@
     border-radius: 8px; /* Rounded corners */
     background-color: #444444; /* White background for the items */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
-    width: 100px; /* Fixed width for the items */
+    width: 100%; /* Fixed width for the items */
 }
 
 /* Label styling */
@@ -66,10 +76,4 @@
 /* Value styling */
 .flexbox-value {
     font-size: 16px;
-}
-
-.bot-viewer:hover {
-    transform: translateY(-5px); /* Lifts the component slightly */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Stronger shadow on hover */
-    cursor: pointer; /* Indicates interactivity */
 }

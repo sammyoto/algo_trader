@@ -1,0 +1,7 @@
+Redesigning the backend for scalability to as many bots as needed
+
+- api layer on top for frontend control
+- backend manager (we have data and bots, find a good way to manage this)
+- use data models, anytime there is raw dictionary processing its bad
+- figure out a way to store data from bots in a cheap way
+- look into a message broker for clean frontend communication (Redis)
