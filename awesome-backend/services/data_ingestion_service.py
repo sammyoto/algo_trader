@@ -1,0 +1,1 @@
+# take data from polygon and send it to the redis instance 
