@@ -1,11 +1,21 @@
 import redis
 
 class RedisService:
-    def __init__(self):
+    def __init__(self, host, username, password):
         self.r =    redis.Redis(
-                    host='redis-13455.c1.us-central1-2.gce.redns.redis-cloud.com',
+                    host=host,
                     port=13455,
                     decode_responses=True,
-                    username="default",
-                    password="D065ssmyFdtSej2UXWp5Vdvvkc9E3Ygd",
-)
+                    username=username,
+                    password=password
+                    )
+        self.pubsub = self.r.pubsub()
+    
+    def publish_to_channel(self, channel, message):
+        self.r.publish(channel, message)
+
+    def subscribe_to_channel(self, channel):
+        self.pubsub.subscribe(channel)
+
+    def get_listener(self):
+        return self.pubsub.listen()

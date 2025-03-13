@@ -1,1 +1,52 @@
-# take data from polygon and send it to the redis instance 
+import os
+import threading
+import time
+from redis_service import RedisService
+from polygon_websocket_service import PolygonWebSocketService
+from polygon_rest_service import PolygonRESTService
+from polygon.websocket.models import WebSocketMessage
+from typing import List
+
+class DataIngestionService: 
+    def __init__(self):
+        self.r = RedisService(
+            os.getenv("REDIS_HOST"),
+            os.getenv("REDIS_USERNAME"),
+            os.getenv("REDIS_PASSWORD")
+        )
+        self.pr = PolygonRESTService(
+            os.getenv("POLYGON_API_KEY")
+        )
+        self.pw = PolygonWebSocketService(
+            os.getenv("POLYGON_API_KEY")
+        )
+        self.pr.set_message_callback(self.process_rest_messages)
+        self.pw.set_message_callback(self.process_ws_messages)
+
+    def process_ws_messages(self, messages: List[WebSocketMessage]):
+        for message in messages:
+            print(message)
+
+    def process_rest_messages(self, messages):
+        print("REST API Data:", messages)
+
+    def run_rest_service(self):
+        while True:
+            try:
+                self.pr.poll_subscribed_endpoints()
+            except Exception as e:
+                print("Error in REST service:", e)
+            time.sleep(5)
+
+    def run_websocket_service(self):
+        self.pw.stream_messages()
+
+    def start_services(self):
+        rest_thread = threading.Thread(target=self.run_rest_service, name="RESTThread")
+        websocket_thread = threading.Thread(target=self.run_websocket_service, name="WebSocketThread")
+
+        rest_thread.daemon = True
+        websocket_thread.daemon = True
+
+        rest_thread.start()
+        websocket_thread.start()

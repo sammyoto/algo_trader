@@ -3,3 +3,4 @@ fastapi[standard]
 schwabdev
 pytz
 polygon-api-client
+python-dotenv
