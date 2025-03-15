@@ -1,6 +1,7 @@
 fastapi
 fastapi[standard]
 schwabdev
-pytz
-polygon-api-client
+redis
 python-dotenv
+polygon-api-client
+alpaca-py
