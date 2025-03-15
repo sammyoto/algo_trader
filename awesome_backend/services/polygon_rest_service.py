@@ -1,11 +1,10 @@
 from polygon import RESTClient
-from models.polygon_models import RestEndpoint
+from models.polygon_models import RestEndpoint, RestEvents
 from typing import List, Callable
 
 class PolygonRESTService:
     def __init__(self, api_key):
         self.rc = RESTClient(api_key=api_key)
-        self.supported_endpoints: List[str] = ["get_last_quote"]
         self.endpoint_subs: List[RestEndpoint] = []
         self.message_callback: Callable = None
 
@@ -13,19 +12,20 @@ class PolygonRESTService:
         self.message_callback = callback
 
     def get_endpoint(self, endpoint: RestEndpoint):
-        match endpoint.function:
-            case "get_last_quote":
-                return self.rc.get_last_quote(endpoint.ticker)
+        match endpoint.event:
+            case RestEvents.GET_SNAPSHOT_TICKER:
+                return self.rc.get_snapshot_ticker(**endpoint.params.model_dump())
+            case RestEvents.GET_SIMPLE_MOVING_AVERAGE:
+                return self.rc.get_sma(**endpoint.params.model_dump())
+            case RestEvents.GET_LAST_QUOTE:
+                return self.rc.get_last_quote(**endpoint.params.model_dump())
 
     # Make an error class
     def subscribe_to_endpoint(self, endpoint: RestEndpoint):
-        if endpoint.function in self.supported_endpoints:
-            if endpoint not in self.endpoint_subs:
-                self.endpoint_subs.append(endpoint)
-
-                return f"Endpoint '{endpoint.function}' subscribed."
-            return f"No duplicate endpoints."
-        return f"Endpoint '{endpoint.function}' not supported."
+        if endpoint not in self.endpoint_subs:
+            self.endpoint_subs.append(endpoint)
+            return f"Endpoint subscribed."
+        return f"No duplicate endpoints."
     
     def poll_subscribed_endpoints(self):
         results = []

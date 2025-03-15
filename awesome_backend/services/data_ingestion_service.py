@@ -1,9 +1,9 @@
 import os
 import threading
 import time
-from redis_service import RedisService
-from polygon_websocket_service import PolygonWebSocketService
-from polygon_rest_service import PolygonRESTService
+from services.redis_service import RedisService
+from services.polygon_websocket_service import PolygonWebSocketService
+from services.polygon_rest_service import PolygonRESTService
 from polygon.websocket.models import WebSocketMessage
 from typing import List
 
@@ -25,7 +25,7 @@ class DataIngestionService:
 
     def process_ws_messages(self, messages: List[WebSocketMessage]):
         for message in messages:
-            print(message)
+            print("Websocket Data", message)
 
     def process_rest_messages(self, messages):
         print("REST API Data:", messages)
@@ -41,7 +41,7 @@ class DataIngestionService:
     def run_websocket_service(self):
         self.pw.stream_messages()
 
-    def start_services(self):
+    def start_service(self):
         rest_thread = threading.Thread(target=self.run_rest_service, name="RESTThread")
         websocket_thread = threading.Thread(target=self.run_websocket_service, name="WebSocketThread")
 
