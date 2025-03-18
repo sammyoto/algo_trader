@@ -15,11 +15,11 @@ class PolygonRESTService:
     def get_endpoint(self, endpoint: RestEndpoint) -> tuple:
         match endpoint.event:
             case RestEvents.GET_SNAPSHOT_TICKER:
-                return (endpoint.redis_channel , self.rc.get_snapshot_ticker(**endpoint.params))
+                return (endpoint.redis_channel, self.rc.get_snapshot_ticker(**endpoint.params))
             case RestEvents.GET_SIMPLE_MOVING_AVERAGE:
-                return (endpoint.redis_channel , self.rc.get_sma(**endpoint.params))
+                return (endpoint.redis_channel, self.rc.get_sma(**endpoint.params, raw=True))
             case RestEvents.GET_LAST_QUOTE:
-                return (endpoint.redis_channel , self.rc.get_last_quote(**endpoint.params))
+                return (endpoint.redis_channel, self.rc.get_last_quote(**endpoint.params, raw=True))
 
     # Make an error class
     def subscribe_to_endpoint(self, endpoint: RestEndpoint):
@@ -29,11 +29,11 @@ class PolygonRESTService:
         return f"No duplicate endpoints."
     
     def poll_subscribed_endpoints(self):
-        tasks = [self.get_endpoint(endpoint) for endpoint in self.endpoint_subs]
-        # Run all tasks concurrently and wait for all of them to complete
-        results = tasks
+        def get_data():
+            results = [self.get_endpoint(endpoint) for endpoint in self.endpoint_subs]
+            return results
 
         if self.message_callback:
-            self.message_callback(results)
+            self.message_callback(get_data())
         else:
-            print(results)
+            print(get_data())
