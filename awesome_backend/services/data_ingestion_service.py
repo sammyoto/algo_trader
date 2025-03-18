@@ -7,7 +7,7 @@ from services.polygon_rest_service import PolygonRESTService
 from polygon.websocket.models import WebSocketMessage
 from typing import List
 
-class DataIngestionService: 
+class DataIngestionService:
     def __init__(self):
         self.r = RedisService(
             os.getenv("REDIS_HOST"),
@@ -27,8 +27,11 @@ class DataIngestionService:
         for message in messages:
             print("Websocket Data", message)
 
-    def process_rest_messages(self, messages):
-        print("REST API Data:", messages)
+    def process_rest_messages(self, messages: List[tuple]):
+        for message in messages:
+            print(message[0])
+            print(message[1])
+            self.r.publish_to_channel(channel=message[0], message=message[1])
 
     def run_rest_service(self):
         while True:

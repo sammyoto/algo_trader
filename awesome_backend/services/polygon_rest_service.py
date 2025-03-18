@@ -1,6 +1,7 @@
 from polygon import RESTClient
 from models.polygon_models import RestEndpoint, RestEvents
 from typing import List, Callable
+import asyncio
 
 class PolygonRESTService:
     def __init__(self, api_key):
@@ -11,14 +12,14 @@ class PolygonRESTService:
     def set_message_callback(self, callback):
         self.message_callback = callback
 
-    def get_endpoint(self, endpoint: RestEndpoint):
+    def get_endpoint(self, endpoint: RestEndpoint) -> tuple:
         match endpoint.event:
             case RestEvents.GET_SNAPSHOT_TICKER:
-                return self.rc.get_snapshot_ticker(**endpoint.params.model_dump())
+                return (endpoint.redis_channel , self.rc.get_snapshot_ticker(**endpoint.params))
             case RestEvents.GET_SIMPLE_MOVING_AVERAGE:
-                return self.rc.get_sma(**endpoint.params.model_dump())
+                return (endpoint.redis_channel , self.rc.get_sma(**endpoint.params))
             case RestEvents.GET_LAST_QUOTE:
-                return self.rc.get_last_quote(**endpoint.params.model_dump())
+                return (endpoint.redis_channel , self.rc.get_last_quote(**endpoint.params))
 
     # Make an error class
     def subscribe_to_endpoint(self, endpoint: RestEndpoint):
@@ -28,10 +29,9 @@ class PolygonRESTService:
         return f"No duplicate endpoints."
     
     def poll_subscribed_endpoints(self):
-        results = []
-        # Make async
-        for endpoint in self.endpoint_subs:
-            results.append(self.get_endpoint(endpoint))
+        tasks = [self.get_endpoint(endpoint) for endpoint in self.endpoint_subs]
+        # Run all tasks concurrently and wait for all of them to complete
+        results = tasks
 
         if self.message_callback:
             self.message_callback(results)

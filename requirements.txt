@@ -4,4 +4,3 @@ schwabdev
 redis
 python-dotenv
 polygon-api-client
-alpaca-py
