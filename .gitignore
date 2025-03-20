@@ -1,13 +1,4 @@
-gcp_deployment/.terraform
-gcp_deployment/.terraform.lock.hcl
-gcp_deployment/terraform.tfstate.backup
-gcp_deployment/terraform.tfstate
-gcp_deployment/.terraform.tfstate.lock.hcl
-local_testing
 venv
-tokens.json
-temp.txt
-node_modules
 .vscode
 __pycache__
 .DS_Store

@@ -1,4 +1,0 @@
-schwabdev
-flask
-flask-socketio
-google-cloud-storage
