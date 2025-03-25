@@ -1,9 +1,9 @@
 import os
 import threading
 import time
-from services.redis_service import RedisService
-from services.polygon_websocket_service import PolygonWebSocketService
-from services.polygon_rest_service import PolygonRESTService
+from common_libs.common_services.redis_service import RedisService 
+from polygon_websocket_service import PolygonWebSocketService
+from polygon_rest_service import PolygonRESTService
 from polygon.websocket.models import WebSocketMessage
 from typing import List
 
@@ -21,9 +21,9 @@ class DataIngestionService:
             os.getenv("POLYGON_API_KEY")
         )
         self.pr.set_message_callback(self.process_rest_messages)
-        self.pw.set_message_callback(self.process_ws_messages)
+        self.pw.set_message_callback(self.process_websocket_messages)
 
-    def process_ws_messages(self, messages: List[WebSocketMessage]):
+    def process_websocket_messages(self, messages: List[WebSocketMessage]):
         for message in messages:
             print("Websocket Data", message)
 
