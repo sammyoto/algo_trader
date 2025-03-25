@@ -1,6 +1,6 @@
 from polygon import WebSocketClient
 from polygon.websocket.models import WebSocketMessage
-from common_libs.common_models.polygon_models import WebSocketEndpoint
+from shared.models.polygon_models import WebSocketEndpoint
 from typing import List, Callable, Optional
 
 class PolygonWebSocketService:

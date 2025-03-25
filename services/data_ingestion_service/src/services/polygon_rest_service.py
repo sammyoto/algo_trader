@@ -1,5 +1,5 @@
 from polygon import RESTClient
-from common_libs.common_models.polygon_models import RestEndpoint, RestEvents
+from shared.models.polygon_models import RestEndpoint, RestEvents
 from typing import List, Callable
 import asyncio
 
