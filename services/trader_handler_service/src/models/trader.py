@@ -4,8 +4,8 @@ import json
 import os
 import threading
 from enum import Enum
-from models.polygon_models import RestEndpoint, WebSocketEndpoint
-from services.redis_service import RedisService
+from shared.models.polygon_models import RestEndpoint, WebSocketEndpoint
+from shared.services.redis_service import RedisService
 
 class TraderAlgorithm(str, Enum):
     PIVOT = "pivot"

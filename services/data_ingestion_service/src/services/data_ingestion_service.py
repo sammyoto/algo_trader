@@ -1,11 +1,13 @@
 import os
 import threading
 import time
-from shared.services.redis_service import RedisService 
-from polygon_websocket_service import PolygonWebSocketService
-from polygon_rest_service import PolygonRESTService
-from polygon.websocket.models import WebSocketMessage
 from typing import List
+
+from shared.services.redis_service import RedisService 
+from services.polygon_websocket_service import PolygonWebSocketService
+from services.polygon_rest_service import PolygonRESTService
+from polygon.websocket.models import WebSocketMessage
+
 
 class DataIngestionService:
     def __init__(self):
