@@ -24,10 +24,19 @@ async def startup_event():
 async def root():
     return "Hello World!"
 
+@app.get("/rest")
+async def get_rest_endpoint(endpoint: RestEndpoint):
+    try:
+        response = data_ingestion_service.pr.get_endpoint(endpoint)
+        return APIResponse(Status.SUCCESS,  "Response returned succesfully.", response)
+    except:
+        return APIResponse(Status.FAILED, "Response failed.", None)
+    
+
 @app.post("/rest")
 async def subscribe_to_rest_endpoint(endpoint: RestEndpoint):
     try:
         data_ingestion_service.pr.subscribe_to_endpoint(endpoint)
+        return APIResponse(Status.SUCCESS, "Subscribed to endpount successfully.", None)
     except:
-        return APIResponse(Status.FAILED, "Subscribe failed.")
-    return APIResponse(Status.SUCCESS, "Subscribed to endpount successfully.")
+        return APIResponse(Status.FAILED, "Subscribe failed.", None)

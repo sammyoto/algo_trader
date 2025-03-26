@@ -28,8 +28,8 @@ class RestEndpoint(BaseModel):
     params: dict
     redis_channel: str
 
-    def __init__(self, event: RestEvents, params: BaseModel):
-        super().__init__(event=event, params=params.model_dump(), redis_channel="")
+    def __init__(self, event: RestEvents, params: dict):
+        super().__init__(event=event, params=params, redis_channel="")
         self.redis_channel = self.get_channel_name()
 
     def serialize_param(self, param):
