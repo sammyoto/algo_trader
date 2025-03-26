@@ -27,16 +27,17 @@ async def root():
 @app.get("/rest")
 async def get_rest_endpoint(endpoint: RestEndpoint):
     try:
-        response = data_ingestion_service.pr.get_endpoint(endpoint)
-        return APIResponse(Status.SUCCESS,  "Response returned succesfully.", response)
+        response = data_ingestion_service.pr.get_endpoint(endpoint)[1]
+        print(response)
+        return APIResponse(status=Status.SUCCESS,  message="Response returned succesfully.", body=response)
     except:
-        return APIResponse(Status.FAILED, "Response failed.", None)
+        return APIResponse(status=Status.FAILED, message="Response failed.", body=None)
     
 
 @app.post("/rest")
 async def subscribe_to_rest_endpoint(endpoint: RestEndpoint):
     try:
         data_ingestion_service.pr.subscribe_to_endpoint(endpoint)
-        return APIResponse(Status.SUCCESS, "Subscribed to endpount successfully.", None)
+        return APIResponse(status=Status.SUCCESS, message="Subscribed to endpount successfully.", body=None)
     except:
-        return APIResponse(Status.FAILED, "Subscribe failed.", None)
+        return APIResponse(status=Status.FAILED, message="Subscribe failed.", body=None)
