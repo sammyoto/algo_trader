@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from services.data_ingestion_service import DataIngestionService
+from shared.models.polygon_models import RestEndpoint
+from shared.models.api_models import *
 
 app = FastAPI()
 
@@ -21,3 +23,11 @@ async def startup_event():
 @app.get("/")
 async def root():
     return "Hello World!"
+
+@app.post("/rest")
+async def subscribe_to_rest_endpoint(endpoint: RestEndpoint):
+    try:
+        data_ingestion_service.pr.subscribe_to_endpoint(endpoint)
+    except:
+        return APIResponse(Status.FAILED, "Subscribe failed.")
+    return APIResponse(Status.SUCCESS, "Subscribed to endpount successfully.")
