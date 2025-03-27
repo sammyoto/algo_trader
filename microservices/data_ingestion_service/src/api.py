@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 from services.data_ingestion_service import DataIngestionService
 from shared.models.polygon_models import RestEndpoint, RestResponseKeys
@@ -42,3 +43,7 @@ async def subscribe_to_rest_endpoint(endpoint: RestEndpoint):
         return APIResponse(status=Status.SUCCESS, message="Subscribed to endpoint successfully.", body=None)
     except:
         return APIResponse(status=Status.FAILED, message="Subscribe failed.", body=None)
+    
+    
+if __name__ == "__main__":
+    uvicorn.run("api:app", host="127.0.0.1", port=8001, reload=True)

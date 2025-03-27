@@ -14,6 +14,7 @@ class PolygonRESTService:
 
     def get_endpoint(self, endpoint: RestEndpoint) -> HTTPResponse:
         response_key = RestResponseKeys.get_key(endpoint.event)
+        print(endpoint.get_channel_name())
         match endpoint.event:
             case RestEvents.GET_SNAPSHOT_TICKER:
                 return self.rc.get_snapshot_ticker(**endpoint.params, raw=True).json()[response_key]

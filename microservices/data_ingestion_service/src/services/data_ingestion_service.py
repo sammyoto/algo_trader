@@ -47,11 +47,8 @@ class DataIngestionService:
         self.pw.stream_messages()
 
     def start_service(self):
-        rest_thread = threading.Thread(target=self.run_rest_service, name="RESTThread")
-        websocket_thread = threading.Thread(target=self.run_websocket_service, name="WebSocketThread")
-
-        rest_thread.daemon = True
-        websocket_thread.daemon = True
+        rest_thread = threading.Thread(target=self.run_rest_service, name="RESTThread", daemon=True)
+        websocket_thread = threading.Thread(target=self.run_websocket_service, name="WebSocketThread", daemon=True)
 
         rest_thread.start()
         websocket_thread.start()
