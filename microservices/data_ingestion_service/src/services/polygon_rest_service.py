@@ -1,7 +1,7 @@
 from polygon import RESTClient
-from shared.models.polygon_models import RestEndpoint, RestEvents
+from shared.models.polygon_models import RestEndpoint, RestEvents, RestResponseKeys
 from typing import List, Callable
-import asyncio
+from urllib3 import HTTPResponse
 
 class PolygonRESTService:
     def __init__(self, api_key):
@@ -12,14 +12,15 @@ class PolygonRESTService:
     def set_message_callback(self, callback):
         self.message_callback = callback
 
-    def get_endpoint(self, endpoint: RestEndpoint) -> tuple:
+    def get_endpoint(self, endpoint: RestEndpoint) -> HTTPResponse:
+        response_key = RestResponseKeys.get_key(endpoint.event)
         match endpoint.event:
             case RestEvents.GET_SNAPSHOT_TICKER:
-                return (endpoint.redis_channel, self.rc.get_snapshot_ticker(**endpoint.params))
+                return self.rc.get_snapshot_ticker(**endpoint.params, raw=True).json()[response_key]
             case RestEvents.GET_SIMPLE_MOVING_AVERAGE:
-                return (endpoint.redis_channel, self.rc.get_sma(**endpoint.params, raw=True))
+                return self.rc.get_sma(**endpoint.params, raw=True).json()[response_key]
             case RestEvents.GET_LAST_QUOTE:
-                return (endpoint.redis_channel, self.rc.get_last_quote(**endpoint.params, raw=True))
+                return self.rc.get_last_quote(**endpoint.params, raw=True).json()[response_key]
 
     # Make an error class
     def subscribe_to_endpoint(self, endpoint: RestEndpoint):
@@ -30,7 +31,7 @@ class PolygonRESTService:
     
     def poll_subscribed_endpoints(self):
         def get_data():
-            results = [self.get_endpoint(endpoint) for endpoint in self.endpoint_subs]
+            results = [(endpoint.get_channel_name(), self.get_endpoint(endpoint)) for endpoint in self.endpoint_subs]
             return results
 
         if self.message_callback:

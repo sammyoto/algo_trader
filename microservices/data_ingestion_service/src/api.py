@@ -1,8 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from services.data_ingestion_service import DataIngestionService
-from shared.models.polygon_models import RestEndpoint
+from shared.models.polygon_models import RestEndpoint, RestResponseKeys
 from shared.models.api_models import *
+from polygon.rest.models import TickerSnapshot
+import json
 
 app = FastAPI()
 
@@ -27,8 +29,7 @@ async def root():
 @app.get("/rest")
 async def get_rest_endpoint(endpoint: RestEndpoint):
     try:
-        response = data_ingestion_service.pr.get_endpoint(endpoint)[1]
-        print(response)
+        response = data_ingestion_service.pr.get_endpoint(endpoint)
         return APIResponse(status=Status.SUCCESS,  message="Response returned succesfully.", body=response)
     except:
         return APIResponse(status=Status.FAILED, message="Response failed.", body=None)
@@ -38,6 +39,6 @@ async def get_rest_endpoint(endpoint: RestEndpoint):
 async def subscribe_to_rest_endpoint(endpoint: RestEndpoint):
     try:
         data_ingestion_service.pr.subscribe_to_endpoint(endpoint)
-        return APIResponse(status=Status.SUCCESS, message="Subscribed to endpount successfully.", body=None)
+        return APIResponse(status=Status.SUCCESS, message="Subscribed to endpoint successfully.", body=None)
     except:
         return APIResponse(status=Status.FAILED, message="Subscribe failed.", body=None)

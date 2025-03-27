@@ -17,6 +17,17 @@ class RestEvents(str, Enum):
     GET_SIMPLE_MOVING_AVERAGE = "get_sma"
     GET_LAST_QUOTE = "get_last_quote"
 
+class RestResponseKeys:
+    mapping = {
+        RestEvents.GET_SNAPSHOT_TICKER: "ticker",
+        RestEvents.GET_SIMPLE_MOVING_AVERAGE: "results",
+        RestEvents.GET_LAST_QUOTE: "results",
+    }
+
+    @classmethod
+    def get_key(cls, event: RestEvents) -> str:
+        return cls.mapping.get(event)
+
 class WebSocketEvents(str, Enum):
     AGG_MIN = "AM"
     AGG_SEC = "A"

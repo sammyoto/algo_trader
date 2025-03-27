@@ -1,6 +1,7 @@
 import os
 import threading
 import time
+import json
 from typing import List
 
 from shared.services.redis_service import RedisService 
@@ -31,9 +32,8 @@ class DataIngestionService:
 
     def process_rest_messages(self, messages: List[tuple]):
         for message in messages:
-            print(message[0])
-            print(message[1])
-            self.r.publish_to_channel(channel=message[0], message=message[1])
+            message_string = json.dumps(message[1])
+            self.r.publish_to_channel(channel=message[0], message=message_string)
 
     def run_rest_service(self):
         while True:

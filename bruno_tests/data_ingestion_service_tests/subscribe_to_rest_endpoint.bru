@@ -6,6 +6,16 @@ meta {
 
 post {
   url: http://localhost:8000/rest
-  body: none
+  body: json
   auth: inherit
+}
+
+body:json {
+  {
+    "event" : "get_snapshot_ticker",
+    "params" : {
+      "market_type" : "stocks",
+      "ticker" : "NVDA"
+    }
+  }
 }
