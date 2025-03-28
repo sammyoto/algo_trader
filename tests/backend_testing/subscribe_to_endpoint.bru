@@ -1,11 +1,11 @@
 meta {
-  name: get_rest_endpoint
+  name: subscribe_to_endpoint
   type: http
-  seq: 3
+  seq: 1
 }
 
-get {
-  url: http://localhost:8001/rest
+post {
+  url: http://localhost:8000/data/rest
   body: json
   auth: inherit
 }

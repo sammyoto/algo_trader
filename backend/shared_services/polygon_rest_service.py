@@ -1,5 +1,5 @@
 from polygon import RESTClient
-from shared.models.polygon_models import RestEndpoint, RestEvents, RestResponseKeys
+from models.polygon_models import RestEndpoint, RestEvents, RestResponseKeys
 from typing import List, Callable
 from urllib3 import HTTPResponse
 

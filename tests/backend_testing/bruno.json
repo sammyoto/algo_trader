@@ -1,6 +1,6 @@
 {
   "version": "1",
-  "name": "data_ingestion_service_tests",
+  "name": "backend_testing",
   "type": "collection",
   "ignore": [
     "node_modules",

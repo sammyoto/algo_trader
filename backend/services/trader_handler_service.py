@@ -1,4 +1,4 @@
-from backend.shared_services.redis_service import RedisService
+from shared_services.redis_service import RedisService
 import threading
 import os
 
@@ -14,7 +14,7 @@ class TraderHandlerService():
     def listen(self):
         for message in self.r.get_listener():
             if message['type'] == 'message':
-                print(f"Received: {message['data'].decode('utf-8')}")
+                print(f"Received: {message}")
         
     def start_service(self):
         threading.Thread(target=self.listen, daemon=True).start()
