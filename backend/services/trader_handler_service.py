@@ -14,7 +14,7 @@ class TraderHandlerService():
     def listen(self):
         for message in self.r.get_listener():
             if message['type'] == 'message':
-                print(f"Received: {message}")
+                print(f"Received: {message['data']}")
         
     def start_service(self):
         threading.Thread(target=self.listen, daemon=True).start()
