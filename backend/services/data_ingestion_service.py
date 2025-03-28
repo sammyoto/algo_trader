@@ -4,9 +4,9 @@ import time
 import json
 from typing import List
 
-from shared.services.redis_service import RedisService 
-from services.polygon_websocket_service import PolygonWebSocketService
-from services.polygon_rest_service import PolygonRESTService
+from backend.shared_services.redis_service import RedisService 
+from backend.shared_services.polygon_websocket_service import PolygonWebSocketService
+from backend.shared_services.polygon_rest_service import PolygonRESTService
 from polygon.websocket.models import WebSocketMessage
 
 

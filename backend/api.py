@@ -2,8 +2,8 @@ from fastapi import FastAPI
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 from services.data_ingestion_service import DataIngestionService
-from shared.models.polygon_models import RestEndpoint, RestResponseKeys
-from shared.models.api_models import *
+from models.polygon_models import RestEndpoint, RestResponseKeys
+from models.api_models import *
 from polygon.rest.models import TickerSnapshot
 import json
 

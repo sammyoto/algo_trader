@@ -1,4 +1,4 @@
-from shared.services.redis_service import RedisService
+from backend.shared_services.redis_service import RedisService
 import threading
 import os
 
