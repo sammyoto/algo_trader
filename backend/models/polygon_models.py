@@ -65,9 +65,3 @@ class RestEndpoint(BaseModel):
 class WebSocketEndpoint(BaseModel):
     event: WebSocketEvents
     ticker: str
-
-class SimpleMovingAverageRestEndpoint(BaseModel):
-    ticker: str
-    series_type: SeriesTypes
-    timespan: str
-    window: int
