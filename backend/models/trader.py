@@ -27,4 +27,6 @@ class Trader(BaseModel):
     def start(self):
         for endpoint in self.rest_endpoints:
             self._r.subscribe_to_channel(endpoint.get_channel_name())
+        for endpoint in self.ws_endpoints:
+            self._r.subscribe_to_channel(endpoint.endpoint_str)
         threading.Thread(target=self.listen, daemon=True).start()

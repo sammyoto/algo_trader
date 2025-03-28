@@ -1,0 +1,18 @@
+meta {
+  name: subscribe_to_ws_endpoint
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:8000/data/ws
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "event" : "A",
+    "ticker" : "NVDA"
+  }
+}

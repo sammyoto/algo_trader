@@ -3,7 +3,7 @@ from typing import List
 from services.data_ingestion_service import DataIngestionService
 from services.trader_handler_service import TraderHandlerService
 from models.trader import Trader
-from models.polygon_models import RestEndpoint, RestResponseKeys
+from models.polygon_models import RestEndpoint, RestResponseKeys, WebSocketEndpoint
 
 class ApiService:
     def __init__(self, data_ingestion_service: DataIngestionService, trader_handler_service: TraderHandlerService):
@@ -16,7 +16,13 @@ class ApiService:
     def subscribe_to_rest_endpoint(self, endpoint: RestEndpoint):
         self.data_ingestion_service.pr.subscribe_to_endpoint(endpoint)
 
+    def subscribe_to_ws_endpoint(self, endpoint: WebSocketEndpoint):
+        self.data_ingestion_service.pw.subscribe_to_endpoint(endpoint)
+
     def add_trader(self, trader: Trader):
         for endpoint in trader.rest_endpoints:
-            self.data_ingestion_service.pr.subscribe_to_endpoint(endpoint)
+            self.subscribe_to_rest_endpoint(endpoint)
+        for endpoint in trader.ws_endpoints:
+            self.subscribe_to_ws_endpoint(endpoint)
+            
         self.trader_handler_service.add_trader(trader)

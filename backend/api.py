@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from services.data_ingestion_service import DataIngestionService
 from services.trader_handler_service import TraderHandlerService
 from services.api_service import ApiService
-from models.polygon_models import RestEndpoint, RestResponseKeys
+from models.polygon_models import RestEndpoint, RestResponseKeys, WebSocketEndpoint
 from models.api_models import *
 from models.trader import Trader
 from polygon.rest.models import TickerSnapshot
@@ -44,6 +44,14 @@ async def get_rest_endpoint(endpoint: RestEndpoint):
 async def subscribe_to_rest_endpoint(endpoint: RestEndpoint):
     try:
         api_service.subscribe_to_rest_endpoint(endpoint)
+        return APIResponse(status=Status.SUCCESS, message="Subscribed to endpoint successfully.", body=None)
+    except Exception as e:
+        return APIResponse(status=Status.FAILED, message="Subscribe failed.", body=str(e))
+    
+@app.post("/data/ws")
+async def subscribe_to_websocket_endpoint(endpoint: WebSocketEndpoint):
+    try:
+        api_service.subscribe_to_ws_endpoint(endpoint)
         return APIResponse(status=Status.SUCCESS, message="Subscribed to endpoint successfully.", body=None)
     except Exception as e:
         return APIResponse(status=Status.FAILED, message="Subscribe failed.", body=str(e))

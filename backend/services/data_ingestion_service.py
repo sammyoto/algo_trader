@@ -24,9 +24,8 @@ class DataIngestionService:
         self.pr.set_message_callback(self.process_rest_messages)
         self.pw.set_message_callback(self.process_websocket_messages)
 
-    def process_websocket_messages(self, messages: List[WebSocketMessage]):
-        for message in messages:
-            print("Websocket Data", message)
+    def process_websocket_messages(self, messages: dict):
+        print("Websocket Data", messages)
 
     def process_rest_messages(self, messages: List[tuple]):
         for message in messages:

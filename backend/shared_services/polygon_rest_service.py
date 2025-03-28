@@ -14,7 +14,6 @@ class PolygonRESTService:
 
     def get_endpoint(self, endpoint: RestEndpoint) -> HTTPResponse:
         response_key = RestResponseKeys.get_key(endpoint.event)
-        print(endpoint.get_channel_name())
         match endpoint.event:
             case RestEvents.GET_SNAPSHOT_TICKER:
                 return self.rc.get_snapshot_ticker(**endpoint.params, raw=True).json()[response_key]
@@ -31,11 +30,9 @@ class PolygonRESTService:
         return f"No duplicate endpoints."
     
     def poll_subscribed_endpoints(self):
-        def get_data():
-            results = [(endpoint.get_channel_name(), self.get_endpoint(endpoint)) for endpoint in self.endpoint_subs]
-            return results
+        results = [(endpoint.get_channel_name(), self.get_endpoint(endpoint)) for endpoint in self.endpoint_subs]
 
         if self.message_callback:
-            self.message_callback(get_data())
+            self.message_callback(results)
         else:
-            print(get_data())
+            print(results)
