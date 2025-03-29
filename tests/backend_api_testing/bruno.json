@@ -1,6 +1,6 @@
 {
   "version": "1",
-  "name": "backend_testing",
+  "name": "backend_api_testing",
   "type": "collection",
   "ignore": [
     "node_modules",

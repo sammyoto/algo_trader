@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from dotenv import load_dotenv
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 from services.data_ingestion_service import DataIngestionService
@@ -9,6 +10,8 @@ from models.api_models import *
 from models.trader import Trader
 from polygon.rest.models import TickerSnapshot
 import json
+
+load_dotenv()
 
 app = FastAPI()
 

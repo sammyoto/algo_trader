@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import Union, Optional
+from polygon.rest.models import TickerSnapshot, SMAIndicatorResults, LastQuote
 import json
 from enum import Enum
 
@@ -27,6 +28,17 @@ class RestResponseKeys:
     @classmethod
     def get_key(cls, event: RestEvents) -> str:
         return cls.mapping.get(event)
+    
+class RestResponseType:
+    mapping = {
+        "get_snapshot_ticker": TickerSnapshot,
+        "get_sma": SMAIndicatorResults,
+        "get_last_quote": LastQuote,
+    }
+
+    @classmethod
+    def get_type(cls, function: str):
+        return cls.mapping.get(function)
 
 class WebSocketEvents(str, Enum):
     AGG_MIN = "AM"

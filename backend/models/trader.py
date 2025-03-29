@@ -2,7 +2,8 @@ from pydantic import BaseModel, PrivateAttr
 from typing import Union, Optional, List
 from shared_services.redis_service import RedisService
 import threading
-from models.polygon_models import RestEndpoint, WebSocketEndpoint
+from models.polygon_models import RestEndpoint, WebSocketEndpoint, RestResponseType
+from models.redis_models import RedisMessage
 import os
 
 class Trader(BaseModel):
@@ -18,11 +19,23 @@ class Trader(BaseModel):
             os.getenv("REDIS_USERNAME"),
             os.getenv("REDIS_PASSWORD")
         )
+    
+    def bsh(self):
+        pass
+    
+    def update_trader(self):
+        pass
+
+    def step(self, data):
+        print(data)
 
     def listen(self):
         for message in self._r.get_listener():
             if message['type'] == 'message':
-                print(message)
+                message = RedisMessage(**message)
+                # we use the channel to tell what will be returned
+                data = RestResponseType.get_type(message.get_data_type()).from_dict(message.data)
+                self.step(message)
         
     def start(self):
         for endpoint in self.rest_endpoints:
