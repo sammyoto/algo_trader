@@ -48,6 +48,14 @@ async def subscribe_to_rest_endpoint(endpoint: RestEndpoint):
     except Exception as e:
         return APIResponse(status=Status.FAILED, message="Subscribe failed.", body=str(e))
     
+@app.delete("/data/rest")
+async def delete_rest_endpoint(endpoint: RestEndpoint):
+    try:
+        api_service.delete_rest_endpoint(endpoint)
+        return APIResponse(status=Status.SUCCESS, message="Endpoint deleted successfully.", body=None)
+    except Exception as e:
+        return APIResponse(status=Status.FAILED, message="Endpoint deletion failed.", body=str(e))
+    
 @app.post("/data/ws")
 async def subscribe_to_websocket_endpoint(endpoint: WebSocketEndpoint):
     try:
@@ -63,6 +71,23 @@ async def add_trader(trader: Trader):
         return APIResponse(status=Status.SUCCESS, message="Added trader successfully.", body=None)
     except Exception as e:
         return APIResponse(status=Status.FAILED, message="Add trader failed.", body=str(e))
+    
+@app.get("/trader")
+async def get_all_traders():
+    try:
+        traders = api_service.get_all_traders()
+        return APIResponse(status=Status.SUCCESS, message="Get traders succeeded.", body=traders)
+    except Exception as e:
+        return APIResponse(status=Status.FAILED, message="Get traders failed.", body=str(e))
+    
+@app.delete("/trader")
+async def delete_trader(trader_name: str):
+    try:
+        api_service.delete_trader(trader_name)
+        return APIResponse(status=Status.SUCCESS, message="Trader deleted", body=None)
+    except Exception as e:
+        return APIResponse(status=Status.FAILED, message="Trader deletion failed.", body=str(e))
+    
     
 if __name__ == "__main__":
     uvicorn.run("api:app", host="127.0.0.1", port=8000, reload=True)

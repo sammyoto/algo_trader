@@ -21,6 +21,9 @@ class PolygonRESTService:
                 return self.rc.get_sma(**endpoint.params, raw=True).json()[response_key]
             case RestEvents.GET_LAST_QUOTE:
                 return self.rc.get_last_quote(**endpoint.params, raw=True).json()[response_key]
+            
+    def delete_endpoint(self, endpoint: RestEndpoint):
+        self.endpoint_subs.remove(endpoint)
 
     # Make an error class
     def subscribe_to_endpoint(self, endpoint: RestEndpoint):

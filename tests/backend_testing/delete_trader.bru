@@ -1,0 +1,15 @@
+meta {
+  name: delete_trader
+  type: http
+  seq: 6
+}
+
+delete {
+  url: http://localhost:8000/trader?trader_name=test
+  body: json
+  auth: inherit
+}
+
+params:query {
+  trader_name: test
+}
