@@ -31,9 +31,9 @@ class RestResponseKeys:
     
 class RestResponseType:
     mapping = {
-        "get_snapshot_ticker": TickerSnapshot,
-        "get_sma": SMAIndicatorResults,
-        "get_last_quote": LastQuote,
+        RestEvents.GET_SNAPSHOT_TICKER: TickerSnapshot,
+        RestEvents.GET_SIMPLE_MOVING_AVERAGE: SMAIndicatorResults,
+        RestEvents.GET_LAST_QUOTE: LastQuote,
     }
 
     @classmethod
