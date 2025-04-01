@@ -59,14 +59,6 @@ async def delete_rest_endpoint(endpoint: RestEndpoint):
     except Exception as e:
         return APIResponse(status=Status.FAILED, message="Endpoint deletion failed.", body=str(e))
     
-@app.post("/data/ws")
-async def subscribe_to_websocket_endpoint(endpoint: WebSocketEndpoint):
-    try:
-        api_service.subscribe_to_ws_endpoint(endpoint)
-        return APIResponse(status=Status.SUCCESS, message="Subscribed to endpoint successfully.", body=None)
-    except Exception as e:
-        return APIResponse(status=Status.FAILED, message="Subscribe failed.", body=str(e))
-    
 @app.post("/trader")
 async def add_trader(trader: Trader):
     try:

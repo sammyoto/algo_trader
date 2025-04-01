@@ -19,9 +19,6 @@ class ApiService:
     def delete_rest_endpoint(self, endpoint: RestEndpoint):
         self.data_ingestion_service.pr.delete_endpoint(endpoint)
 
-    def subscribe_to_ws_endpoint(self, endpoint: WebSocketEndpoint):
-        self.data_ingestion_service.pw.subscribe_to_endpoint(endpoint)
-
     def add_trader(self, trader: Trader):
         for endpoint in trader.rest_endpoints:
             self.subscribe_to_rest_endpoint(endpoint)

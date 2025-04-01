@@ -73,12 +73,3 @@ class RestEndpoint(BaseModel):
             for key, value in self.params.items()
         ]
         return f"{name}." + '.'.join(serialized_params)
-
-class WebSocketEndpoint(BaseModel):
-    event: WebSocketEvents
-    ticker: str
-    endpoint_str: str
-
-    def __init__(self, event: WebSocketEvents, ticker: str):
-        super().__init__(event=event, ticker=ticker, endpoint_str = "")
-        self.endpoint_str = f"{event}.{ticker}"

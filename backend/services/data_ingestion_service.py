@@ -4,9 +4,7 @@ import time
 import json
 from typing import List
 from shared_services.redis_service import RedisService 
-from shared_services.polygon_websocket_service import PolygonWebSocketService
 from shared_services.polygon_rest_service import PolygonRESTService
-from polygon.websocket.models import WebSocketMessage
 
 class DataIngestionService:
     def __init__(self):
@@ -18,14 +16,7 @@ class DataIngestionService:
         self.pr = PolygonRESTService(
             os.getenv("POLYGON_API_KEY")
         )
-        self.pw = PolygonWebSocketService(
-            os.getenv("POLYGON_API_KEY")
-        )
         self.pr.set_message_callback(self.process_rest_messages)
-        self.pw.set_message_callback(self.process_websocket_messages)
-
-    def process_websocket_messages(self, messages: dict):
-        print("Websocket Data", messages)
 
     def process_rest_messages(self, messages: List[tuple]):
         for message in messages:
@@ -40,12 +31,7 @@ class DataIngestionService:
                 print("Error in REST service:", e)
             time.sleep(5)
 
-    def run_websocket_service(self):
-        self.pw.stream_messages()
-
     def start_service(self):
         rest_thread = threading.Thread(target=self.run_rest_service, name="RESTThread", daemon=True)
-        websocket_thread = threading.Thread(target=self.run_websocket_service, name="WebSocketThread", daemon=True)
 
         rest_thread.start()
-        websocket_thread.start()
