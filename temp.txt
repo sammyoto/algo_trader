@@ -1,0 +1,5 @@
+What does a user need to make an algo?
+- State
+- Input data
+- Input data frequency
+- A preprogrammed algo. No customization here
