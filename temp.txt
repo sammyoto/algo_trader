@@ -3,3 +3,11 @@ What does a user need to make an algo?
 - Input data
 - Input data frequency
 - A preprogrammed algo. No customization here
+
+TODO:
+- Finish Trader
+- Make trader either live or scheduled
+- Live traders have frequencies between 1 sec and 10 min
+- Scheduled will save resources and be able to run as little as once a week
+- All traders want to do are input data, run an algorithm, update their state.
+- Each algorithm has to have a trade trigger 
