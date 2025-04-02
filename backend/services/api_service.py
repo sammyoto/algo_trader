@@ -2,8 +2,8 @@ import json
 from typing import List
 from services.data_ingestion_service import DataIngestionService
 from services.trader_handler_service import TraderHandlerService
-from models.trader import Trader
-from models.polygon_models import RestEndpoint, RestResponseKeys, WebSocketEndpoint
+from backend.models.traders.trader import Trader
+from models.polygon_models import RestEndpoint, RestResponseKeys
 
 class ApiService:
     def __init__(self, data_ingestion_service: DataIngestionService, trader_handler_service: TraderHandlerService):
@@ -22,8 +22,6 @@ class ApiService:
     def add_trader(self, trader: Trader):
         for endpoint in trader.rest_endpoints:
             self.subscribe_to_rest_endpoint(endpoint)
-        for endpoint in trader.ws_endpoints:
-            self.subscribe_to_ws_endpoint(endpoint)
 
         self.trader_handler_service.add_trader(trader)
 

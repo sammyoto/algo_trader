@@ -6,8 +6,7 @@ What does a user need to make an algo?
 
 TODO:
 - Finish Trader
-- Make trader either live or scheduled
-- Live traders have frequencies between 1 sec and 10 min
-- Scheduled will save resources and be able to run as little as once a week
+- Centralize trader scheduling, maybe traders don't subscribe to Redis anymore, they are part of a scheduler and get their data independently
 - All traders want to do are input data, run an algorithm, update their state.
-- Each algorithm has to have a trade trigger 
+- Each algorithm has to have a trade trigger
+- Make it fully customizable, what do we want to store from endpoints? What functions do we want to run? What's our trade trigger?

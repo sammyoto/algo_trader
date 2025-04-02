@@ -5,9 +5,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from services.data_ingestion_service import DataIngestionService
 from services.trader_handler_service import TraderHandlerService
 from services.api_service import ApiService
-from models.polygon_models import RestEndpoint, RestResponseKeys, WebSocketEndpoint
+from models.polygon_models import RestEndpoint, RestResponseKeys
 from models.api_models import *
-from models.trader import Trader
+from backend.models.traders.trader import Trader
 from polygon.rest.models import TickerSnapshot
 import json
 

@@ -40,12 +40,6 @@ class RestResponseType:
     def get_type(cls, function: str):
         return cls.mapping.get(function)
 
-class WebSocketEvents(str, Enum):
-    AGG_MIN = "AM"
-    AGG_SEC = "A"
-    TRADES = "T"
-    QUOTES = "Q"
-
 class RestEndpoint(BaseModel):
     event: RestEvents
     params: dict
@@ -73,3 +67,6 @@ class RestEndpoint(BaseModel):
             for key, value in self.params.items()
         ]
         return f"{name}." + '.'.join(serialized_params)
+
+    def get_response_type(self):
+        return RestResponseType.get_type(self.event)
