@@ -11,13 +11,14 @@ import os
 
 class Trader(BaseModel):
     name: str
-    cash: TwoDecimal
+    cash: TwoDecimal = TwoDecimal(0)
+    description: str = "Default Trader."
+    
     _r: RedisService = PrivateAttr()
     _p: PolygonRESTService = PrivateAttr()
     _a: AccountService = PrivateAttr()
-    _description: str = PrivateAttr()
 
-    def __init__(self, name: str):
+    def __init__(self, name: str, cash: float):
         super().__init__(name = name)
         self._r = RedisService(
             os.getenv("REDIS_HOST"),
@@ -26,10 +27,11 @@ class Trader(BaseModel):
         )
         self._p = PolygonRESTService()
         self._a = AccountService(debug=True)
-        self._description = "Default Trader."
 
+        self.cash = TwoDecimal(cash)
         self.awaiting_trade_confirmation: bool = False
-        self.order_id: str = ""
+        self.order_id: str | None = None
+        self.current_order: BasicOrder | None = None
 
     def update_trader_after_trade(self):
         pass
@@ -37,7 +39,7 @@ class Trader(BaseModel):
     def verify_order_execution(self):
         if self._a.get_order_status(self.order_id) == "Filled":
             self.awaiting_trade_confirmation = False
-            self.order_id = ""
+            self.order_id = None
             self.update_trader_after_trade()
 
             return "Filled"
@@ -51,6 +53,9 @@ class Trader(BaseModel):
         pass
  
     def get_data(self):
+        pass
+
+    def get_trader_data(self):
         pass
 
     def step(self):

@@ -2,7 +2,7 @@ from shared_services.redis_service import RedisService
 from typing import Union, Optional, List, Dict
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.interval import IntervalTrigger
-from backend.models.traders.trader import Trader
+from models.traders.trader import Trader
 
 class TraderHandlerService:
     def __init__(self):
