@@ -33,6 +33,7 @@ class TraderType(str, Enum):
 class BaseTraderCreationRequest(BaseModel):
     trader_type: TraderType
     name: str
+    cash: float
     data_frequency: DataFrequency
 
 class SimpleThresholdTraderCreationRequest(BaseTraderCreationRequest):

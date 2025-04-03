@@ -15,8 +15,9 @@ class SimpleThresholdTrader(Trader):
     holdings: int = 0
     holding: bool = False
 
-    def __init__(self, name, buy_threshold, sell_threshold, ticker):
-        super.__init__(name = name, buy_threshold = buy_threshold, sell_threshold = sell_threshold, ticker = ticker)
+    def __init__(self, name: str, cash: float, buy_threshold: float, sell_threshold: float, ticker: str):
+        super().__init__(name=name, cash=cash, buy_threshold=buy_threshold, sell_threshold=sell_threshold, ticker=ticker)
+
         self.description = "A trader that buys and sells at specific price points."
 
     def bsh(self):

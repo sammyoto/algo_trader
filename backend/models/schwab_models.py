@@ -22,7 +22,7 @@ class BasicOrder(BaseModel):
     def __init__(self, price: TwoDecimal, instruction: str, quantity: int, symbol: str):
         order_leg_collection = OrderLegCollection(instruction, quantity, Instrument(symbol))
         order = [order_leg_collection]
-        super.__init__(price = price, orderLegCollection = order)
+        super().__init__(price = price, orderLegCollection = order)
 
     def get_price(self):
         return self.price

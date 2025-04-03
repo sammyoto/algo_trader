@@ -1,3 +1,5 @@
+from pydantic import GetCoreSchemaHandler
+from pydantic_core import core_schema
 from decimal import Decimal as PyDecimal, ROUND_DOWN, ROUND_FLOOR
 
 class TwoDecimal:
@@ -11,7 +13,7 @@ class TwoDecimal:
         return f"{self.value}"
     
     def __getstate__(self):
-        return str(self.value)
+        return {'value': str(self.value)}
 
     # Arithmetic Operators
     def __add__(self, other: "TwoDecimal"):
@@ -48,3 +50,14 @@ class TwoDecimal:
 
     def __ge__(self, other: "TwoDecimal"):
         return self.value >= other.value
+    
+     # Pydantic support: Define how Pydantic should handle TwoDecimal
+    @classmethod
+    def __get_pydantic_core_schema__(cls, source_type, handler: GetCoreSchemaHandler):
+        return core_schema.no_info_plain_validator_function(cls.validate)
+
+    @classmethod
+    def validate(cls, value):
+        if isinstance(value, cls):
+            return value
+        return cls(value)  # Convert int/float/str to TwoDecimal automatically

@@ -7,7 +7,7 @@ from services.trader_handler_service import TraderHandlerService
 from services.api_service import ApiService
 from models.polygon_models import RestEndpoint, RestResponseKeys
 from models.api_models import *
-from backend.models.traders.trader import Trader
+from models.traders.trader import Trader
 from polygon.rest.models import TickerSnapshot
 import json
 
@@ -60,9 +60,9 @@ async def delete_rest_endpoint(endpoint: RestEndpoint):
         return APIResponse(status=Status.FAILED, message="Endpoint deletion failed.", body=str(e))
     
 @app.post("/trader")
-async def add_trader(trader: Trader):
+async def add_trader(trader_creation_request: TraderCreationRequest):
     try:
-        api_service.add_trader(trader)
+        api_service.add_trader(trader_creation_request)
         return APIResponse(status=Status.SUCCESS, message="Added trader successfully.", body=None)
     except Exception as e:
         return APIResponse(status=Status.FAILED, message="Add trader failed.", body=str(e))

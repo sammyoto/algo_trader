@@ -11,27 +11,29 @@ import os
 
 class Trader(BaseModel):
     name: str
-    cash: TwoDecimal = TwoDecimal(0)
+    cash: TwoDecimal
     description: str = "Default Trader."
-    
+    awaiting_trade_confirmation: bool = False
+    order_id: str | None = None
+    current_order: BasicOrder | None = None
+
     _r: RedisService = PrivateAttr()
     _p: PolygonRESTService = PrivateAttr()
     _a: AccountService = PrivateAttr()
+    _message_callback: callable = PrivateAttr()
 
-    def __init__(self, name: str, cash: float):
-        super().__init__(name = name)
+    # **args is necessary to forward any extra parameters to BaseModel needed by classes that inherit Trader
+    def __init__(self, name: str, cash: float, **args):
+        super().__init__(name= name, cash=cash, **args)
         self._r = RedisService(
             os.getenv("REDIS_HOST"),
             os.getenv("REDIS_USERNAME"),
             os.getenv("REDIS_PASSWORD")
         )
-        self._p = PolygonRESTService()
+        self._p = PolygonRESTService(
+            os.getenv("POLYGON_API_KEY")
+        )
         self._a = AccountService(debug=True)
-
-        self.cash = TwoDecimal(cash)
-        self.awaiting_trade_confirmation: bool = False
-        self.order_id: str | None = None
-        self.current_order: BasicOrder | None = None
 
     def update_trader_after_trade(self):
         pass
@@ -57,6 +59,9 @@ class Trader(BaseModel):
 
     def get_trader_data(self):
         pass
+
+    def set_message_callback(self, callback: callable):
+        self._callback = callback
 
     def step(self):
         if self.awaiting_trade_confirmation:

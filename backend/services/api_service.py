@@ -2,7 +2,7 @@ import json
 from typing import List
 from services.data_ingestion_service import DataIngestionService
 from services.trader_handler_service import TraderHandlerService
-from backend.models.traders.trader import Trader
+from models.traders.trader import Trader
 from models.polygon_models import RestEndpoint, RestResponseKeys
 from models.api_models import TraderCreationRequest, TraderType
 from models.traders.simple_threshold_trader import SimpleThresholdTrader
@@ -17,18 +17,31 @@ class ApiService:
     
     def subscribe_to_rest_endpoint(self, endpoint: RestEndpoint):
         self.data_ingestion_service.pr.subscribe_to_endpoint(endpoint)
-
+ 
     def delete_rest_endpoint(self, endpoint: RestEndpoint):
         self.data_ingestion_service.pr.delete_endpoint(endpoint)
 
     def add_trader(self, trader_creation_request: TraderCreationRequest):
-        if trader_creation_request.trader_type == TraderType.SIMPLE_THRESHOLD:
-            trader = SimpleThresholdTrader(
-                name=trader_creation_request.name
-            )
+        match trader_creation_request.trader_type:
+            case TraderType.SIMPLE_THRESHOLD:
+                trader = SimpleThresholdTrader(
+                    name=trader_creation_request.name,
+                    cash=trader_creation_request.cash,
+                    buy_threshold=trader_creation_request.buy_threshold,
+                    sell_threshold=trader_creation_request.sell_threshold,
+                    ticker=trader_creation_request.ticker
+                )
+                print("Here")
+            case _:
+                trader = SimpleThresholdTrader(
+                    name="Default",
+                    cash=0.0,
+                    buy_threshold=0,
+                    sell_threshold=0,
+                    ticker="NVDA"
+                )
 
-
-        self.trader_handler_service.add_trader(trader)
+        self.trader_handler_service.add_trader(trader, trader_creation_request.data_frequency)
 
     def delete_trader(self, trader_name: str):
         self.trader_handler_service.delete_trader(trader_name)

@@ -12,16 +12,17 @@ post {
 
 body:json {
   {
-    "name" : "test",
-    "rest_endpoints" : [
-      {
-        "event": "get_snapshot_ticker",
-        "params": {
-          "market_type": "stocks",
-          "ticker": "NVDA"
-        }
-      }
-    ],
-    "ws_endpoints" : []
+    "trader_type": "simple_threshold",
+    "name": "Test",
+    "cash": 1000.0,
+    "data_frequency": {
+      "days": 0,
+      "hours": 0,
+      "minutes": 0,
+      "seconds": 5
+    },
+    "buy_threshold": 100.0,
+    "sell_threshold": 200.0,
+    "ticker": "NVDA"
   }
 }
