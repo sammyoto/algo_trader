@@ -4,3 +4,5 @@ schwabdev
 redis
 python-dotenv
 polygon-api-client
+cdp-sdk
+coinbase-advanced-py

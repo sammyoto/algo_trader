@@ -1,6 +1,6 @@
 from models.schwab_models import BasicOrder
 
-class AccountService:
+class SchwabAccountService:
     def __init__(self, debug: bool):
         self.debug = debug
 

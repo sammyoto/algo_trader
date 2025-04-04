@@ -2,24 +2,21 @@ from pydantic import BaseModel, PrivateAttr
 from typing import Union, Optional, List, Dict
 from shared_services.redis_service import RedisService
 from shared_services.polygon_rest_service import PolygonRESTService
-from shared_services.schwab_account_service import SchwabAccountService
+from shared_services.coinbase_account_service import CoinbaseAccountService
 from models.polygon_models import RestEndpoint, RestResponseType, RestEvents
 from models.redis_models import RedisMessage
 from models.two_decimal import TwoDecimal
 from models.schwab_models import BasicOrder
 import os
 
-class Trader(BaseModel):
+class CryptoTrader(BaseModel):
     name: str
     cash: TwoDecimal
-    description: str = "Default Trader."
-    awaiting_trade_confirmation: bool = False
-    order_id: str | None = None
-    current_order: BasicOrder | None = None
+    description: str = "Default Crypto Trader."
 
     _r: RedisService = PrivateAttr()
     _p: PolygonRESTService = PrivateAttr()
-    _a: SchwabAccountService = PrivateAttr()
+    _c: CoinbaseAccountService = PrivateAttr()
     _message_callback: callable = PrivateAttr()
 
     # **args is necessary to forward any extra parameters to BaseModel needed by classes that inherit Trader
@@ -33,13 +30,17 @@ class Trader(BaseModel):
         self._p = PolygonRESTService(
             os.getenv("POLYGON_API_KEY")
         )
-        self._a = SchwabAccountService(debug=True)
+        self._c = CoinbaseAccountService(
+            debug=True,
+            api_key=os.getenv("COINBASE_API_KEY"),
+            api_secret=os.getenv("COINBASE_SECRET_KEY")
+        )
 
     def update_trader_after_trade(self):
         pass
 
     def verify_order_execution(self):
-        if self._a.get_order_status(self.order_id) == "Filled":
+        if self._c.get_order_status(self.order_id) == "Filled":
             self.awaiting_trade_confirmation = False
             self.order_id = None
             self.update_trader_after_trade()
