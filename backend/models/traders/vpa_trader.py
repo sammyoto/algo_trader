@@ -2,7 +2,7 @@ from models.traders.trader import Trader
 from models.two_decimal import TwoDecimal
 from models.polygon_models import RestEndpoint, RestEvents
 from models.schwab_models import BasicOrder
-from polygon.rest.models import LastQuote
+from polygon.rest.models import LastQuote 
 from typing import Union, Optional, List, Dict
 
 class VPATrader(Trader):
