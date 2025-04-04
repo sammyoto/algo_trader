@@ -1,4 +1,5 @@
 TODO:
-- Fix api
-- Create a trader we can use
-- Start with crypto and add money to account
+- Create a test trader with an endpoint we can use right now
+- Figure out Schwabdev and finish SchwabService
+- Clean up API and make switching between paper and real money easy
+- Hook up to frontend
