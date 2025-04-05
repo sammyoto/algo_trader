@@ -19,12 +19,6 @@ class VPATrader(Trader):
     sma_vals: List[float] = []
     daily_aggs: List[DailyOpenCloseAgg] = []
 
-    profit: TwoDecimal = TwoDecimal(0)
-    bought_price: TwoDecimal = TwoDecimal(0)
-    current_price: TwoDecimal = TwoDecimal(0)
-    holdings: int = 0
-    holding: bool = False
-
     def __init__(self, 
                  name: str, 
                  cash: float, 
@@ -46,8 +40,8 @@ class VPATrader(Trader):
         self.description = "A trader that trades using Volume Price Analysis."
 
     def bsh(self):
-        # compare yesterday and today to the moving average, if its lower following a high day, we buy.
         order: BasicOrder = None
+        # compare yesterday and today to the moving average, if its lower following a high day, we buy.
         # buy signal
         if not self.holding:
             yesterday_index = self.limit - 2

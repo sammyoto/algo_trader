@@ -16,6 +16,11 @@ class Trader(BaseModel):
     awaiting_trade_confirmation: bool = False
     order_id: str | None = None
     current_order: BasicOrder | None = None
+    profit: TwoDecimal = TwoDecimal(0)
+    bought_price: TwoDecimal = TwoDecimal(0)
+    current_price: TwoDecimal = TwoDecimal(0)
+    holdings: int = 0
+    holding: bool = False
 
     _r: RedisService = PrivateAttr()
     _p: PolygonRESTService = PrivateAttr()

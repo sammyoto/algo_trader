@@ -10,13 +10,6 @@ class SimpleThresholdTrader(Trader):
     sell_threshold: TwoDecimal
     ticker: str
 
-    # trader state variables
-    profit: TwoDecimal = TwoDecimal(0)
-    bought_price: TwoDecimal = TwoDecimal(0)
-    current_price: TwoDecimal = TwoDecimal(0)
-    holdings: int = 0
-    holding: bool = False
-
     def __init__(self, name: str, cash: float, buy_threshold: float, sell_threshold: float, ticker: str):
         super().__init__(name=name, cash=cash, buy_threshold=buy_threshold, sell_threshold=sell_threshold, ticker=ticker)
 
