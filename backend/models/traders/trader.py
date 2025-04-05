@@ -35,6 +35,9 @@ class Trader(BaseModel):
         )
         self._a = SchwabAccountService(debug=True)
 
+        # function used to initialize trader values if needed
+        self.on_trader_init()
+
     def update_trader_after_trade(self):
         pass
 
@@ -53,12 +56,12 @@ class Trader(BaseModel):
     
     def update_trader(self, data):
         pass
- 
-    def get_data(self):
+
+    def on_trader_init(self):
         pass
 
     def get_trader_data(self):
-        pass
+        return self.model_dump()
 
     def set_message_callback(self, callback: callable):
         self._callback = callback
@@ -70,5 +73,5 @@ class Trader(BaseModel):
             if status == "Waiting":
                 return
 
-        self.update_trader(self.get_data())
+        self.update_trader()
         self.bsh()

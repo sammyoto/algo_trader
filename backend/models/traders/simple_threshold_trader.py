@@ -11,6 +11,8 @@ class SimpleThresholdTrader(Trader):
     ticker: str
 
     # trader state variables
+    profit: TwoDecimal = TwoDecimal(0)
+    bought_price: TwoDecimal = TwoDecimal(0)
     current_price: TwoDecimal = TwoDecimal(0)
     holdings: int = 0
     holding: bool = False
@@ -42,24 +44,24 @@ class SimpleThresholdTrader(Trader):
 
         if instruction == "BUY":
             self.cash -= (self.current_order.get_price() * TwoDecimal(self.current_order.get_quantity()))
+            self.bought_price = self.current_order.get_price()
             self.holdings = self.current_order.get_quantity()
+            self.holding = True
         elif instruction == "SELL":
             self.cash += (self.current_order.get_price() * TwoDecimal(self.current_order.get_quantity()))
+            self.profit += ((self.current_order.get_price() * TwoDecimal(self.current_order.get_quantity())) - self.bought_price)
+            self.bought_price = TwoDecimal(0)
             self.holdings = self.holdings - self.current_order.get_quantity()
+            self.holding = False
 
         self.current_order = None
     
-    def update_trader(self, data: LastQuote):
+    def update_trader(self):
+        last_quote_endpoint = RestEndpoint(RestEvents.GET_LAST_QUOTE, {"ticker": self.ticker})
+        data = self._p.get_endpoint(last_quote_endpoint)
+
         if data.ask_price and data.bid_price:
             current_price = (data.ask_price + data.bid_price) / 2
             self.current_price = TwoDecimal(current_price)
         else:
             pass
- 
-    def get_data(self):
-        last_quote_endpoint = RestEndpoint(RestEvents.GET_LAST_QUOTE, {"ticker": self.ticker})
-        response = self._p.get_endpoint(last_quote_endpoint)
-        return response
-    
-    def get_trader_data(self):
-        return self.model_dump()

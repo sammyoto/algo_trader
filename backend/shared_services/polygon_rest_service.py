@@ -19,6 +19,8 @@ class PolygonRESTService:
                 return self.rc.get_snapshot_ticker(**endpoint.params)
             case RestEvents.GET_SIMPLE_MOVING_AVERAGE:
                 return self.rc.get_sma(**endpoint.params)
+            case RestEvents.GET_DAILY_OPEN_CLOSE_AGG:
+                return self.rc.get_daily_open_close_agg(**endpoint.params)
             case RestEvents.GET_LAST_QUOTE:
                 return self.rc.get_last_quote(**endpoint.params)
             

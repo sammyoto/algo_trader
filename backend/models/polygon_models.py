@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Union, Optional
 from polygon.rest.models import TickerSnapshot, SMAIndicatorResults, LastQuote
+from datetime import datetime
 import json
 from enum import Enum
 
@@ -13,9 +14,22 @@ class SeriesTypes(str, Enum):
     LOW = "low"
     CLOSE = "close"
 
+class Timespan(str, Enum):
+    MINUTE = "minute"
+    HOUR = "hour"
+    DAY = "day"
+    WEEK = "week"
+    MONTH = "month"
+    QUARTER = "quarter"
+    YEAR = "year"
+
+def DateFromTimestamp(timestamp):
+    return datetime.fromtimestamp(timestamp / 1000).date()
+
 class RestEvents(str, Enum):
     GET_SNAPSHOT_TICKER = "get_snapshot_ticker"
     GET_SIMPLE_MOVING_AVERAGE = "get_sma"
+    GET_DAILY_OPEN_CLOSE_AGG = "get_daily_open_close_agg"
     GET_LAST_QUOTE = "get_last_quote"
 
 class RestResponseKeys:
