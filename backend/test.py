@@ -7,13 +7,14 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def test_simple_threshold_trader():
-    trader = SimpleThresholdTrader("Test", 500, 500, 500, 'NVDA')
+    trader = SimpleThresholdTrader("Test", 500, True, 500, 500, 'NVDA')
 
     assert trader.cash == TwoDecimal(500)
 
 def test_vpa_trader():
     trader = VPATrader("Test", 
-                       500, 
+                       500,
+                       True,
                        "NVDA",
                         Timespan.DAY,
                         3,
@@ -24,7 +25,6 @@ def test_vpa_trader():
     assert trader.cash == TwoDecimal(500)
     assert trader.selloff_percentage == 20
     assert trader.stoploss_percentage == 20
-
     
 
 test_simple_threshold_trader()

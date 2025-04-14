@@ -22,6 +22,7 @@ class VPATrader(Trader):
     def __init__(self, 
                  name: str, 
                  cash: float, 
+                 paper: bool,
                  ticker: str, 
                  timespan: Timespan, 
                  window: int, 
@@ -30,6 +31,7 @@ class VPATrader(Trader):
                  stoploss_percentage: int):
         super().__init__(name=name, 
                          cash=cash, 
+                         paper=paper,
                          ticker=ticker, 
                          timespan=timespan, 
                          window=window, 

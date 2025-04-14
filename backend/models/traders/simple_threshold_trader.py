@@ -10,8 +10,8 @@ class SimpleThresholdTrader(Trader):
     sell_threshold: TwoDecimal
     ticker: str
 
-    def __init__(self, name: str, cash: float, buy_threshold: float, sell_threshold: float, ticker: str):
-        super().__init__(name=name, cash=cash, buy_threshold=buy_threshold, sell_threshold=sell_threshold, ticker=ticker)
+    def __init__(self, name: str, cash: float, paper: bool, buy_threshold: float, sell_threshold: float, ticker: str):
+        super().__init__(name=name, cash=cash, paper=paper, buy_threshold=buy_threshold, sell_threshold=sell_threshold, ticker=ticker)
 
         self.description = "A trader that buys and sells at specific price points."
 

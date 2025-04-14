@@ -11,6 +11,7 @@ import os
 
 class Trader(BaseModel):
     name: str
+    cash_basis: TwoDecimal
     cash: TwoDecimal
     description: str = "Default Trader."
     awaiting_trade_confirmation: bool = False
@@ -21,6 +22,7 @@ class Trader(BaseModel):
     current_price: TwoDecimal = TwoDecimal(0)
     holdings: int = 0
     holding: bool = False
+    paper: bool
 
     _r: RedisService = PrivateAttr()
     _p: PolygonRESTService = PrivateAttr()
@@ -28,8 +30,8 @@ class Trader(BaseModel):
     _message_callback: callable = PrivateAttr()
 
     # **args is necessary to forward any extra parameters to BaseModel needed by classes that inherit Trader
-    def __init__(self, name: str, cash: float, **args):
-        super().__init__(name= name, cash=cash, **args)
+    def __init__(self, name: str, cash: float, paper:bool, **args):
+        super().__init__(name= name, cash_basis=cash, cash=cash, paper=paper, **args)
         self._r = RedisService(
             os.getenv("REDIS_HOST"),
             os.getenv("REDIS_USERNAME"),
@@ -38,7 +40,7 @@ class Trader(BaseModel):
         self._p = PolygonRESTService(
             os.getenv("POLYGON_API_KEY")
         )
-        self._a = SchwabAccountService(debug=True)
+        self._a = SchwabAccountService(paper=self.paper)
 
         # function used to initialize trader values if needed
         self.on_trader_init()
@@ -64,6 +66,22 @@ class Trader(BaseModel):
 
     def on_trader_init(self):
         pass
+
+    def set_paper(self, paper: bool):
+        self.reset_trader()
+        self.paper = paper
+        self._a.set_paper(paper)
+
+    def reset_trader(self):
+        self.cash = self.cash_basis
+        self.awaiting_trade_confirmation = False
+        self.order_id = None
+        self.current_order = None
+        self.profit = TwoDecimal(0)
+        self.bought_price = TwoDecimal(0)
+        self.current_price = TwoDecimal(0)
+        self.holdings = 0
+        self.holding = False
 
     def get_trader_data(self):
         return self.model_dump()
