@@ -24,6 +24,7 @@ class Trader(BaseModel):
     holding: bool
     paper: bool
 
+    _d: List[Union[RestEndpoint, RestResponseType]] = PrivateAttr(default_factory=list)
     _r: RedisService = PrivateAttr()
     _p: PolygonRESTService = PrivateAttr()
     _a: SchwabAccountService = PrivateAttr()
