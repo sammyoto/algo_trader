@@ -13,15 +13,15 @@ class Trader(BaseModel):
     name: str
     cash_basis: TwoDecimal
     cash: TwoDecimal
-    description: str = "Default Trader."
+    description: str
     awaiting_trade_confirmation: bool = False
     order_id: str | None = None
     current_order: BasicOrder | None = None
-    profit: TwoDecimal = TwoDecimal(0)
-    bought_price: TwoDecimal = TwoDecimal(0)
-    current_price: TwoDecimal = TwoDecimal(0)
-    holdings: int = 0
-    holding: bool = False
+    profit: TwoDecimal
+    bought_price: TwoDecimal
+    current_price: TwoDecimal
+    holdings: int
+    holding: bool
     paper: bool
 
     _r: RedisService = PrivateAttr()
@@ -31,7 +31,17 @@ class Trader(BaseModel):
 
     # **args is necessary to forward any extra parameters to BaseModel needed by classes that inherit Trader
     def __init__(self, name: str, cash: float, paper:bool, **args):
-        super().__init__(name= name, cash_basis=cash, cash=cash, paper=paper, **args)
+        super().__init__(name= name, 
+                         cash_basis=cash, 
+                         cash=cash,
+                         description="Default Trader.",
+                         profit=TwoDecimal(0), 
+                         bought_price=TwoDecimal(0),
+                         current_price=TwoDecimal(0),
+                         holdings=0,
+                         holding=False,
+                         paper=paper,
+                         **args)
         self._r = RedisService(
             os.getenv("REDIS_HOST"),
             os.getenv("REDIS_USERNAME"),

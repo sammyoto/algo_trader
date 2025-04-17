@@ -28,6 +28,7 @@ class TraderHandlerService:
         print(message)
 
     def delete_trader(self, trader_name: str):
+        self.scheduler.remove_job(trader_name)
         del self.traders[trader_name]
     
     def get_traders(self):

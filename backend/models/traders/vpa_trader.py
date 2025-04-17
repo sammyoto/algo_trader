@@ -14,10 +14,10 @@ class VPATrader(Trader):
     stoploss_percentage: int
 
     # trader state variables 
-    limit: int = 3
-    sma_aggs: List[Agg] = []
-    sma_vals: List[float] = []
-    daily_aggs: List[DailyOpenCloseAgg] = []
+    limit: int
+    sma_aggs: List[Agg]
+    sma_vals: List[float]
+    daily_aggs: List[DailyOpenCloseAgg]
 
     def __init__(self, 
                  name: str, 
@@ -37,7 +37,12 @@ class VPATrader(Trader):
                          window=window, 
                          volume_sensitivity=volume_sensitivity, 
                          selloff_percentage=selloff_percentage, 
-                         stoploss_percentage = stoploss_percentage)
+                         stoploss_percentage = stoploss_percentage,
+                         limit=3,
+                         sma_aggs=[],
+                         sma_vals=[],
+                         daily_aggs=[]
+                         )
 
         self.description = "A trader that trades using Volume Price Analysis."
 
