@@ -31,7 +31,7 @@ class Trader(BaseModel):
     _message_callback: callable = PrivateAttr()
 
     # **args is necessary to forward any extra parameters to BaseModel needed by classes that inherit Trader
-    def __init__(self, name: str, cash: float, paper:bool, **args):
+    def __init__(self, name: str, cash: float, paper:bool, init_data = None, **args):
         super().__init__(name= name, 
                          cash_basis=cash, 
                          cash=cash,
@@ -54,7 +54,10 @@ class Trader(BaseModel):
         self._a = SchwabAccountService(paper=self.paper)
 
         # function used to initialize trader values if needed
-        self.on_trader_init()
+        if init_data is not None:
+            self.on_trader_init(data=init_data)
+        else:
+            self.on_trader_init(self.get_init_data())
 
     def update_trader_after_trade(self):
         pass
@@ -74,8 +77,14 @@ class Trader(BaseModel):
     
     def update_trader(self, data):
         pass
+    
+    def get_data(self):
+        pass
 
-    def on_trader_init(self):
+    def get_init_data(self):
+        pass
+
+    def on_trader_init(self, data):
         pass
 
     def set_paper(self, paper: bool):
@@ -100,12 +109,14 @@ class Trader(BaseModel):
     def set_message_callback(self, callback: callable):
         self._callback = callback
 
-    def step(self):
+    def step(self, data=None):
         if self.awaiting_trade_confirmation:
             status = self.verify_order_execution()
-
             if status == "Waiting":
                 return
+            
+        if data is None:
+            data = self.get_data()
 
-        self.update_trader()
+        self.update_trader(data)
         self.bsh()

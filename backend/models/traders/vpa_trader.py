@@ -2,6 +2,7 @@ from models.traders.trader import Trader
 from models.two_decimal import TwoDecimal
 from models.polygon_models import RestEndpoint, RestEvents, Timespan, DateFromTimestamp
 from models.schwab_models import BasicOrder
+from models.trader_models import VPADataSchema, VPAInitializationDataSchema
 from polygon.rest.models import DailyOpenCloseAgg, Agg
 from typing import List
 
@@ -28,7 +29,8 @@ class VPATrader(Trader):
                  window: int, 
                  volume_sensitivity: int, 
                  selloff_percentage: int, 
-                 stoploss_percentage: int):
+                 stoploss_percentage: int,
+                 init_data: VPAInitializationDataSchema = None):
         super().__init__(name=name, 
                          cash=cash, 
                          paper=paper,
@@ -38,6 +40,7 @@ class VPATrader(Trader):
                          volume_sensitivity=volume_sensitivity, 
                          selloff_percentage=selloff_percentage, 
                          stoploss_percentage = stoploss_percentage,
+                         init_data=init_data,
                          limit=3,
                          sma_aggs=[],
                          sma_vals=[],
@@ -106,49 +109,63 @@ class VPATrader(Trader):
 
         self.current_order = None
     
-    def update_trader(self):
-        # update list with latest data, get rid of oldest data
+    def update_trader(self, data: VPADataSchema):
+        sma = data.sma
+        dailyAggs = data.dailyAggs
+        quote =data.quote
+
+        self.sma_aggs.pop(0)
+        self.sma_vals.pop(0)
+        self.daily_aggs.pop(0)
+
+        self.sma_aggs.append(sma.underlying.aggregates[0])
+        self.sma_vals.append(sma.values[0].value)
+        self.daily_aggs.append(dailyAggs)
+
+        if quote.ask_price and quote.bid_price:
+            current_price = (quote.ask_price + quote.bid_price) / 2
+            self.current_price = TwoDecimal(current_price)
+
+    def get_data(self):
         sma_endpoint = RestEndpoint(RestEvents.GET_SIMPLE_MOVING_AVERAGE, {"ticker": self.ticker, 
                                                                            "timespan": self.timespan, 
                                                                            "window": self.window,
                                                                            "expand_underlying": True,
                                                                            "limit": 1})
         sma_response = self._p.get_endpoint(sma_endpoint)
+
         daily_aggs_endpoint = RestEndpoint(RestEvents.GET_DAILY_OPEN_CLOSE_AGG, {"ticker": self.ticker,
                                                                                  "date": DateFromTimestamp(sma_response.values[0].timestamp)})
         daily_aggs_response = self._p.get_endpoint(daily_aggs_endpoint)
 
-        self.sma_aggs.pop(0)
-        self.sma_vals.pop(0)
-        self.daily_aggs.pop(0)
-
-        self.sma_aggs.append(sma_response.underlying.aggregates[0])
-        self.sma_vals.append(sma_response.values[0].value)
-        self.daily_aggs.append(daily_aggs_response)
-
-        # get current price of ticker
         last_quote_endpoint = RestEndpoint(RestEvents.GET_LAST_QUOTE, {"ticker": self.ticker})
-        data = self._p.get_endpoint(last_quote_endpoint)
+        quote_response = self._p.get_endpoint(last_quote_endpoint)
 
-        if data.ask_price and data.bid_price:
-            current_price = (data.ask_price + data.bid_price) / 2
-            self.current_price = TwoDecimal(current_price)
-
+        return VPADataSchema(sma=sma_response, dailyAggs=daily_aggs_response, quote=quote_response)
+    
     # populate our lists with the moving averages and daily averages over a period of time
-    def on_trader_init(self):
+    def on_trader_init(self, data: VPAInitializationDataSchema):
+        sma = data.sma
+        daily_aggs = data.dailyAggs
+
+        for i in range(len(sma.values)):
+            self.sma_aggs.append(sma.underlying.aggregates[i])
+            self.sma_vals.append(sma.values[i].value)
+            self.daily_aggs.append(daily_aggs[i])
+    
+    def get_init_data(self):
         sma_endpoint = RestEndpoint(RestEvents.GET_SIMPLE_MOVING_AVERAGE, {"ticker": self.ticker, 
                                                                            "timespan": self.timespan, 
                                                                            "window": self.window,
                                                                            "expand_underlying": True,
                                                                            "limit": self.limit})
         sma_response = self._p.get_endpoint(sma_endpoint)
-
+        daily_aggs = []
         for i in range(len(sma_response.values)):
-            self.sma_aggs.append(sma_response.underlying.aggregates[i])
-            self.sma_vals.append(sma_response.values[i].value)
-
             daily_aggs_endpoint = RestEndpoint(RestEvents.GET_DAILY_OPEN_CLOSE_AGG, {"ticker": self.ticker,
                                                                                      "date": DateFromTimestamp(sma_response.values[i].timestamp)})
             daily_aggs_response = self._p.get_endpoint(daily_aggs_endpoint)
+            daily_aggs_response = self._p.get_endpoint(daily_aggs_endpoint)
+            daily_aggs.append(daily_aggs_response)
 
-            self.daily_aggs.append(daily_aggs_response)
+        return VPAInitializationDataSchema(sma=sma_response, dailyAggs=daily_aggs)

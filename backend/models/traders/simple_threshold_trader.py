@@ -2,6 +2,7 @@ from models.traders.trader import Trader
 from models.two_decimal import TwoDecimal
 from models.polygon_models import RestEndpoint, RestEvents
 from models.schwab_models import BasicOrder
+from models.trader_models import SimpleThresholdDataSchema
 from polygon.rest.models import LastQuote
 from typing import Union, Optional, List, Dict
 
@@ -55,12 +56,16 @@ class SimpleThresholdTrader(Trader):
 
         self.current_order = None
     
-    def update_trader(self):
-        last_quote_endpoint = RestEndpoint(RestEvents.GET_LAST_QUOTE, {"ticker": self.ticker})
-        data = self._p.get_endpoint(last_quote_endpoint)
+    def update_trader(self, data: SimpleThresholdDataSchema):
+        quote = data.quote
 
-        if data.ask_price and data.bid_price:
-            current_price = (data.ask_price + data.bid_price) / 2
+        if quote.ask_price and quote.bid_price:
+            current_price = (quote.ask_price + quote.bid_price) / 2
             self.current_price = TwoDecimal(current_price)
         else:
             pass
+
+    def get_data(self):
+        last_quote_endpoint = RestEndpoint(RestEvents.GET_LAST_QUOTE, {"ticker": self.ticker})
+        data = self._p.get_endpoint(last_quote_endpoint)
+        return SimpleThresholdDataSchema(quote=data)

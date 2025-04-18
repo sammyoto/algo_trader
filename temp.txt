@@ -1,7 +1,3 @@
 TODO:
 - Figure out Schwabdev and finish SchwabService
 - Clean up API and make switching between paper and real money easy
-
-
-TRADER REQUIREMENTS:
-- Data and trader decoupled (figure out a way for Trader to not get its own data)
