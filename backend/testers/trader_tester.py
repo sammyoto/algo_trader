@@ -3,7 +3,7 @@ from models.traders.trader import Trader
 from models.traders.simple_threshold_trader import SimpleThresholdTrader
 from models.traders.vpa_trader import VPATrader
 from models.two_decimal import TwoDecimal
-from testers.test_data import mock_simple_threshold_data
+from testers.test_data import mock_simple_threshold_data, mock_vpa_init_data, mock_vpa_data
 
 class TraderTester:
     def __init__(self):
@@ -80,7 +80,8 @@ class TraderTester:
                            3,
                            20,
                            20,
-                           20)
+                           20,
+                           init_data=mock_vpa_init_data)
         
         assert trader.ticker == "NVDA"
         assert trader.timespan == Timespan.DAY
@@ -95,4 +96,9 @@ class TraderTester:
         # assert trader.sma_vals != []
         # assert trader.daily_aggs != []
 
-    
+        trader.step(mock_vpa_data[0])
+        print(trader.get_trader_data())
+
+        trader.step(mock_vpa_data[1])
+
+        trader.step(mock_vpa_data[2])

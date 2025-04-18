@@ -17,7 +17,6 @@ class VPATrader(Trader):
     # trader state variables 
     limit: int
     sma_aggs: List[Agg]
-    sma_vals: List[float]
     daily_aggs: List[DailyOpenCloseAgg]
 
     def __init__(self, 
@@ -43,7 +42,6 @@ class VPATrader(Trader):
                          init_data=init_data,
                          limit=3,
                          sma_aggs=[],
-                         sma_vals=[],
                          daily_aggs=[]
                          )
 
@@ -57,14 +55,14 @@ class VPATrader(Trader):
             yesterday_index = self.limit - 2
             today_index = self.limit - 1
 
-            yesterday_agg = self.sma_aggs[yesterday_index]
+            yesterday_sma = self.sma_aggs[yesterday_index]
             yesterday_daily = self.daily_aggs[yesterday_index]
 
-            today_agg = self.sma_aggs[today_index]
+            today_sma = self.sma_aggs[today_index]
             today_daily = self.daily_aggs[today_index]
 
-            yesterday_threshold = yesterday_agg.volume * (1.0 + (self.volume_sensitivity/100))
-            today_threshold = today_agg.volume * (1.0 - (self.volume_sensitivity/100))
+            yesterday_threshold = yesterday_sma.volume * (1.0 + (self.volume_sensitivity/100))
+            today_threshold = today_sma.volume * (1.0 - (self.volume_sensitivity/100))
 
             if yesterday_daily.volume >= yesterday_threshold and today_daily.volume <= today_threshold:
                 purchasable_quantity = int(self.cash.floored_div(self.current_price).value)
@@ -75,8 +73,8 @@ class VPATrader(Trader):
         # we either want to sell at our selloff percentage or our stoploss percentage
         # sell signal
         else:
-            selloff_threshold = self.bought_price * (1.0 + (self.selloff_percentage/100))
-            stoploss_threshold = self.bought_price * (1.0 - (self.stoploss_percentage/100))
+            selloff_threshold = self.bought_price * TwoDecimal((1.0 + (self.selloff_percentage/100)))
+            stoploss_threshold = self.bought_price * TwoDecimal((1.0 - (self.stoploss_percentage/100)))
 
             if self.current_price >= selloff_threshold or self.current_price <= stoploss_threshold:
                 order = BasicOrder(self.current_price, "SELL", self.holdings, self.ticker)
@@ -115,11 +113,9 @@ class VPATrader(Trader):
         quote =data.quote
 
         self.sma_aggs.pop(0)
-        self.sma_vals.pop(0)
         self.daily_aggs.pop(0)
 
         self.sma_aggs.append(sma.underlying.aggregates[0])
-        self.sma_vals.append(sma.values[0].value)
         self.daily_aggs.append(dailyAggs)
 
         if quote.ask_price and quote.bid_price:
@@ -148,9 +144,8 @@ class VPATrader(Trader):
         sma = data.sma
         daily_aggs = data.dailyAggs
 
-        for i in range(len(sma.values)):
+        for i in range(len(sma.underlying.aggregates)):
             self.sma_aggs.append(sma.underlying.aggregates[i])
-            self.sma_vals.append(sma.values[i].value)
             self.daily_aggs.append(daily_aggs[i])
     
     def get_init_data(self):
