@@ -3,6 +3,7 @@ from models.traders.trader import Trader
 from models.traders.simple_threshold_trader import SimpleThresholdTrader
 from models.traders.vpa_trader import VPATrader
 from models.two_decimal import TwoDecimal
+from testers.test_data import mock_simple_threshold_data
 
 class TraderTester:
     def __init__(self):
@@ -30,15 +31,45 @@ class TraderTester:
         assert trader.holding == False
 
     def test_simple_threshold_trader(self):
-        trader = SimpleThresholdTrader("Test", 500, True, 500, 500, "NVDA")
+        buy_threshold = 200
+        sell_threshold = 300
+        trader = SimpleThresholdTrader(
+                                        name="Test", 
+                                        cash=500, 
+                                        paper=True, 
+                                        buy_threshold=buy_threshold, 
+                                        sell_threshold=sell_threshold, 
+                                        ticker="NVDA"
+                                    )
 
         assert trader.ticker == "NVDA"
-        assert trader.buy_threshold == TwoDecimal(500)
-        assert trader.sell_threshold == TwoDecimal(500)
+        assert trader.buy_threshold == TwoDecimal(buy_threshold)
+        assert trader.sell_threshold == TwoDecimal(sell_threshold)
         assert trader.description == "A trader that buys and sells at specific price points."
 
         # Uncomment when the API is available
         # trader.step()
+
+        trader.step(mock_simple_threshold_data[0])
+        assert trader.current_price == TwoDecimal(200)
+        assert trader.holdings == 2
+        assert trader.cash == TwoDecimal(100)
+        assert trader.profit == TwoDecimal(0)
+        assert trader.holding == True
+
+        trader.step(mock_simple_threshold_data[1])
+        assert trader.current_price == TwoDecimal(300)
+        assert trader.holdings == 0
+        assert trader.cash == TwoDecimal(700)
+        assert trader.profit == TwoDecimal(400)
+        assert trader.holding == False
+
+        trader.step(mock_simple_threshold_data[2])
+        assert trader.current_price == TwoDecimal(200)
+        assert trader.holdings == 3
+        assert trader.cash == TwoDecimal(100)
+        assert trader.profit == TwoDecimal(400)
+        assert trader.holding == True
 
     def test_vpa_trader(self):
         trader = VPATrader("Test", 

@@ -1,10 +1,10 @@
 from pydantic import GetCoreSchemaHandler
 from pydantic_core import core_schema
-from decimal import Decimal as PyDecimal, ROUND_DOWN, ROUND_FLOOR
+from decimal import Decimal as PyDecimal, ROUND_HALF_DOWN, ROUND_FLOOR
 
 class TwoDecimal:
     def __init__(self, value: str | float | int):
-        self.value = PyDecimal(value).quantize(PyDecimal("0.01"), rounding=ROUND_DOWN)
+        self.value = PyDecimal(value).quantize(PyDecimal("0.01"), rounding=ROUND_HALF_DOWN)
 
     def __repr__(self):
         return f"{self.value}"

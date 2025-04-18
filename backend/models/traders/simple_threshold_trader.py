@@ -25,9 +25,9 @@ class SimpleThresholdTrader(Trader):
     def bsh(self):
         purchasable_quantity = int(self.cash.floored_div(self.current_price).value)
 
-        if not self.holding and self.current_price < self.buy_threshold:
+        if not self.holding and self.current_price <= self.buy_threshold:
             order = BasicOrder(self.current_price, "BUY", purchasable_quantity, self.ticker)
-        elif self.holding and self.current_price > self.sell_threshold:
+        elif self.holding and self.current_price >= self.sell_threshold:
             order = BasicOrder(self.current_price, "SELL", self.holdings, self.ticker)
         else:
             return
@@ -58,7 +58,6 @@ class SimpleThresholdTrader(Trader):
     
     def update_trader(self, data: SimpleThresholdDataSchema):
         quote = data.quote
-
         if quote.ask_price and quote.bid_price:
             current_price = (quote.ask_price + quote.bid_price) / 2
             self.current_price = TwoDecimal(current_price)

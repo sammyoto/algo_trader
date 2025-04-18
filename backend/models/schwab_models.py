@@ -20,7 +20,7 @@ class BasicOrder(BaseModel):
     orderLegCollection: List[OrderLegCollection]
 
     def __init__(self, price: TwoDecimal, instruction: str, quantity: int, symbol: str):
-        order_leg_collection = OrderLegCollection(instruction, quantity, Instrument(symbol))
+        order_leg_collection = OrderLegCollection(instruction=instruction, quantity=quantity, instrument=Instrument(symbol=symbol))
         order = [order_leg_collection]
         super().__init__(price = price, orderLegCollection = order)
 
