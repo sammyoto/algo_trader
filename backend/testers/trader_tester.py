@@ -61,26 +61,26 @@ class TraderTester:
         assert trader.current_price == TwoDecimal(300)
         assert trader.holdings == 0
         assert trader.cash == TwoDecimal(700)
-        assert trader.profit == TwoDecimal(400)
+        assert trader.profit == TwoDecimal(200)
         assert trader.holding == False
 
         trader.step(mock_simple_threshold_data[2])
         assert trader.current_price == TwoDecimal(200)
         assert trader.holdings == 3
         assert trader.cash == TwoDecimal(100)
-        assert trader.profit == TwoDecimal(400)
+        assert trader.profit == TwoDecimal(200)
         assert trader.holding == True
 
     def test_vpa_trader(self):
-        trader = VPATrader("Test", 
-                           500,
-                           True,
-                           "NVDA",
-                           Timespan.DAY,
-                           3,
-                           20,
-                           20,
-                           20,
+        trader = VPATrader(name="Test", 
+                           cash=500,
+                           paper=True,
+                           ticker="NVDA",
+                           timespan=Timespan.DAY,
+                           window=3,
+                           volume_sensitivity=20,
+                           selloff_percentage=20,
+                           stoploss_percentage=20,
                            init_data=mock_vpa_init_data)
         
         assert trader.ticker == "NVDA"
@@ -97,8 +97,16 @@ class TraderTester:
         # assert trader.daily_aggs != []
 
         trader.step(mock_vpa_data[0])
-        print(trader.get_trader_data())
+        assert trader.cash == TwoDecimal(0.00)
+        assert trader.bought_price == TwoDecimal(100.00)
+        assert trader.holdings == 5
 
         trader.step(mock_vpa_data[1])
+        assert trader.cash == TwoDecimal(1000.00)
+        assert trader.bought_price == TwoDecimal(0.00)
+        assert trader.profit == TwoDecimal(500.00)
 
         trader.step(mock_vpa_data[2])
+        assert trader.cash == TwoDecimal(0.00)
+        assert trader.bought_price == TwoDecimal(200.00)
+        assert trader.holdings == 5

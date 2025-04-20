@@ -49,7 +49,7 @@ class SimpleThresholdTrader(Trader):
             self.holding = True
         elif instruction == "SELL":
             self.cash += (self.current_order.get_price() * TwoDecimal(self.current_order.get_quantity()))
-            self.profit += ((self.current_order.get_price() * TwoDecimal(self.current_order.get_quantity())) - self.bought_price)
+            self.profit += ((self.current_order.get_price() * TwoDecimal(self.current_order.get_quantity())) - (self.bought_price * TwoDecimal(self.current_order.get_quantity())))
             self.bought_price = TwoDecimal(0)
             self.holdings = self.holdings - self.current_order.get_quantity()
             self.holding = False

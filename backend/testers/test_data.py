@@ -80,8 +80,8 @@ mock_vpa_data = [
     dailyAggs=DailyOpenCloseAgg(volume=150),
     quote=LastQuote(
         ticker="NVDA",
-        ask_price=120.00,
-        bid_price=120.00
+        ask_price=200.00,
+        bid_price=200.00
     )
     ),
     VPADataSchema(
