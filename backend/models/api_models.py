@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import Generic, TypeVar, Union, Optional, List, Literal
+from models.polygon_models import Timespan
 from enum import Enum
 
 T = TypeVar("T")
@@ -29,11 +30,14 @@ class DataFrequency(BaseModel):
     
 class TraderType(str, Enum):
     SIMPLE_THRESHOLD = "simple_threshold"
+    VOLUME_PRICE_ANALYSIS = "vpa"
     
 class BaseTraderCreationRequest(BaseModel):
     trader_type: TraderType
     name: str
     cash: float
+    paper: bool = True
+    init_data: dict = None
     data_frequency: DataFrequency
 
 class SimpleThresholdTraderCreationRequest(BaseTraderCreationRequest):
@@ -42,6 +46,16 @@ class SimpleThresholdTraderCreationRequest(BaseTraderCreationRequest):
     sell_threshold: float
     ticker: str
 
+class VPATraderCreationRequest(BaseTraderCreationRequest):
+    trader_type: Literal[TraderType.VOLUME_PRICE_ANALYSIS]
+    ticker: str
+    timespan: Timespan
+    window: int
+    volume_sensitivity: int
+    selloff_percentage: int
+    stoploss_percentage: int
+
 TraderCreationRequest = Union[
-                                SimpleThresholdTraderCreationRequest
+                                SimpleThresholdTraderCreationRequest,
+                                VPATraderCreationRequest
                             ]

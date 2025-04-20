@@ -2,7 +2,6 @@ from fastapi import FastAPI
 from dotenv import load_dotenv
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
-from services.data_ingestion_service import DataIngestionService
 from services.trader_handler_service import TraderHandlerService
 from services.api_service import ApiService
 from models.polygon_models import RestEndpoint, RestResponseKeys
@@ -23,41 +22,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-data_ingestion_service = DataIngestionService()
-trader_handler_service = TraderHandlerService()
-api_service = ApiService(data_ingestion_service, trader_handler_service)
 
-@app.on_event("startup")
-async def startup_event():
-    data_ingestion_service.start_service()
+trader_handler_service = TraderHandlerService()
+api_service = ApiService(trader_handler_service)
 
 @app.get("/")
 async def root():
     return "Hello World!"
-
-@app.get("/data/rest")
-async def get_rest_endpoint(endpoint: RestEndpoint):
-    try:
-        response = api_service.get_rest_endpoint(endpoint)
-        return APIResponse(status=Status.SUCCESS,  message="Response returned succesfully.", body=response)
-    except Exception as e:
-        return APIResponse(status=Status.FAILED, message="Response failed.", body=str(e))
-
-@app.post("/data/rest")
-async def subscribe_to_rest_endpoint(endpoint: RestEndpoint):
-    try:
-        api_service.subscribe_to_rest_endpoint(endpoint)
-        return APIResponse(status=Status.SUCCESS, message="Subscribed to endpoint successfully.", body=None)
-    except Exception as e:
-        return APIResponse(status=Status.FAILED, message="Subscribe failed.", body=str(e))
-    
-@app.delete("/data/rest")
-async def delete_rest_endpoint(endpoint: RestEndpoint):
-    try:
-        api_service.delete_rest_endpoint(endpoint)
-        return APIResponse(status=Status.SUCCESS, message="Endpoint deleted successfully.", body=None)
-    except Exception as e:
-        return APIResponse(status=Status.FAILED, message="Endpoint deletion failed.", body=str(e))
     
 @app.post("/trader")
 async def add_trader(trader_creation_request: TraderCreationRequest):

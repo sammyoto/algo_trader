@@ -1,25 +1,15 @@
 import json
 from typing import List
-from services.data_ingestion_service import DataIngestionService
 from services.trader_handler_service import TraderHandlerService
 from models.traders.trader import Trader
 from models.polygon_models import RestEndpoint, RestResponseKeys
 from models.api_models import TraderCreationRequest, TraderType
 from models.traders.simple_threshold_trader import SimpleThresholdTrader
+from models.traders.vpa_trader import VPATrader
 
 class ApiService:
-    def __init__(self, data_ingestion_service: DataIngestionService, trader_handler_service: TraderHandlerService):
-        self.data_ingestion_service = data_ingestion_service
+    def __init__(self, trader_handler_service: TraderHandlerService):
         self.trader_handler_service = trader_handler_service
-
-    def get_rest_endpoint(self, endpoint: RestEndpoint):
-        return self.data_ingestion_service.pr.get_endpoint(endpoint)
-    
-    def subscribe_to_rest_endpoint(self, endpoint: RestEndpoint):
-        self.data_ingestion_service.pr.subscribe_to_endpoint(endpoint)
- 
-    def delete_rest_endpoint(self, endpoint: RestEndpoint):
-        self.data_ingestion_service.pr.delete_endpoint(endpoint)
 
     def add_trader(self, trader_creation_request: TraderCreationRequest):
         match trader_creation_request.trader_type:
@@ -27,11 +17,23 @@ class ApiService:
                 trader = SimpleThresholdTrader(
                     name=trader_creation_request.name,
                     cash=trader_creation_request.cash,
+                    paper=trader_creation_request.paper,
                     buy_threshold=trader_creation_request.buy_threshold,
                     sell_threshold=trader_creation_request.sell_threshold,
                     ticker=trader_creation_request.ticker
                 )
-                print("Here")
+            case TraderType.VOLUME_PRICE_ANALYSIS:
+                trader = VPATrader(
+                    name=trader_creation_request.name, 
+                    cash=trader_creation_request.cash, 
+                    paper=trader_creation_request.paper,
+                    ticker=trader_creation_request.ticker, 
+                    timespan=trader_creation_request.timespan, 
+                    window=trader_creation_request.window, 
+                    volume_sensitivity=trader_creation_request.volume_sensitivity, 
+                    selloff_percentage=trader_creation_request.selloff_percentage, 
+                    stoploss_percentage =trader_creation_request.stoploss_percentage,
+                )
             case _:
                 trader = SimpleThresholdTrader(
                     name="Default",
