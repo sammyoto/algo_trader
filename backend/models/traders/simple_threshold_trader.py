@@ -23,7 +23,7 @@ class SimpleThresholdTrader(Trader):
         self.description = "A trader that buys and sells at specific price points."
 
     def bsh(self):
-        purchasable_quantity = int(self.cash.floored_div(self.current_price).value)
+        purchasable_quantity = int(self.cash.floored_div(self.current_price).root)
 
         if not self.holding and self.current_price <= self.buy_threshold:
             order = BasicOrder(self.current_price, "BUY", purchasable_quantity, self.ticker)

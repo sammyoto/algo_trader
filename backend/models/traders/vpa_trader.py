@@ -65,7 +65,7 @@ class VPATrader(Trader):
             today_threshold = today_sma.volume * (1.0 - (self.volume_sensitivity/100))
 
             if yesterday_daily.volume >= yesterday_threshold and today_daily.volume <= today_threshold:
-                purchasable_quantity = int(self.cash.floored_div(self.current_price).value)
+                purchasable_quantity = int(self.cash.floored_div(self.current_price).root)
                 order = BasicOrder(self.current_price, "BUY", purchasable_quantity, self.ticker)
             else:
                 return

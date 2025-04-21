@@ -1,63 +1,61 @@
-from pydantic import GetCoreSchemaHandler
+from pydantic import GetCoreSchemaHandler, RootModel, Field, field_validator, field_serializer
 from pydantic_core import core_schema
 from decimal import Decimal as PyDecimal, ROUND_HALF_DOWN, ROUND_FLOOR
+from typing import Any
 
-class TwoDecimal:
-    def __init__(self, value: str | float | int):
-        self.value = PyDecimal(value).quantize(PyDecimal("0.01"), rounding=ROUND_HALF_DOWN)
+class TwoDecimal(RootModel[PyDecimal]):
+    @field_validator('root', mode='before')
+    @classmethod
+    def quantize(cls, v: Any) -> PyDecimal:
+        d = PyDecimal(v)
+        return d.quantize(PyDecimal('0.01'), rounding=ROUND_HALF_DOWN)
+
+    @field_serializer('root')
+    @classmethod
+    def serialize_root(cls, v: PyDecimal) -> str:
+        return str(v)
 
     def __repr__(self):
-        return f"{self.value}"
+        return f"{self.root}"
     
     def __str__(self):
-        return f"{self.value}"
+        return f"{self.root}"
     
     def __getstate__(self):
-        return {'value': str(self.value)}
+        return {'root': str(self.root)}
 
     # Arithmetic Operators
     def __add__(self, other: "TwoDecimal"):
-        return TwoDecimal(self.value + other.value)
+        return TwoDecimal(self.root + other.root)
 
     def __sub__(self, other: "TwoDecimal"):
-        return TwoDecimal(self.value - other.value)
+        return TwoDecimal(self.root - other.root)
 
     def __mul__(self, other: "TwoDecimal"):
-        return TwoDecimal(self.value * other.value)
+        return TwoDecimal(self.root * other.root)
 
     def __truediv__(self, other: "TwoDecimal"):
-        return TwoDecimal(self.value / other.value)
+        return TwoDecimal(self.root / other.root)
     
     # Floored Division to Whole Number
     def floored_div(self, other: "TwoDecimal"):
-        return TwoDecimal(self.value // other.value)  # Floor division using //
+        return TwoDecimal(self.root // other.root)  # Floor division using //
 
     # Comparison Operators
     def __eq__(self, other: "TwoDecimal"):
-        return self.value == other.value
+        return self.root == other.root
 
     def __ne__(self, other: "TwoDecimal"):
-        return self.value != other.value
+        return self.root != other.root
 
     def __lt__(self, other: "TwoDecimal"):
-        return self.value < other.value
+        return self.root < other.root
 
     def __le__(self, other: "TwoDecimal"):
-        return self.value <= other.value
+        return self.root <= other.root
 
     def __gt__(self, other: "TwoDecimal"):
-        return self.value > other.value
+        return self.root > other.root
 
     def __ge__(self, other: "TwoDecimal"):
-        return self.value >= other.value
-    
-     # Pydantic support: Define how Pydantic should handle TwoDecimal
-    @classmethod
-    def __get_pydantic_core_schema__(cls, source_type, handler: GetCoreSchemaHandler):
-        return core_schema.no_info_plain_validator_function(cls.validate)
-
-    @classmethod
-    def validate(cls, value):
-        if isinstance(value, cls):
-            return value
-        return cls(value)  # Convert int/float/str to TwoDecimal automatically
+        return self.root >= other.root
