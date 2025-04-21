@@ -1,3 +1,2 @@
 TODO:
-- Figure out Schwabdev and finish SchwabService
-- Clean up API and make switching between paper and real money easy
+- Start on frontend
