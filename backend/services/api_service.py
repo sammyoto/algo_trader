@@ -8,8 +8,8 @@ from models.traders.simple_threshold_trader import SimpleThresholdTrader
 from models.traders.vpa_trader import VPATrader
 
 class ApiService:
-    def __init__(self, trader_handler_service: TraderHandlerService):
-        self.trader_handler_service = trader_handler_service
+    def __init__(self):
+        self.trader_handler_service = TraderHandlerService()
 
     def add_trader(self, trader_creation_request: TraderCreationRequest):
         match trader_creation_request.trader_type:
@@ -50,3 +50,9 @@ class ApiService:
 
     def get_all_traders(self):
         return self.trader_handler_service.get_traders()
+    
+    def get_trader_by_name(self, trader_name: str):
+        if trader_name in self.trader_handler_service.traders.keys():
+            return self.trader_handler_service.traders[trader_name]
+        
+        return "Trader not found."

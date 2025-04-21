@@ -1,0 +1,15 @@
+meta {
+  name: get_trader_by_name
+  type: http
+  seq: 5
+}
+
+get {
+  url: http://localhost:8000/trader/:name
+  body: none
+  auth: inherit
+}
+
+params:path {
+  name: bruh
+}

@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from dotenv import load_dotenv
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
@@ -22,9 +22,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-trader_handler_service = TraderHandlerService()
-api_service = ApiService(trader_handler_service)
+api_service = ApiService()
 
 @app.get("/")
 async def root():
@@ -45,6 +43,16 @@ async def get_all_traders():
         return APIResponse(status=Status.SUCCESS, message="Get traders succeeded.", body=traders)
     except Exception as e:
         return APIResponse(status=Status.FAILED, message="Get traders failed.", body=str(e))
+    
+@app.get("/trader/{name}")
+async def get_trader_by_name(name: str):
+    try:
+        trader = api_service.get_trader_by_name(name)
+        if trader == "Trader not found.":
+            raise HTTPException(status_code=404, detail=trader)
+        return APIResponse(status=Status.SUCCESS, message="Get trader succeeded.", body=trader)
+    except Exception as e:
+        return APIResponse(status=Status.FAILED, message="Get trader failed.", body=str(e))
     
 @app.delete("/trader")
 async def delete_trader(trader_name: str):
