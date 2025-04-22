@@ -1,0 +1,12 @@
+<div id="main">
+    <div id="activity-list-container">
+        <h3 id="list-title">Activity Feed</h3>
+        <ul id="list">
+            @for(activity of mock_activities; track activity.name) {
+                <li class="list-item">
+                    <strong>{{ activity.timestamp }} - Trader: {{ activity.name }} - {{ activity.message }}</strong>
+                </li>
+            }
+        </ul>
+    </div>
+</div>

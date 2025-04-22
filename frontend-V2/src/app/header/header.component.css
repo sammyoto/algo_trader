@@ -1,0 +1,40 @@
+.header {
+    height: 100%; /* Fills the parent #header's height */
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    background-color: var(--secondary-bg-color);
+    color: var(--text-color);
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.nav {
+    flex: 1;
+    display: flex;
+}
+
+/* Add styles for links inside the header */
+.nav a {
+    color: var(--text-color); /* Link text color */
+    text-decoration: none; /* Remove underline from links */
+    text-align: center;
+    vertical-align: middle;
+    flex: 1;
+    font-size: 16px; /* Set link font size */
+}
+
+/* Add hover effect for links */
+.nav a:hover {
+    text-decoration: underline; /* Underline links on hover */
+}
+
+.logo {
+    flex: 0 0 auto;
+}
+
+.logo img {
+    object-fit: contain; /* Ensures the image scales proportionally */
+}

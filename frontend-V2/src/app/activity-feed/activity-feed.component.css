@@ -1,0 +1,23 @@
+#main {
+    height: 100%;
+    width: 100%;
+}
+
+#activity-list-container {
+    width: 95%;
+    height: 95%;
+    display: flex;
+    flex-direction: column;
+}
+
+#list-title {
+    align-content: center;
+}
+
+#list {
+
+}
+
+.list-item {
+
+}
