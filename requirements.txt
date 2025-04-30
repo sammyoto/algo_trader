@@ -7,3 +7,4 @@ polygon-api-client
 cdp-sdk
 coinbase-advanced-py
 apscheduler
+sqlmodel
