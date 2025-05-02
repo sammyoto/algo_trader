@@ -2,7 +2,8 @@ from pydantic import GetCoreSchemaHandler, RootModel, Field, field_validator, fi
 from pydantic_core import core_schema
 from decimal import Decimal as PyDecimal, ROUND_HALF_DOWN, ROUND_FLOOR
 from typing import Any
-
+from sqlalchemy.types import TypeDecorator, Numeric
+    
 class TwoDecimal(RootModel[PyDecimal]):
     @field_validator('root', mode='before')
     @classmethod
@@ -59,3 +60,17 @@ class TwoDecimal(RootModel[PyDecimal]):
 
     def __ge__(self, other: "TwoDecimal"):
         return self.root >= other.root
+
+# For conversion to float for DB storage
+class TwoDecimalType(TypeDecorator):
+    impl = Numeric(precision=20, scale=2)  # Precision: Total num digits, Scale: num digits after decimal
+
+    def process_bind_param(self, value: TwoDecimal, dialect):
+        if value is not None:
+            return value.root  # Store as raw decimal
+        return None
+
+    def process_result_value(self, value, dialect):
+        if value is not None:
+            return TwoDecimal(value)
+        return None
