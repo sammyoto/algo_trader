@@ -1,6 +1,7 @@
 import json
 from typing import List
 from services.trader_handler_service import TraderHandlerService
+from services.database_service import DatabaseService
 from models.traders.trader import Trader
 from models.polygon_models import RestEndpoint, RestResponseKeys
 from models.api_models import TraderCreationRequest, TraderType
@@ -10,6 +11,7 @@ from models.traders.vpa_trader import VPATrader
 class ApiService:
     def __init__(self):
         self.trader_handler_service = TraderHandlerService()
+        self.db_service = DatabaseService()
 
     def add_trader(self, trader_creation_request: TraderCreationRequest):
         match trader_creation_request.trader_type:

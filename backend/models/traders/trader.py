@@ -6,42 +6,20 @@ from shared_services.schwab_account_service import SchwabAccountService
 from models.polygon_models import RestEndpoint, RestResponseType, RestEvents
 from models.redis_models import RedisMessage
 from models.two_decimal import TwoDecimal
+from models.traders.state_models.trader_state import TraderState
 from models.schwab_models import BasicOrder
 import os
 
 class Trader(BaseModel):
-    name: str
-    cash_basis: TwoDecimal
-    cash: TwoDecimal
-    description: str
-    awaiting_trade_confirmation: bool = False
-    order_id: str | None = None
-    current_order: BasicOrder | None = None
-    profit: TwoDecimal
-    bought_price: TwoDecimal
-    current_price: TwoDecimal
-    holdings: int
-    holding: bool
-    paper: bool
+    state: TraderState
 
     _r: RedisService = PrivateAttr()
     _p: PolygonRESTService = PrivateAttr()
     _a: SchwabAccountService = PrivateAttr()
     _message_callback: callable = PrivateAttr()
 
-    # **args is necessary to forward any extra parameters to BaseModel needed by classes that inherit Trader
-    def __init__(self, name: str, cash: float, paper:bool, init_data = None, **args):
-        super().__init__(name= name, 
-                         cash_basis=cash, 
-                         cash=cash,
-                         description="Default Trader.",
-                         profit=TwoDecimal(0), 
-                         bought_price=TwoDecimal(0),
-                         current_price=TwoDecimal(0),
-                         holdings=0,
-                         holding=False,
-                         paper=paper,
-                         **args)
+    def __init__(self, state: TraderState, init_data = None):
+        super().__init__(state = state)
         self._r = RedisService(
             os.getenv("REDIS_HOST"),
             os.getenv("REDIS_USERNAME"),
@@ -50,7 +28,7 @@ class Trader(BaseModel):
         self._p = PolygonRESTService(
             os.getenv("POLYGON_API_KEY")
         )
-        self._a = SchwabAccountService(paper=self.paper)
+        self._a = SchwabAccountService(paper=self.state.paper)
 
         # function used to initialize trader values if needed
         if init_data is not None:
@@ -62,9 +40,9 @@ class Trader(BaseModel):
         pass
 
     def verify_order_execution(self):
-        if self._a.get_order_status(self.order_id) == "Filled":
-            self.awaiting_trade_confirmation = False
-            self.order_id = None
+        if self._a.get_order_status(self.state.order_id) == "Filled":
+            self.state.awaiting_trade_confirmation = False
+            self.state.order_id = None
             self.update_trader_after_trade()
 
             return "Filled"
@@ -88,19 +66,19 @@ class Trader(BaseModel):
 
     def set_paper(self, paper: bool):
         self.reset_trader()
-        self.paper = paper
+        self.state.paper = paper
         self._a.set_paper(paper)
 
     def reset_trader(self):
-        self.cash = self.cash_basis
-        self.awaiting_trade_confirmation = False
-        self.order_id = None
-        self.current_order = None
-        self.profit = TwoDecimal(0)
-        self.bought_price = TwoDecimal(0)
-        self.current_price = TwoDecimal(0)
-        self.holdings = 0
-        self.holding = False
+        self.state.cash = self.state.cash_basis
+        self.state.awaiting_trade_confirmation = False
+        self.state.order_id = None
+        self.state.current_order = None
+        self.state.profit = TwoDecimal(0)
+        self.state.bought_price = TwoDecimal(0)
+        self.state.current_price = TwoDecimal(0)
+        self.state.holdings = 0
+        self.state.holding = False
 
     def get_trader_data(self):
         return self.model_dump()
@@ -109,7 +87,7 @@ class Trader(BaseModel):
         self._callback = callback
 
     def step(self, data=None):
-        if self.awaiting_trade_confirmation:
+        if self.state.awaiting_trade_confirmation:
             status = self.verify_order_execution()
             if status == "Waiting":
                 return

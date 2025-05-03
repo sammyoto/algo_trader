@@ -6,6 +6,7 @@ from models.two_decimal import TwoDecimal, TwoDecimalType
 
 class TraderState(SQLModel, table=True):
     id: str = Field(default_factory=lambda: str(uuid4()), primary_key=True)
+    type: str
     name: str
     description: str
     cash_basis: TwoDecimal = Field(sa_column=Column(TwoDecimalType))
@@ -18,4 +19,8 @@ class TraderState(SQLModel, table=True):
     awaiting_trade_confirmation: bool
     order_id: Optional[str]
     paper: bool
-    trader_type: str  # helps you reload correct logic class
+
+    __mapper_args__ = {
+        "polymorphic_on": "type",         # which column tells us the subclass
+        "polymorphic_identity": "base"    # what value means "this is a base trader"
+    }
