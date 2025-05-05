@@ -7,6 +7,7 @@ from models.two_decimal import TwoDecimal, TwoDecimalType
 from models.traders.state_models.trader_state import TraderState
 
 class VPATraderState(TraderState, table=False):
+    type: str = "vpa"
     ticker: str
     timespan: Timespan
     window: int

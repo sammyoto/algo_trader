@@ -82,7 +82,7 @@ class VPATrader(Trader):
                 return
 
         # order processing
-        self.current_order = order
+        self._current_order = order
         self.order_id = self._a.execute_trade(order)
         status = self.verify_order_execution()
 
@@ -91,21 +91,21 @@ class VPATrader(Trader):
 
 
     def update_trader_after_trade(self):
-        instruction = self.current_order.get_instruction()
+        instruction = self._current_order.get_instruction()
 
         if instruction == "BUY":
-            self.cash -= (self.current_order.get_price() * TwoDecimal(self.current_order.get_quantity()))
-            self.bought_price = self.current_order.get_price()
-            self.holdings = self.current_order.get_quantity()
+            self.cash -= (self._current_order.get_price() * TwoDecimal(self._current_order.get_quantity()))
+            self.bought_price = self._current_order.get_price()
+            self.holdings = self._current_order.get_quantity()
             self.holding = True
         elif instruction == "SELL":
-            self.cash += (self.current_order.get_price() * TwoDecimal(self.current_order.get_quantity()))
-            self.profit += ((self.current_order.get_price() * TwoDecimal(self.current_order.get_quantity())) - (self.bought_price * TwoDecimal(self.current_order.get_quantity())))
+            self.cash += (self._current_order.get_price() * TwoDecimal(self._current_order.get_quantity()))
+            self.profit += ((self._current_order.get_price() * TwoDecimal(self._current_order.get_quantity())) - (self.bought_price * TwoDecimal(self._current_order.get_quantity())))
             self.bought_price = TwoDecimal(0)
-            self.holdings = self.holdings - self.current_order.get_quantity()
+            self.holdings = self.holdings - self._current_order.get_quantity()
             self.holding = False
 
-        self.current_order = None
+        self._current_order = None
     
     def update_trader(self, data: VPADataSchema):
         sma = data.sma

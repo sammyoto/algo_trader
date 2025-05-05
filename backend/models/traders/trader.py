@@ -16,6 +16,7 @@ class Trader(BaseModel):
     _r: RedisService = PrivateAttr()
     _p: PolygonRESTService = PrivateAttr()
     _a: SchwabAccountService = PrivateAttr()
+    _current_order: BasicOrder = PrivateAttr()
     _message_callback: callable = PrivateAttr()
 
     def __init__(self, state: TraderState, init_data = None):
@@ -73,12 +74,12 @@ class Trader(BaseModel):
         self.state.cash = self.state.cash_basis
         self.state.awaiting_trade_confirmation = False
         self.state.order_id = None
-        self.state.current_order = None
         self.state.profit = TwoDecimal(0)
         self.state.bought_price = TwoDecimal(0)
         self.state.current_price = TwoDecimal(0)
         self.state.holdings = 0
         self.state.holding = False
+        self._current_order = None
 
     def get_trader_data(self):
         return self.model_dump()

@@ -14,6 +14,9 @@ class DatabaseService:
     def push(self, data):
         self.session.add(data)
         self.session.commit()
+
+    def get_all_traders(self):
+        return self.session.get(TraderState)
     
     def get_trader_by_id(self, id: int):
         trader = self.session.get(TraderState, id)

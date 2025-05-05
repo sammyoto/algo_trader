@@ -7,42 +7,50 @@ from models.polygon_models import RestEndpoint, RestResponseKeys
 from models.api_models import TraderCreationRequest, TraderType
 from models.traders.simple_threshold_trader import SimpleThresholdTrader
 from models.traders.vpa_trader import VPATrader
+from models.traders.state_models.simple_threshold_trader_state import SimpleThresholdTraderState
+from models.traders.state_models.vpa_trader_state import VPATraderState
 
 class ApiService:
     def __init__(self):
-        self.trader_handler_service = TraderHandlerService()
         self.db_service = DatabaseService()
+        self.trader_handler_service = TraderHandlerService(db_service=self.db_service)
 
     def add_trader(self, trader_creation_request: TraderCreationRequest):
         match trader_creation_request.trader_type:
             case TraderType.SIMPLE_THRESHOLD:
                 trader = SimpleThresholdTrader(
-                    name=trader_creation_request.name,
-                    cash=trader_creation_request.cash,
-                    paper=trader_creation_request.paper,
-                    buy_threshold=trader_creation_request.buy_threshold,
-                    sell_threshold=trader_creation_request.sell_threshold,
-                    ticker=trader_creation_request.ticker
+                    state = SimpleThresholdTraderState(
+                            name=trader_creation_request.name,
+                            cash=trader_creation_request.cash,
+                            paper=trader_creation_request.paper,
+                            buy_threshold=trader_creation_request.buy_threshold,
+                            sell_threshold=trader_creation_request.sell_threshold,
+                            ticker=trader_creation_request.ticker
                 )
+            )                                        
             case TraderType.VOLUME_PRICE_ANALYSIS:
                 trader = VPATrader(
-                    name=trader_creation_request.name, 
-                    cash=trader_creation_request.cash, 
-                    paper=trader_creation_request.paper,
-                    ticker=trader_creation_request.ticker, 
-                    timespan=trader_creation_request.timespan, 
-                    window=trader_creation_request.window, 
-                    volume_sensitivity=trader_creation_request.volume_sensitivity, 
-                    selloff_percentage=trader_creation_request.selloff_percentage, 
-                    stoploss_percentage =trader_creation_request.stoploss_percentage,
+                    state = VPATraderState(
+                        name=trader_creation_request.name, 
+                        cash=trader_creation_request.cash, 
+                        paper=trader_creation_request.paper,
+                        ticker=trader_creation_request.ticker, 
+                        timespan=trader_creation_request.timespan, 
+                        window=trader_creation_request.window, 
+                        volume_sensitivity=trader_creation_request.volume_sensitivity, 
+                        selloff_percentage=trader_creation_request.selloff_percentage, 
+                        stoploss_percentage =trader_creation_request.stoploss_percentage,
+                    ) 
                 )
             case _:
                 trader = SimpleThresholdTrader(
-                    name="Default",
-                    cash=0.0,
-                    buy_threshold=0,
-                    sell_threshold=0,
-                    ticker="NVDA"
+                    state = SimpleThresholdTraderState(
+                        name="Default",
+                        cash=0,
+                        buy_threshold=0,
+                        sell_threshold=0,
+                        ticker="NVDA"
+                    )  
                 )
 
         self.trader_handler_service.add_trader(trader, trader_creation_request.data_frequency)

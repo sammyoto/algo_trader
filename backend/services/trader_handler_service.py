@@ -4,15 +4,17 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 from models.traders.trader import Trader
 from models.api_models import DataFrequency
+from services.database_service import DatabaseService
 
 class TraderHandlerService:
-    def __init__(self):
+    def __init__(self, db_service: DatabaseService):
         self.scheduler = BackgroundScheduler()
+        self.db_service = db_service
         self.traders : Dict[str, Trader] = {}
 
     def add_trader(self, trader: Trader, data_frequency: DataFrequency):
         trader.set_message_callback(self.print_trader_message)
-        self.traders[trader.name] = trader
+        self.traders[trader.state.name] = trader
         self.scheduler.add_job(
             trader.step,
             IntervalTrigger(
@@ -21,7 +23,7 @@ class TraderHandlerService:
                 minutes=data_frequency.minutes,
                 seconds=data_frequency.seconds
             ),
-            id=trader.name
+            id=trader.state.name
         )
 
     def print_trader_message(self, message):
