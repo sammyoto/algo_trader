@@ -10,7 +10,7 @@ from typing import Union, Optional, List, Dict
 class SimpleThresholdTrader(Trader):
     state: SimpleThresholdTraderState
 
-    def __init__(self, state: SimpleThresholdTraderState):
+    def __init__(self, state: SimpleThresholdTraderState, init_data: SimpleThresholdDataSchema = None):
         super().__init__(state=state)
 
         self.description = "A trader that buys and sells at specific price points."

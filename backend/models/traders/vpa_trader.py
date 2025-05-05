@@ -4,42 +4,20 @@ from models.polygon_models import RestEndpoint, RestEvents, Timespan, DateFromTi
 from models.schwab_models import BasicOrder
 from models.trader_models import VPADataSchema, VPAInitializationDataSchema
 from polygon.rest.models import DailyOpenCloseAgg, Agg
+from models.traders.state_models.vpa_trader_state import VPATraderState
 from typing import List
 
 class VPATrader(Trader):
-    ticker: str
-    timespan: Timespan
-    window: int
-    volume_sensitivity: int
-    selloff_percentage: int
-    stoploss_percentage: int
+    state: VPATraderState
 
     # trader state variables 
     limit: int
     sma_aggs: List[Agg]
     daily_aggs: List[DailyOpenCloseAgg]
 
-    def __init__(self, 
-                 name: str, 
-                 cash: float, 
-                 paper: bool,
-                 ticker: str, 
-                 timespan: Timespan, 
-                 window: int, 
-                 volume_sensitivity: int, 
-                 selloff_percentage: int, 
-                 stoploss_percentage: int,
-                 init_data: VPAInitializationDataSchema = None):
-        super().__init__(name=name, 
-                         cash=cash, 
-                         paper=paper,
-                         ticker=ticker, 
-                         timespan=timespan, 
-                         window=window, 
-                         volume_sensitivity=volume_sensitivity, 
-                         selloff_percentage=selloff_percentage, 
-                         stoploss_percentage = stoploss_percentage,
-                         init_data=init_data,
+    def __init__(self, state: VPATraderState, init_data: VPAInitializationDataSchema = None):
+        super().__init__(
+                         state=state,
                          limit=3,
                          sma_aggs=[],
                          daily_aggs=[]
@@ -61,23 +39,23 @@ class VPATrader(Trader):
             today_sma = self.sma_aggs[today_index]
             today_daily = self.daily_aggs[today_index]
 
-            yesterday_threshold = yesterday_sma.volume * (1.0 + (self.volume_sensitivity/100))
-            today_threshold = today_sma.volume * (1.0 - (self.volume_sensitivity/100))
+            yesterday_threshold = yesterday_sma.volume * (1.0 + (self.state.volume_sensitivity/100))
+            today_threshold = today_sma.volume * (1.0 - (self.state.volume_sensitivity/100))
 
             if yesterday_daily.volume >= yesterday_threshold and today_daily.volume <= today_threshold:
-                purchasable_quantity = int(self.cash.floored_div(self.current_price).root)
-                order = BasicOrder(self.current_price, "BUY", purchasable_quantity, self.ticker)
+                purchasable_quantity = int(self.state.cash.floored_div(self.state.current_price).root)
+                order = BasicOrder(self.state.current_price, "BUY", purchasable_quantity, self.state.ticker)
             else:
                 return
 
         # we either want to sell at our selloff percentage or our stoploss percentage
         # sell signal
         else:
-            selloff_threshold = self.bought_price * TwoDecimal((1.0 + (self.selloff_percentage/100)))
-            stoploss_threshold = self.bought_price * TwoDecimal((1.0 - (self.stoploss_percentage/100)))
+            selloff_threshold = self.state.bought_price * TwoDecimal((1.0 + (self.state.selloff_percentage/100)))
+            stoploss_threshold = self.state.bought_price * TwoDecimal((1.0 - (self.state.stoploss_percentage/100)))
 
-            if self.current_price >= selloff_threshold or self.current_price <= stoploss_threshold:
-                order = BasicOrder(self.current_price, "SELL", self.holdings, self.ticker)
+            if self.state.current_price >= selloff_threshold or self.state.current_price <= stoploss_threshold:
+                order = BasicOrder(self.state.current_price, "SELL", self.state.holdings, self.state.ticker)
             else:
                 return
 
@@ -120,21 +98,21 @@ class VPATrader(Trader):
 
         if quote.ask_price and quote.bid_price:
             current_price = (quote.ask_price + quote.bid_price) / 2
-            self.current_price = TwoDecimal(current_price)
+            self.state.current_price = TwoDecimal(current_price)
 
     def get_data(self):
-        sma_endpoint = RestEndpoint(RestEvents.GET_SIMPLE_MOVING_AVERAGE, {"ticker": self.ticker, 
-                                                                           "timespan": self.timespan, 
-                                                                           "window": self.window,
+        sma_endpoint = RestEndpoint(RestEvents.GET_SIMPLE_MOVING_AVERAGE, {"ticker": self.state.ticker, 
+                                                                           "timespan": self.state.timespan, 
+                                                                           "window": self.state.window,
                                                                            "expand_underlying": True,
                                                                            "limit": 1})
         sma_response = self._p.get_endpoint(sma_endpoint)
 
-        daily_aggs_endpoint = RestEndpoint(RestEvents.GET_DAILY_OPEN_CLOSE_AGG, {"ticker": self.ticker,
+        daily_aggs_endpoint = RestEndpoint(RestEvents.GET_DAILY_OPEN_CLOSE_AGG, {"ticker": self.state.ticker,
                                                                                  "date": DateFromTimestamp(sma_response.values[0].timestamp)})
         daily_aggs_response = self._p.get_endpoint(daily_aggs_endpoint)
 
-        last_quote_endpoint = RestEndpoint(RestEvents.GET_LAST_QUOTE, {"ticker": self.ticker})
+        last_quote_endpoint = RestEndpoint(RestEvents.GET_LAST_QUOTE, {"ticker": self.state.ticker})
         quote_response = self._p.get_endpoint(last_quote_endpoint)
 
         return VPADataSchema(sma=sma_response, dailyAggs=daily_aggs_response, quote=quote_response)
@@ -149,15 +127,15 @@ class VPATrader(Trader):
             self.daily_aggs.append(daily_aggs[i])
     
     def get_init_data(self):
-        sma_endpoint = RestEndpoint(RestEvents.GET_SIMPLE_MOVING_AVERAGE, {"ticker": self.ticker, 
-                                                                           "timespan": self.timespan, 
-                                                                           "window": self.window,
+        sma_endpoint = RestEndpoint(RestEvents.GET_SIMPLE_MOVING_AVERAGE, {"ticker": self.state.ticker, 
+                                                                           "timespan": self.state.timespan, 
+                                                                           "window": self.state.window,
                                                                            "expand_underlying": True,
                                                                            "limit": self.limit})
         sma_response = self._p.get_endpoint(sma_endpoint)
         daily_aggs = []
         for i in range(len(sma_response.values)):
-            daily_aggs_endpoint = RestEndpoint(RestEvents.GET_DAILY_OPEN_CLOSE_AGG, {"ticker": self.ticker,
+            daily_aggs_endpoint = RestEndpoint(RestEvents.GET_DAILY_OPEN_CLOSE_AGG, {"ticker": self.state.ticker,
                                                                                      "date": DateFromTimestamp(sma_response.values[i].timestamp)})
             daily_aggs_response = self._p.get_endpoint(daily_aggs_endpoint)
             daily_aggs_response = self._p.get_endpoint(daily_aggs_endpoint)
