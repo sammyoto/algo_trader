@@ -11,7 +11,7 @@ class SimpleThresholdTrader(Trader):
     state: SimpleThresholdTraderState
 
     def __init__(self, state: SimpleThresholdTraderState, init_data: SimpleThresholdDataSchema = None):
-        super().__init__(state=state)
+        super().__init__(state=state, init_data=init_data)
 
         self.description = "A trader that buys and sells at specific price points."
 

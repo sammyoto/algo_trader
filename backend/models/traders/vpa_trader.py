@@ -18,6 +18,7 @@ class VPATrader(Trader):
     def __init__(self, state: VPATraderState, init_data: VPAInitializationDataSchema = None):
         super().__init__(
                          state=state,
+                         init_data=init_data,
                          limit=3,
                          sma_aggs=[],
                          daily_aggs=[]
