@@ -16,6 +16,7 @@ Pre-Hard Launch:
 - Finish Schwab Trader Class
 - Figure out Schwab Trader Secrets refresh
 - Security for only authorized users
+- README
 - Testing
 
 TODO:
