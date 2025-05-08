@@ -8,19 +8,22 @@ from models.redis_models import RedisMessage
 from models.two_decimal import TwoDecimal
 from models.traders.state_models.trader_state import TraderState
 from models.schwab_models import BasicOrder
+from services.database_service import DatabaseService
 import os
 
 class Trader(BaseModel):
     state: TraderState
 
+    _d: DatabaseService = PrivateAttr()
     _r: RedisService = PrivateAttr()
     _p: PolygonRESTService = PrivateAttr()
     _a: SchwabAccountService = PrivateAttr()
-    _current_order: BasicOrder = PrivateAttr()
+    _current_order: BasicOrder|None = PrivateAttr()
     _message_callback: callable = PrivateAttr()
 
-    def __init__(self, state: TraderState, init_data = None):
+    def __init__(self, state: TraderState, db_service: DatabaseService = None, init_data = None):
         super().__init__(state = state)
+        self._d = db_service
         self._r = RedisService(
             os.getenv("REDIS_HOST"),
             os.getenv("REDIS_USERNAME"),
@@ -30,6 +33,7 @@ class Trader(BaseModel):
             os.getenv("POLYGON_API_KEY")
         )
         self._a = SchwabAccountService(paper=self.state.paper)
+        self._current_order = None
 
         # function used to initialize trader values if needed
         if init_data is not None:
@@ -98,3 +102,6 @@ class Trader(BaseModel):
 
         self.update_trader(data)
         self.bsh()
+
+        if self._d != None:
+            self._d.push_trader_state(self.state)

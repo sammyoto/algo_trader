@@ -16,6 +16,9 @@ class ApiService:
         self.trader_handler_service = TraderHandlerService(db_service=self.db_service)
 
     def add_trader(self, trader_creation_request: TraderCreationRequest):
+        if self.db_service.name_exists(trader_creation_request.name):
+            raise ValueError(f"Trader with name '{trader_creation_request.name}' already exists, or has existed in the past. Please choose another name.")
+            
         match trader_creation_request.trader_type:
             case TraderType.SIMPLE_THRESHOLD:
                 trader = SimpleThresholdTrader(
@@ -26,8 +29,9 @@ class ApiService:
                             buy_threshold=trader_creation_request.buy_threshold,
                             sell_threshold=trader_creation_request.sell_threshold,
                             ticker=trader_creation_request.ticker
-                )
-            )                                        
+                    ),
+                    db_service = self.db_service
+                )                                        
             case TraderType.VOLUME_PRICE_ANALYSIS:
                 trader = VPATrader(
                     state = VPATraderState(
@@ -40,7 +44,8 @@ class ApiService:
                         volume_sensitivity=trader_creation_request.volume_sensitivity, 
                         selloff_percentage=trader_creation_request.selloff_percentage, 
                         stoploss_percentage =trader_creation_request.stoploss_percentage,
-                    ) 
+                    ),
+                    db_service = self.db_service 
                 )
             case _:
                 trader = SimpleThresholdTrader(
@@ -50,7 +55,8 @@ class ApiService:
                         buy_threshold=0,
                         sell_threshold=0,
                         ticker="NVDA"
-                    )  
+                    ),
+                    db_service = self.db_service
                 )
 
         self.trader_handler_service.add_trader(trader, trader_creation_request.data_frequency)
@@ -58,11 +64,8 @@ class ApiService:
     def delete_trader(self, trader_name: str):
         self.trader_handler_service.delete_trader(trader_name)
 
+    def get_trader_by_name(self, trader_name: str) -> Trader|str:
+        return self.trader_handler_service.get_trader(trader_name)
+
     def get_all_traders(self):
         return self.trader_handler_service.get_traders()
-    
-    def get_trader_by_name(self, trader_name: str):
-        if trader_name in self.trader_handler_service.traders.keys():
-            return self.trader_handler_service.traders[trader_name]
-        
-        return "Trader not found."

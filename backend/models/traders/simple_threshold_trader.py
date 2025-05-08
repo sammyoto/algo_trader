@@ -6,27 +6,26 @@ from models.trader_models import SimpleThresholdDataSchema
 from models.traders.state_models.simple_threshold_trader_state import SimpleThresholdTraderState
 from polygon.rest.models import LastQuote
 from typing import Union, Optional, List, Dict
+from services.database_service import DatabaseService
 
 class SimpleThresholdTrader(Trader):
     state: SimpleThresholdTraderState
 
-    def __init__(self, state: SimpleThresholdTraderState, init_data: SimpleThresholdDataSchema = None):
-        super().__init__(state=state, init_data=init_data)
-
-        self.description = "A trader that buys and sells at specific price points."
+    def __init__(self, state: SimpleThresholdTraderState, db_service: DatabaseService = None, init_data: SimpleThresholdDataSchema = None):
+        super().__init__(state=state, db_service=db_service, init_data=init_data)
 
     def bsh(self):
         purchasable_quantity = int(self.state.cash.floored_div(self.state.current_price).root)
-
+        
         if not self.state.holding and self.state.current_price <= self.state.buy_threshold:
             order = BasicOrder(self.state.current_price, "BUY", purchasable_quantity, self.state.ticker)
-        elif self.holding and self.state.current_price >= self.state.sell_threshold:
+        elif self.state.holding and self.state.current_price >= self.state.sell_threshold:
             order = BasicOrder(self.state.current_price, "SELL", self.state.holdings, self.state.ticker)
         else:
             return
 
         self._current_order = order
-        self.order_id = self._a.execute_trade(order)
+        self.state.order_id = self._a.execute_trade(order)
         status = self.verify_order_execution()
 
         if status == "Waiting":
@@ -36,16 +35,16 @@ class SimpleThresholdTrader(Trader):
         instruction = self._current_order.get_instruction()
 
         if instruction == "BUY":
-            self.cash -= (self._current_order.get_price() * TwoDecimal(self._current_order.get_quantity()))
-            self.bought_price = self._current_order.get_price()
-            self.holdings = self._current_order.get_quantity()
-            self.holding = True
+            self.state.cash -= (self._current_order.get_price() * TwoDecimal(self._current_order.get_quantity()))
+            self.state.bought_price = self._current_order.get_price()
+            self.state.holdings = self._current_order.get_quantity()
+            self.state.holding = True
         elif instruction == "SELL":
-            self.cash += (self._current_order.get_price() * TwoDecimal(self._current_order.get_quantity()))
-            self.profit += ((self._current_order.get_price() * TwoDecimal(self._current_order.get_quantity())) - (self.bought_price * TwoDecimal(self._current_order.get_quantity())))
-            self.bought_price = TwoDecimal(0)
-            self.holdings = self.holdings - self._current_order.get_quantity()
-            self.holding = False
+            self.state.cash += (self._current_order.get_price() * TwoDecimal(self._current_order.get_quantity()))
+            self.state.profit += ((self._current_order.get_price() * TwoDecimal(self._current_order.get_quantity())) - (self.state.bought_price * TwoDecimal(self._current_order.get_quantity())))
+            self.state.bought_price = TwoDecimal(0)
+            self.state.holdings = self.state.holdings - self._current_order.get_quantity()
+            self.state.holding = False
 
         self._current_order = None
     
