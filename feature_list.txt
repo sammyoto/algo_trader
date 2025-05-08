@@ -16,8 +16,10 @@ Pre-Hard Launch:
 - Finish Schwab Trader Class
 - Figure out Schwab Trader Secrets refresh
 - Security for only authorized users
+- Crypto Trading Support
 - README
 - Testing
 
 TODO:
-- Crypto Trading Support
+- Test db changes
+- Make API open to db changes
