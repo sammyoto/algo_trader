@@ -9,6 +9,7 @@ MVP Frontend:
 - Activity view
 - Bots page
 - Bots list page
+- Create bot page
 - Backtesting page
 
 Pre-Hard Launch:
