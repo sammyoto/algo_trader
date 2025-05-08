@@ -1,11 +1,8 @@
 MVP Backend:
-- Backtesting
-- Finish Schwab Trader Class
 - Analyzing previous traders
 - Browsing traders
 - Trader templates
-- Testing
-- Security for only authorized users
+- Backtesting
 
 MVP Frontend:
 - Accounts view
@@ -13,6 +10,12 @@ MVP Frontend:
 - Bots page
 - Bots list page
 - Backtesting page
+
+Pre-Hard Launch:
+- Finish Schwab Trader Class
+- Figure out Schwab Trader Secrets refresh
+- Security for only authorized users
+- Testing
 
 TODO:
 - Crypto Trading Support
