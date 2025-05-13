@@ -2,13 +2,13 @@ import json
 from typing import List
 from services.trader_handler_service import TraderHandlerService
 from services.database_service import DatabaseService
+from models.two_decimal import TwoDecimal
 from models.traders.trader import Trader
 from models.polygon_models import RestEndpoint, RestResponseKeys
 from models.api_models import TraderCreationRequest, TraderType
 from models.traders.simple_threshold_trader import SimpleThresholdTrader
 from models.traders.vpa_trader import VPATrader
-from models.traders.state_models.simple_threshold_trader_state import SimpleThresholdTraderState
-from models.traders.state_models.vpa_trader_state import VPATraderState
+from models.traders.state_models.trader_state import TraderState
 
 class ApiService:
     def __init__(self):
@@ -18,25 +18,27 @@ class ApiService:
     def add_trader(self, trader_creation_request: TraderCreationRequest):
         if self.db_service.name_exists(trader_creation_request.name):
             raise ValueError(f"Trader with name '{trader_creation_request.name}' already exists, or has existed in the past. Please choose another name.")
-            
+        
         match trader_creation_request.trader_type:
             case TraderType.SIMPLE_THRESHOLD:
                 trader = SimpleThresholdTrader(
-                    state = SimpleThresholdTraderState(
+                    state = TraderState(
                             name=trader_creation_request.name,
-                            cash=trader_creation_request.cash,
+                            type="simple_threshold",
+                            cash=TwoDecimal(trader_creation_request.cash),
                             paper=trader_creation_request.paper,
-                            buy_threshold=trader_creation_request.buy_threshold,
-                            sell_threshold=trader_creation_request.sell_threshold,
+                            buy_threshold=TwoDecimal(trader_creation_request.buy_threshold),
+                            sell_threshold=TwoDecimal(trader_creation_request.sell_threshold),
                             ticker=trader_creation_request.ticker
                     ),
                     db_service = self.db_service
                 )                                        
             case TraderType.VOLUME_PRICE_ANALYSIS:
                 trader = VPATrader(
-                    state = VPATraderState(
-                        name=trader_creation_request.name, 
-                        cash=trader_creation_request.cash, 
+                    state = TraderState(
+                        name=trader_creation_request.name,
+                        type="vpa",
+                        cash=TwoDecimal(trader_creation_request.cash), 
                         paper=trader_creation_request.paper,
                         ticker=trader_creation_request.ticker, 
                         timespan=trader_creation_request.timespan, 
@@ -49,16 +51,18 @@ class ApiService:
                 )
             case _:
                 trader = SimpleThresholdTrader(
-                    state = SimpleThresholdTraderState(
+                    state = TraderState(
                         name="Default",
-                        cash=0,
-                        buy_threshold=0,
-                        sell_threshold=0,
+                        type="simple_threshold",
+                        cash=TwoDecimal(0),
+                        buy_threshold=TwoDecimal(0),
+                        sell_threshold=TwoDecimal(0),
                         ticker="NVDA"
                     ),
                     db_service = self.db_service
                 )
 
+        self.db_service.push_trader_state(trader.state)
         self.trader_handler_service.add_trader(trader, trader_creation_request.data_frequency)
 
     def delete_trader(self, trader_name: str):

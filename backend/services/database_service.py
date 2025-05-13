@@ -1,18 +1,19 @@
 from sqlmodel import SQLModel, create_engine, Session, select
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, with_polymorphic
 
 # All tables to be created
 from models.traders.state_models.trader_state import TraderState
-from models.traders.state_models.simple_threshold_trader_state import SimpleThresholdTraderState
-from models.traders.state_models.vpa_trader_state import VPATraderState
+# from models.traders.state_models.simple_threshold_trader_state import SimpleThresholdTraderState
+# from models.traders.state_models.vpa_trader_state import VPATraderState
 
 class DatabaseService:
     db_url: str
 
-    def __init__(self, db_url: str="sqlite:///:memory:"):
-        self.engine = create_engine(db_url, connect_args={"check_same_thread": False})
+    def __init__(self, db_url: str="sqlite:///tmp.db"):
+        self.engine = create_engine(db_url, connect_args={"check_same_thread": False}, echo=True)
         self.session = Session(self.engine)
         SQLModel.metadata.create_all(self.engine)
+        print(SQLModel.metadata.tables.keys())
 
     def push_trader_state(self, trader: TraderState):
         self.session.add(trader)

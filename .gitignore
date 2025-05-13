@@ -5,3 +5,4 @@ __pycache__
 .env
 backend/tokens.json
 database.db
+tmp.db

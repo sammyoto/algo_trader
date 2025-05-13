@@ -5,19 +5,17 @@ from models.polygon_models import RestEndpoint, RestEvents, Timespan, DateFromTi
 from models.schwab_models import BasicOrder
 from models.trader_models import VPADataSchema, VPAInitializationDataSchema
 from polygon.rest.models import DailyOpenCloseAgg, Agg
-from models.traders.state_models.vpa_trader_state import VPATraderState
+from models.traders.state_models.trader_state import TraderState
 from services.database_service import DatabaseService
 from typing import List
 
 class VPATrader(Trader):
-    state: VPATraderState
-
     # trader state variables
     _limit: int = PrivateAttr(default=0)
     _sma_aggs: List[Agg] = PrivateAttr(default=[])
     _daily_aggs: List[DailyOpenCloseAgg] = PrivateAttr(default=[])
 
-    def __init__(self, state: VPATraderState, db_service: DatabaseService = None, init_data: VPAInitializationDataSchema = None):
+    def __init__(self, state: TraderState, db_service: DatabaseService = None, init_data: VPAInitializationDataSchema = None):
         super().__init__(
                          state=state,
                          db_service=db_service,

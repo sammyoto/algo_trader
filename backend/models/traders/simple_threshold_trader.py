@@ -3,15 +3,15 @@ from models.two_decimal import TwoDecimal
 from models.polygon_models import RestEndpoint, RestEvents
 from models.schwab_models import BasicOrder
 from models.trader_models import SimpleThresholdDataSchema
-from models.traders.state_models.simple_threshold_trader_state import SimpleThresholdTraderState
+from models.traders.state_models.trader_state import TraderState
 from polygon.rest.models import LastQuote
 from typing import Union, Optional, List, Dict
 from services.database_service import DatabaseService
 
 class SimpleThresholdTrader(Trader):
-    state: SimpleThresholdTraderState
+    state: TraderState
 
-    def __init__(self, state: SimpleThresholdTraderState, db_service: DatabaseService = None, init_data: SimpleThresholdDataSchema = None):
+    def __init__(self, state: TraderState, db_service: DatabaseService = None, init_data: SimpleThresholdDataSchema = None):
         super().__init__(state=state, db_service=db_service, init_data=init_data)
 
     def bsh(self):
