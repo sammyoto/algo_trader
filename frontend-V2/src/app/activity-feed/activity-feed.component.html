@@ -1,9 +1,9 @@
 <div id="main">
     <div id="activity-list-container">
-        <h3 id="list-title">Activity Feed</h3>
-        <ul id="list">
+        <h3 class="account-summary-title">Activity Feed</h3>
+        <ul class="highlight-list">
             @for(activity of mock_activities; track activity.name) {
-                <li class="list-item">
+                <li>
                     <strong>{{ activity.timestamp }} - Trader: {{ activity.name }} - {{ activity.message }}</strong>
                 </li>
             }

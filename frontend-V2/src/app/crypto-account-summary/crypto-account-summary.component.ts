@@ -7,5 +7,6 @@ import { Component } from '@angular/core';
   styleUrl: './crypto-account-summary.component.css'
 })
 export class CryptoAccountSummaryComponent {
-
+  account_value: number = 0;
+  cash: number = 0;
 }

@@ -1,23 +1,15 @@
 #main {
     height: 100%;
-    width: 100%;
+    width: 98%;
+    margin: 0 auto;
 }
 
 #activity-list-container {
-    width: 95%;
-    height: 95%;
+    padding: 10px;
+    background-color: var(--secondary-bg-color);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 2px solid rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-}
-
-#list-title {
-    align-content: center;
-}
-
-#list {
-
-}
-
-.list-item {
-
 }

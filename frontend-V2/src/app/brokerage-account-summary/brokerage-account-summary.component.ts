@@ -7,5 +7,6 @@ import { Component } from '@angular/core';
   styleUrl: './brokerage-account-summary.component.css'
 })
 export class BrokerageAccountSummaryComponent {
-
+  account_value: number = 0;
+  cash: number = 0;
 }
