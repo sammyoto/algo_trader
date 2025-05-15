@@ -1,0 +1,35 @@
+.bot-table {
+    margin: 0 auto;
+    margin-top: 10 auto;
+    width: 99%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: var(--primary-bg-color);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .bot-table thead {
+    background-color: var(--secondary-bg-color);
+  }
+  
+  .bot-table th,
+  .bot-table td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .bot-table tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+  }
+  
+  .bot-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  .clickable-row {
+    cursor: pointer;
+    transition: var(--primary-background-color) 0.2s ease;
+  }

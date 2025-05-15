@@ -11,7 +11,6 @@ html, body {
 }
 
 :root {
-    /*default theme*/
     --primary-bg-color: #333333;
     --secondary-bg-color: #444444;
     --positive-values: #5efd96;
@@ -21,6 +20,17 @@ html, body {
     --secondary-text-color: #dbdbdb;
     --link-color: #1a73e8;
 }
+
+/* :root {
+    --primary-bg-color: #23322D;
+    --secondary-bg-color: #2E4B47;
+    --positive-values: #5efd96;
+    --negative-values: #fd5e5e;
+    --graph-color: #965efd;
+    --primary-text-color: #000000;
+    --secondary-text-color: #dbdbdb;
+    --link-color: #1a73e8;
+} */
 
 .account-summary {
   display: flex;

@@ -8,5 +8,5 @@ export const routes: Routes = [
     { path: '', component: HomeComponent },
     { path: 'bots', component: BotListComponent },
     { path: 'bots/create', component: CreateBotComponent },
-    { path: 'bots/page', component: BotPageComponent }
+    { path: 'bots/:name', component: BotPageComponent }
 ];

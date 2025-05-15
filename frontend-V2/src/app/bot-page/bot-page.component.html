@@ -1,1 +1,53 @@
-<p>bot-page works!</p>
+<div class="bot-page-container">
+
+    <!-- Top Section -->
+    <div class="top-section">
+      <div class="chart-container">
+        <h3>Profit Over Time</h3>
+        
+      </div>
+    </div>
+  
+    <!-- Bottom Section -->
+    <div class="bottom-section">
+      <h3>Bot Parameters</h3>
+      <div class="param-grid">
+        <div class="param">
+          Name: {{ bot_details?.name }}
+        </div>
+        <div class="param">
+          Type: {{ bot_details?.type }}
+        </div>
+        <div class="param">
+          Cash: {{ bot_details?.cash }}
+        </div>
+        <div class="param">
+          Cash Basis: {{ bot_details?.cash_basis }}
+        </div>
+        <div class="param">
+          Profit: {{ bot_details?.profit }}
+        </div>
+        <div class="param">
+          Current Price: {{ bot_details?.current_price }}
+        </div>
+        <div class="param">
+          Holdings: {{ bot_details?.holdings }}
+        </div>
+        <div class="param">
+          Holding: {{ bot_details?.holding }}
+        </div>
+        <div class="param">
+          Ticker: {{ bot_details?.ticker }}
+        </div>
+        <div class="param">
+          Buy Threshold: {{ bot_details?.buy_threshold }}
+        </div>
+        <div class="param">
+          Sell Threshold: {{ bot_details?.sell_threshold }}
+        </div>
+        <!-- Add more as needed -->
+      </div>
+    </div>
+  
+  </div>
+  

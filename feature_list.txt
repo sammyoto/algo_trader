@@ -13,6 +13,7 @@ MVP Frontend:
 - Backtesting page
 
 Pre-Hard Launch:
+- Active/Retired Bot
 - Finish Schwab Trader Class
 - Figure out Schwab Trader Secrets refresh
 - Security for only authorized users
