@@ -32,6 +32,36 @@
     color: var(--link-color); /* Link text color */
 }
 
+.dropdown {
+  position: relative;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: var(--primary-bg-color);
+  min-width: 160px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  flex-direction: column;
+}
+
+.dropdown-content a {
+  padding: 10px 12px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: var(--secondary-bg-color);
+}
+
+.dropdown:hover .dropdown-content {
+  display: flex;
+}
+
 .logo {
     flex: 0 0 auto;
 }

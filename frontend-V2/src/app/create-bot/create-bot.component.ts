@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import * as BotModels from '../../shared/bot-models';
 
 @Component({
   selector: 'app-create-bot',
