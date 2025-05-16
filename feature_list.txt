@@ -23,5 +23,5 @@ Pre-Hard Launch:
 
 TODO:
 - Fix VPA trader
-- Test db changes
+- Figure out why DB doesnt work
 - Make API open to db changes
