@@ -10,7 +10,7 @@ class TraderHandlerService:
     def __init__(self, db_service: DatabaseService):
         self.scheduler = BackgroundScheduler()
         self.db_service = db_service
-        self.traders : Dict[str, Trader] = {}
+        self.traders: Dict[str, Trader] = {}
 
     def add_trader(self, trader: Trader, data_frequency: DataFrequency):
         trader.set_message_callback(self.print_trader_message)
@@ -42,5 +42,5 @@ class TraderHandlerService:
         
         raise KeyError("Trader not found.")
     
-    def get_traders(self):
-        return self.traders
+    def get_trader_states(self):
+        return [trader.state for trader in self.traders.values()]

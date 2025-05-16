@@ -10,15 +10,14 @@ class DatabaseService:
     db_url: str
 
     def __init__(self, db_url: str="sqlite:///tmp.db"):
-        self.engine = create_engine(db_url, connect_args={"check_same_thread": False}, echo=True)
+        self.engine = create_engine(db_url, connect_args={"check_same_thread": False}, echo=False)
         self.session = Session(self.engine)
         SQLModel.metadata.create_all(self.engine)
         print(SQLModel.metadata.tables.keys())
 
     def push_trader_state(self, trader: TraderState):
-        self.session.add(trader)
+        self.session.merge(trader)
         self.session.commit()
-        self.session.refresh(trader)
         return trader
 
     def get_all_traders(self):

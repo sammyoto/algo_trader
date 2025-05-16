@@ -22,5 +22,6 @@ Pre-Hard Launch:
 - Testing
 
 TODO:
+- Fix VPA trader
 - Test db changes
 - Make API open to db changes

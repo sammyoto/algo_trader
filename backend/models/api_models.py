@@ -44,6 +44,6 @@ class TraderCreationRequest(BaseModel):
     sell_threshold: Optional[str] = None
     timespan: Optional[Timespan] = None
     window: Optional[int] = None
-    volume_sensitivity: Optional[float] = None
-    selloff_percentage: Optional[float] = None
-    stoploss_percentage: Optional[float] = None
+    volume_sensitivity: Optional[int] = None
+    selloff_percentage: Optional[int] = None
+    stoploss_percentage: Optional[int] = None

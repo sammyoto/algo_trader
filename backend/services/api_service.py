@@ -18,13 +18,13 @@ class ApiService:
     def add_trader(self, trader_creation_request: TraderCreationRequest):
         if self.db_service.name_exists(trader_creation_request.name):
             raise ValueError(f"Trader with name '{trader_creation_request.name}' already exists, or has existed in the past. Please choose another name.")
-        
         match trader_creation_request.trader_type:
             case TraderType.SIMPLE_THRESHOLD:
                 trader = SimpleThresholdTrader(
                     state = TraderState(
                             name=trader_creation_request.name,
                             type="simple_threshold",
+                            cash_basis=TwoDecimal(trader_creation_request.cash),
                             cash=TwoDecimal(trader_creation_request.cash),
                             paper=trader_creation_request.paper,
                             buy_threshold=TwoDecimal(trader_creation_request.buy_threshold),
@@ -38,6 +38,7 @@ class ApiService:
                     state = TraderState(
                         name=trader_creation_request.name,
                         type="vpa",
+                        cash_basis=TwoDecimal(trader_creation_request.cash),
                         cash=TwoDecimal(trader_creation_request.cash), 
                         paper=trader_creation_request.paper,
                         ticker=trader_creation_request.ticker, 
@@ -49,11 +50,13 @@ class ApiService:
                     ),
                     db_service = self.db_service 
                 )
+                print('here')
             case _:
                 trader = SimpleThresholdTrader(
                     state = TraderState(
                         name="Default",
                         type="simple_threshold",
+                        cash_basis=TwoDecimal(0),
                         cash=TwoDecimal(0),
                         buy_threshold=TwoDecimal(0),
                         sell_threshold=TwoDecimal(0),
@@ -61,9 +64,10 @@ class ApiService:
                     ),
                     db_service = self.db_service
                 )
-
+        print(self.trader_handler_service.traders)
         self.db_service.push_trader_state(trader.state)
         self.trader_handler_service.add_trader(trader, trader_creation_request.data_frequency)
+        print(self.trader_handler_service.traders)
 
     def delete_trader(self, trader_name: str):
         self.trader_handler_service.delete_trader(trader_name)
@@ -72,4 +76,5 @@ class ApiService:
         return self.trader_handler_service.get_trader(trader_name)
 
     def get_all_traders(self):
-        return self.trader_handler_service.get_traders()
+        print(self.trader_handler_service.get_trader_states())
+        return self.trader_handler_service.get_trader_states()

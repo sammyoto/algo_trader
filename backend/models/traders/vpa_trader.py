@@ -11,7 +11,7 @@ from typing import List
 
 class VPATrader(Trader):
     # trader state variables
-    _limit: int = PrivateAttr(default=0)
+    _limit: int = PrivateAttr(default=3)
     _sma_aggs: List[Agg] = PrivateAttr(default=[])
     _daily_aggs: List[DailyOpenCloseAgg] = PrivateAttr(default=[])
 
@@ -118,7 +118,7 @@ class VPATrader(Trader):
     def on_trader_init(self, data: VPAInitializationDataSchema):
         sma = data.sma
         daily_aggs = data.dailyAggs
-
+       
         for i in range(len(sma.underlying.aggregates)):
             self._sma_aggs.append(sma.underlying.aggregates[i])
             self._daily_aggs.append(daily_aggs[i])
@@ -134,7 +134,6 @@ class VPATrader(Trader):
         for i in range(len(sma_response.values)):
             daily_aggs_endpoint = RestEndpoint(RestEvents.GET_DAILY_OPEN_CLOSE_AGG, {"ticker": self.state.ticker,
                                                                                      "date": DateFromTimestamp(sma_response.values[i].timestamp)})
-            daily_aggs_response = self._p.get_endpoint(daily_aggs_endpoint)
             daily_aggs_response = self._p.get_endpoint(daily_aggs_endpoint)
             daily_aggs.append(daily_aggs_response)
 

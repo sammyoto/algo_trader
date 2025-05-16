@@ -23,12 +23,12 @@ export class BackendService {
       }
       return response.json();
     }).then(json => {
-      var data: TraderState[] = [];
-      for (const [key, value] of Object.entries(json['body'])) {
-        console.log(key, value);
-        data.push(json['body'][key]['state'] as TraderState);
+      var traders: TraderState[] = [];
+      for (const trader of json['body']) {
+        console.log(trader)
+        traders.push(trader as TraderState);
       }
-      return data;
+      return traders;
     })
     .catch(error => {
       console.error('There was a problem with the fetch operation:', error);
