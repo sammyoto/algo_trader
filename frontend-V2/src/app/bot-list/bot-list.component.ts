@@ -22,6 +22,7 @@ export class BotListComponent {
       if (!data) {
         console.error('No data received from backend');
       } else {
+        console.log(data)
         this.bots = data;
       }
     });

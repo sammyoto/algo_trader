@@ -32,30 +32,18 @@ class TraderType(str, Enum):
     SIMPLE_THRESHOLD = "simple_threshold"
     VOLUME_PRICE_ANALYSIS = "vpa"
     
-class BaseTraderCreationRequest(BaseModel):
+class TraderCreationRequest(BaseModel):
     trader_type: TraderType
     name: str
-    cash: float
+    cash: str
     paper: bool = True
-    init_data: dict = None
+    init_data: Optional[dict] = None
     data_frequency: DataFrequency
-
-class SimpleThresholdTraderCreationRequest(BaseTraderCreationRequest):
-    trader_type: Literal[TraderType.SIMPLE_THRESHOLD]
-    buy_threshold: float
-    sell_threshold: float
-    ticker: str
-
-class VPATraderCreationRequest(BaseTraderCreationRequest):
-    trader_type: Literal[TraderType.VOLUME_PRICE_ANALYSIS]
-    ticker: str
-    timespan: Timespan
-    window: int
-    volume_sensitivity: int
-    selloff_percentage: int
-    stoploss_percentage: int
-
-TraderCreationRequest = Union[
-                                SimpleThresholdTraderCreationRequest,
-                                VPATraderCreationRequest
-                            ]
+    ticker: Optional[str] = None
+    buy_threshold: Optional[str] = None
+    sell_threshold: Optional[str] = None
+    timespan: Optional[Timespan] = None
+    window: Optional[int] = None
+    volume_sensitivity: Optional[float] = None
+    selloff_percentage: Optional[float] = None
+    stoploss_percentage: Optional[float] = None

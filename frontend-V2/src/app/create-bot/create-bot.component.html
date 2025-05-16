@@ -1,1 +1,71 @@
-<p>create-bot works!</p>
+<div *ngIf="errorMessage" class="error-banner">
+    {{ errorMessage }}
+</div>
+<form [formGroup]="trader_creation_form">
+    <div>
+        <label for="trader_type">Trader Type:</label>
+        <select formControlName="trader_type" id="trader_type" [(ngModel)]="selected_option">
+            <option *ngFor="let type of trader_types" [value]="type">{{ type }}</option>
+        </select>   
+    </div>
+    <div>
+        <label for="name">Name:</label>
+        <input type="text" id="name" formControlName="name">
+    </div>  
+    <div>
+        <label for="cash">Cash:</label>
+        <input type="text" id="cash" formControlName="cash">
+    </div>
+    <div>
+        <label for="data_frequency">Data Frequency:</label>
+        <div formGroupName="data_frequency">
+            <label>Days:</label>
+            <input type="number" formControlName="days">
+          
+            <label>Hours:</label>
+            <input type="number" formControlName="hours">
+          
+            <label>Minutes:</label>
+            <input type="number" formControlName="minutes">
+          
+            <label>Seconds:</label>
+            <input type="number" formControlName="seconds">
+        </div>
+    </div>
+    <div *ngIf="is_ticker_visible()">
+        <label for="ticker">Ticker:</label>
+        <input type="text" id="ticker" formControlName="ticker">
+    </div>
+    <div *ngIf="is_buy_threshold_visible()">
+        <label for="buy_threshold">Buy Threshold:</label>
+        <input type="text" id="buy_threshold" formControlName="buy_threshold">
+    </div>
+    <div *ngIf="is_sell_threshold_visible()">
+        <label for="sell_threshold">Sell Threshold:</label>
+        <input type="text" id="sell_threshold" formControlName="sell_threshold">
+    </div>
+    <div *ngIf="is_timespan_visible()">
+        <label for="timespan">Timespan:</label>
+        <select formControlName="timespan" id="timespan">
+            <option *ngFor="let timespan of timespan_options" [value]="timespan">{{ timespan }}</option>
+        </select>   
+    </div>
+    <div *ngIf="is_window_visible()">
+        <label for="window">Window:</label>
+        <input type="text" id="window" formControlName="window">
+    </div>
+    <div *ngIf="is_volume_sensitivity_visible()">
+        <label for="volume_sensitivity">Volume Sensitivity:</label>
+        <input type="text" id="volume_sensitivity" formControlName="volume_sensitivity">
+    </div>
+    <div *ngIf="is_selloff_percentage_visible()">
+        <label for="selloff_percentage">Selloff Percentage:</label>
+        <input type="text" id="selloff_percentage" formControlName="selloff_percentage">
+    </div>
+    <div *ngIf="is_stoploss_percentage_visible()">
+        <label for="stoploss_percentage">Stoploss Percentage:</label>
+        <input type="text" id="stoploss_percentage" formControlName="stoploss_percentage">
+    </div>
+</form>
+
+<button type="button" (click)="send_trader_creation_request()">Create Trader</button>

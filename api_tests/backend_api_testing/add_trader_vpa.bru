@@ -1,7 +1,7 @@
 meta {
-  name: add_trader
+  name: add_trader_vpa
   type: http
-  seq: 3
+  seq: 6
 }
 
 post {
@@ -12,8 +12,8 @@ post {
 
 body:json {
   {
-    "trader_type": "simple_threshold",
-    "name": "Test2",
+    "trader_type": "vpa",
+    "name": "vpa_test",
     "cash": "1000.0",
     "paper": true,
     "data_frequency": {
@@ -22,9 +22,12 @@ body:json {
       "minutes": 0,
       "seconds": 5
     },
-    "buy_threshold": "100.0",
-    "sell_threshold": "200.0",
-    "ticker": "NVDA"
+    "ticker": "NVDA",
+    "timespan": "minute",
+    "window": 3,
+    "volume_sensitivity": 0.2,
+    "selloff_percentage": 0.2,
+    "stoploss_percentage": 0.2
   }
   
 }
