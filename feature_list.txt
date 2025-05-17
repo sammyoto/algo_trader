@@ -22,6 +22,5 @@ Pre-Hard Launch:
 - Testing
 
 TODO:
+- Bots Page
 - Fix VPA trader
-- Figure out why DB doesnt work
-- Make API open to db changes

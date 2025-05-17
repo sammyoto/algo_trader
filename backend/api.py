@@ -39,7 +39,7 @@ async def add_trader(trader_creation_request: TraderCreationRequest):
 @app.get("/trader")
 async def get_all_traders():
     try:
-        traders = api_service.get_all_traders()
+        traders = api_service.get_latest_traders()
         return APIResponse(status=Status.SUCCESS, message="Get traders succeeded.", body=traders)
     except Exception as e:
         return APIResponse(status=Status.FAILED, message="Get traders failed.", body=str(e))

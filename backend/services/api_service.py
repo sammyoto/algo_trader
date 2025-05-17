@@ -68,10 +68,12 @@ class ApiService:
 
     def delete_trader(self, trader_name: str):
         self.trader_handler_service.delete_trader(trader_name)
-
-    def get_trader_by_name(self, trader_name: str) -> Trader|str:
-        return self.trader_handler_service.get_trader(trader_name)
-
-    def get_all_traders(self):
-        print(self.trader_handler_service.get_trader_states())
-        return self.trader_handler_service.get_trader_states()
+    
+    def get_trader_by_name(self, trader_name: str):
+        return self.db_service.get_trader_by_name(trader_name)
+    
+    def get_latest_trader_by_name(self, trader_name: str):
+        return self.db_service.get_latest_trader_by_name(trader_name)
+    
+    def get_latest_traders(self):
+        return self.db_service.get_latest_traders()

@@ -55,7 +55,11 @@ export class BackendService {
       }
       return response.json();
     }).then(json => {
-      return this.json_to_trader(json['body']['state']);
+      var traders: TraderState[] = [];
+      for (const trader of json['body']) {
+        traders.push(this.json_to_trader(trader));
+      }
+      return traders;
     })
     .catch(error => {
       console.error('There was a problem with the fetch operation:', error);
