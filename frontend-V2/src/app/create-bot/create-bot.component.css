@@ -1,0 +1,51 @@
+.trader-form-container {
+    display: flex;
+    gap: 2rem;
+    padding: 1rem;
+  }
+  
+  .description-panel {
+    width: 35%;
+    padding-right: 1rem;
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    height: fit-content;
+  }
+  
+  .form-panel {
+    width: 65%;
+  }
+  
+  .error-banner {
+    color: #b00020;
+    background-color: #fdd;
+    padding: 0.5rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+  }
+
+  .hovered-title{
+    font-size:x-large;
+  }
+  
+  form > div {
+    margin-bottom: 1rem;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-weight: bold;
+  }
+  
+  input[type="text"],
+  input[type="number"],
+  select {
+    width: 100%;
+    padding: 0.4rem;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  

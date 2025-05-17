@@ -8,16 +8,16 @@ MVP Frontend:
 - Accounts view
 - Activity view
 - Bots page
-- Bots list page
-- Create bot page
+- Past bots page
 - Backtesting page
 
 Pre-Hard Launch:
-- Active/Retired Bot
+- Active/Retired Bot and Bot Market (Stocks/Crypto)
 - Finish Schwab Trader Class
 - Figure out Schwab Trader Secrets refresh
 - Security for only authorized users
 - Crypto Trading Support
+- Pretty up Frontend
 - README
 - Testing
 

@@ -17,8 +17,40 @@ export class CreateBotComponent {
   ];
   selected_option = BotModels.TraderType.SIMPLE_THRESHOLD
   errorMessage: string | null = null;
+
+  hoveredField: keyof BotModels.TraderCreationRequest | null = null;
+
+  setHoveredField(field: keyof BotModels.TraderCreationRequest) {
+    this.hoveredField = field;
+  }
   
-  constructor(private backendService: BackendService) { console.log(this.trader_types)}
+  clearHoveredField() {
+    this.hoveredField = null;
+  }
+
+  AlgoDescriptions: Record<string, string> = {
+    "simple_threshold": "A simple trader that buys and sells at certain thresholds.",
+    "vpa": "A trader that trades based off of Volume Price Analysis."
+  }
+
+  TraderFieldDescriptions: Record<keyof BotModels.TraderCreationRequest, string> = {
+    trader_type: "The type of trader logic to use.",
+    name: "The display name for this trader instance.",
+    cash: "The initial capital allocated to the trader.",
+    paper: "Whether this trader is in paper (simulated) mode. Defaults to true.",
+    init_data: "Optional data to initialize the trader's state.",
+    data_frequency: "The frequency at which the trader will fetch data and run its algorithm.",
+    ticker: "The stock or crypto ticker symbol this trader will operate on.",
+    buy_threshold: "The price at or below which the trader will buy.",
+    sell_threshold: "The price at or above which the trader will sell.",
+    timespan: "The time interval used to grab historical aggregates.",
+    window: "The number of timespan periods used to calculate VPA trends.",
+    volume_sensitivity: "How sensitive the trader is to volume changes.",
+    selloff_percentage: "The percentage drop that triggers a selloff.",
+    stoploss_percentage: "The percentage loss that triggers a stop-loss."
+  };
+  
+  constructor(private backendService: BackendService) { }
 
   trader_creation_form = new FormGroup({
     trader_type: new FormControl(this.selected_option),

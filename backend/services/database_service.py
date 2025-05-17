@@ -16,9 +16,10 @@ class DatabaseService:
         print(SQLModel.metadata.tables.keys())
 
     def push_trader_state(self, trader: TraderState):
-        self.session.merge(trader)
+        merged_trader = self.session.merge(trader)
         self.session.commit()
-        return trader
+        self.session.refresh(merged_trader)
+        return merged_trader
 
     def get_all_traders(self):
         return self.session.exec(select(TraderState)).all()
