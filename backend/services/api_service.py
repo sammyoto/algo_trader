@@ -50,7 +50,6 @@ class ApiService:
                     ),
                     db_service = self.db_service 
                 )
-                print('here')
             case _:
                 trader = SimpleThresholdTrader(
                     state = TraderState(
@@ -64,10 +63,8 @@ class ApiService:
                     ),
                     db_service = self.db_service
                 )
-        print(self.trader_handler_service.traders)
         self.db_service.push_trader_state(trader.state)
         self.trader_handler_service.add_trader(trader, trader_creation_request.data_frequency)
-        print(self.trader_handler_service.traders)
 
     def delete_trader(self, trader_name: str):
         self.trader_handler_service.delete_trader(trader_name)

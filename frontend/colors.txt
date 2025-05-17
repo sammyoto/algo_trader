@@ -1,8 +1,0 @@
-Color Palette:
-#dbdbdb - neutral white for text
-#444444 - lighter background
-#333333 - darker background
-#5efd96 - green for positive values
-#fd5e5e - red for negative values
-#965efd - purple for stock graph
-#1a73e8 - blue for links

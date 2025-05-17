@@ -25,6 +25,14 @@ export class BotPageComponent {
     
   }
 
+  retire_trader() {
+
+  }
+
+  live_switch() {
+
+  }
+
   getBotDetails() {
     if (this.bot_name) {
       this.backendService.get_bot_by_name(this.bot_name).then((data) => {

@@ -9,6 +9,7 @@ export type Timespan =
 
 export interface TraderState {
     id: string;
+    timestamp: Date;
     type: string;
     name: string;
     cash_basis: number;

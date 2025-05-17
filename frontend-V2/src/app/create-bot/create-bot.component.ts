@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgFor, NgIf} from '@angular/common';
 import {FormGroup, FormControl, ReactiveFormsModule} from '@angular/forms';
 import { BackendService } from '../../services/backend.service';
@@ -50,7 +51,7 @@ export class CreateBotComponent {
     stoploss_percentage: "The percentage loss that triggers a stop-loss."
   };
   
-  constructor(private backendService: BackendService) { }
+  constructor(private backendService: BackendService, private router: Router) { }
 
   trader_creation_form = new FormGroup({
     trader_type: new FormControl(this.selected_option),
@@ -107,8 +108,7 @@ export class CreateBotComponent {
       stoploss_percentage: this.trader_creation_form.value.stoploss_percentage!,
     }
 
-    console.log(traderCreationRequest)
-    this.backendService.send_trader_creation_request(traderCreationRequest);
+    this.backendService.send_trader_creation_request(traderCreationRequest).then(() => this.router.navigate(['/bots', traderCreationRequest.name]));
   }
 
   is_ticker_visible(): boolean {

@@ -3,8 +3,6 @@ from sqlalchemy.orm import sessionmaker, with_polymorphic
 
 # All tables to be created
 from models.traders.state_models.trader_state import TraderState
-# from models.traders.state_models.simple_threshold_trader_state import SimpleThresholdTraderState
-# from models.traders.state_models.vpa_trader_state import VPATraderState
 
 class DatabaseService:
     db_url: str

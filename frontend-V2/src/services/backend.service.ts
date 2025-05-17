@@ -10,6 +10,14 @@ export class BackendService {
 
   backend_url = 'http://localhost:8000';
 
+  json_to_trader(json: any): TraderState {
+    return {
+      ...json,
+      // Convert ISO timestamp string to a real Date object if present
+      timestamp: json.timestamp ? new Date(json.timestamp) : undefined
+    };
+  }
+
   get_all_bots() {
     return fetch(this.backend_url + '/trader', {
       method: 'GET',
@@ -25,8 +33,7 @@ export class BackendService {
     }).then(json => {
       var traders: TraderState[] = [];
       for (const trader of json['body']) {
-        console.log(trader)
-        traders.push(trader as TraderState);
+        traders.push(this.json_to_trader(trader));
       }
       return traders;
     })
@@ -48,7 +55,7 @@ export class BackendService {
       }
       return response.json();
     }).then(json => {
-      return json['body']['state'] as TraderState;
+      return this.json_to_trader(json['body']['state']);
     })
     .catch(error => {
       console.error('There was a problem with the fetch operation:', error);
