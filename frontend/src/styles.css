@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+  @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,700;1,700&display=swap');
 
 * {
     margin: 0;
@@ -8,6 +9,18 @@
 
 html, body {
     height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: var(--primary-bg-color);
+}
+
+main {
+    background-color: var(--primary-bg-color);
+    font-family: 'Roboto Mono', serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
 }
 
 :root {
@@ -15,6 +28,7 @@ html, body {
     --secondary-bg-color: #444444;
     --positive-values: #5efd96;
     --negative-values: #fd5e5e;
+    --hover-color:#34495e;
     --graph-color: #965efd;
     --primary-text-color: #000000;
     --secondary-text-color: #dbdbdb;

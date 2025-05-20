@@ -17,6 +17,12 @@
     width: 65%;
   }
   
+  .form-fields div select, .form-fields div input{
+    background-color: var(--secondary-bg-color);
+    font-family: inherit;
+    font-size: large;
+  }
+  
   .error-banner {
     color: #b00020;
     background-color: #fdd;
@@ -47,5 +53,15 @@
     box-sizing: border-box;
     border: 1px solid #ccc;
     border-radius: 4px;
+  }
+
+  #create-trader {
+    background: var(--secondary-bg-color);
+    font-family: inherit;
+    padding: 10px 20px;
+    margin: 10px 0px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
   }
   

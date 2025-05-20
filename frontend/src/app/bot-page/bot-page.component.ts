@@ -4,17 +4,23 @@ import { BackendService } from '../../services/backend.service';
 import { TraderState } from '../../shared/bot-models';
 import { Chart, ChartConfiguration, ChartEvent, ChartType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-bot-page',
-  imports: [BaseChartDirective],
+  imports: [BaseChartDirective, NgIf],
   templateUrl: './bot-page.component.html',
   styleUrl: './bot-page.component.css'
 })
-export class BotPageComponent {
+export class BotPageComponent { 
   // This component is responsible for displaying the details of a specific bot
   // Fetch bot details and history and put here
   // Display bot profit on a graph
+  paper_clicked = false;
+  retired = false;
+  paper = true;
+  showPopup: boolean = false;
+  popupMessage: string = '';
   bot_name: string | null = '';
   bot_details: TraderState | null = null;
   bot_history: TraderState[] = [];
@@ -23,23 +29,23 @@ export class BotPageComponent {
       {
         data: [],
         label: 'Profit',
-        backgroundColor: 'rgba(148,159,177,0.2)',
-        borderColor: 'rgba(148,159,177,1)',
-        pointBackgroundColor: 'rgba(148,159,177,1)',
+        backgroundColor: 'rgba(214, 138, 229, 0.2)',
+        borderColor: 'rgb(164, 106, 230)',
+        pointBackgroundColor: 'rgb(177, 112, 197)',
         pointBorderColor: '#fff',
         pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(148,159,177,0.8)',
+        pointHoverBorderColor: 'rgba(182, 116, 199, 0.8)',
         fill: 'origin',
       },
       {
         data: [],
         label: 'Cash',
-        backgroundColor: 'rgba(77,83,96,0.2)',
-        borderColor: 'rgba(77,83,96,1)',
-        pointBackgroundColor: 'rgba(77,83,96,1)',
+        backgroundColor: 'rgba(74, 126, 240, 0.2)',
+        borderColor: 'rgb(117, 155, 236)',
+        pointBackgroundColor: 'rgb(107, 146, 231)',
         pointBorderColor: '#fff',
         pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(77,83,96,1)',
+        pointHoverBorderColor: 'rgb(112, 146, 218)',
         fill: 'origin',
       },
     ],
@@ -65,15 +71,39 @@ export class BotPageComponent {
   }
 
   ngOnInit() {
-
-  }
-
-  retire_trader() {
-
+    this.paper = this.bot_details!.paper
   }
 
   live_switch() {
+    this.paper_clicked = true;
+    if (!this.paper) {
+      this.popupMessage = 'Trader is already live!'
+    } else {
+      this.popupMessage = 'Are you sure you want to go live? The trader will reset to its initial state and start trading with real money!'
+    }
+    this.showPopup = true;
+  }
 
+  retire_trader() {
+    this.paper_clicked = false;
+    if (this.retired) {
+      this.popupMessage = 'Trader is already retired!'
+    } else {
+      this.popupMessage = 'Are you sure you want to retire this trader? The trader will sell all assets it currently  manages and stop trading!';
+    }
+    this.showPopup = true;
+  }
+
+  live_confirmation() {
+    this.popupMessage = 'Trader is live!'
+    this.paper = false;
+    this.showPopup = true;
+  }
+
+  retire_confirmation() {
+    this.popupMessage = 'Trader retired!'
+    this.retired = true
+    this.showPopup = true
   }
 
   getBotDetails() {

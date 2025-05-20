@@ -4,9 +4,9 @@ MVP Backend:
 - Trader templates
 - Backtesting
 
-MVP Frontend:
+MVP Frontend: 
 - Accounts view
-- Activity view
+- Change Activity view to Asset View
 - Bots page
 - Past bots page
 - Backtesting page
@@ -22,5 +22,5 @@ Pre-Hard Launch:
 - Testing
 
 TODO:
-- Bots Page
+- Add paper and retired functionality to backend and API
 - Fix VPA trader

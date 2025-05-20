@@ -1,11 +1,23 @@
 <div class="bot-page-container">
 
+  <div class="popup-overlay" *ngIf="showPopup" (click)="showPopup = false">
+    <div class="popup-content" (click)="$event.stopPropagation()">
+      <p>{{ popupMessage }}</p>
+      <button *ngIf="paper_clicked && paper" (click)="live_confirmation()">Go Live!</button>
+      <button *ngIf="!paper_clicked && !retired" (click)="retire_confirmation()">Retire</button>
+    </div>
+  </div>
+
     <!-- Top Section -->
     <div class="top-section">
       <div class="chart-container">
-        <h3>Profit Over Time</h3>
-        <button id="paper" type="button" (click)="live_switch()">Paper</button>
-        <button id="retire-trader" type="button" (click)="retire_trader()">Retire Trader</button>
+        <div class="top-bar">
+          <h3>Trader Stats</h3>
+          <div class="button-row">
+            <button id="paper" type="button" *ngIf="!retired" (click)="live_switch()">{{ paper ? 'Paper' : 'Live'}}</button>
+            <button id="retire-trader" type="button" (click)="retire_trader()">{{ retired ? 'Retired' : 'Retire Trader'}}</button>
+          </div>
+        </div>
         <canvas baseChart [data]="chartData" [options]="chartOptions" [type]="'line'"> </canvas>
       </div>
     </div>

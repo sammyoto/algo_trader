@@ -1,10 +1,43 @@
 .bot-page-container {
+  background-color: var(--primary-bg-color);
     display: flex;
     flex-direction: column;
     height: 100vh;
     padding: 20px;
     box-sizing: border-box;
   }
+  .popup-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.popup-content {
+  background: var(--primary-bg-color);
+  color: var(--primary-text-color);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  min-width: 300px;
+  display: flex;
+  justify-content: center; /* horizontally center */
+  align-items: center;     /* vertically center (if you want full center) */
+  flex-direction: column;
+}
+
+.popup-content button{
+  background: var(--secondary-bg-color);
+  font-family: inherit;
+  padding: 10px 20px;
+  margin: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
   
   .top-section {
     flex: 1;
@@ -17,7 +50,7 @@
   .chart-container {
     width: 70%;
     height: 100%;
-    background-color: white;
+    background-color: var(--secondary-bg-color);
     padding: 16px;
     border-radius: 12px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -25,7 +58,7 @@
   
   .bottom-section {
     flex: 1;
-    overflow-y: auto;
+    padding-bottom: 30px;
   }
   
   .param-grid {
@@ -41,4 +74,33 @@
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   }
-  
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.button-row {
+  display: flex;
+  gap: 10px;
+}
+
+.button-row button {
+  background-color: var(--primary-bg-color); /* Dark bluish-gray */
+  font-family: inherit;
+  font-size: medium;
+  font-weight: bolder;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.button-row button:hover {
+  background-color: var(--hover-color); /* Slightly lighter on hover */
+  transform: translateY(-1px);
+}
