@@ -20,6 +20,7 @@
   .form-fields div select, .form-fields div input{
     background-color: var(--secondary-bg-color);
     font-family: inherit;
+    color: inherit;
     font-size: large;
   }
   
@@ -58,6 +59,7 @@
   #create-trader {
     background: var(--secondary-bg-color);
     font-family: inherit;
+    color: inherit;
     padding: 10px 20px;
     margin: 10px 0px;
     border-radius: 8px;

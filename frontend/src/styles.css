@@ -16,6 +16,7 @@ html, body {
 
 main {
     background-color: var(--primary-bg-color);
+    color: var(--primary-text-color);
     font-family: 'Roboto Mono', serif;
     display: flex;
     flex-direction: column;
@@ -28,11 +29,11 @@ main {
     --secondary-bg-color: #444444;
     --positive-values: #5efd96;
     --negative-values: #fd5e5e;
-    --hover-color:#34495e;
+    --hover-color:#000000;
     --graph-color: #965efd;
-    --primary-text-color: #000000;
+    --primary-text-color: #a7a3a3;
     --secondary-text-color: #dbdbdb;
-    --link-color: #1a73e8;
+    --link-color: #7e858f;
 }
 
 /* :root {
