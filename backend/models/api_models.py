@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from typing import Generic, TypeVar, Union, Optional, List, Literal
 from models.polygon_models import Timespan
 from enum import Enum
+from models.trader_models import TraderType
 
 T = TypeVar("T")
 
@@ -27,14 +28,6 @@ class DataFrequency(BaseModel):
             self.minutes * 60 + 
             self.seconds
         )
-    
-class MarketType(str, Enum):
-    STOCKS = "stocks"
-    CRYPTO = "crypto"
-    
-class TraderType(str, Enum):
-    SIMPLE_THRESHOLD = "simple_threshold"
-    VOLUME_PRICE_ANALYSIS = "vpa"
     
 class TraderCreationRequest(BaseModel):
     trader_type: TraderType

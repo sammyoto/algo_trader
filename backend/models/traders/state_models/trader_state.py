@@ -6,7 +6,7 @@ from typing import Optional, Annotated
 from models.polygon_models import Timespan
 from uuid import uuid4
 from models.two_decimal import TwoDecimal, TwoDecimalType
-from models.api_models import MarketType
+from models.trader_models import MarketType
 from models.trader_models import TraderStatus
 
 class TraderState(SQLModel, table=True):

@@ -1,7 +1,6 @@
 MVP Backend:
 - Analyzing previous traders
 - Browsing traders
-- Trader templates
 - Backtesting
 
 MVP Frontend: 
@@ -23,4 +22,5 @@ Pre-Hard Launch:
 
 TODO:
 - Add paper, retired, and market functionality to backend and API
+- Look into adding crypto to algos, see if its easy
 - Fix VPA trader

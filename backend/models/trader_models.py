@@ -20,3 +20,11 @@ class VPAInitializationDataSchema(BaseModel):
 class TraderStatus(str, Enum):
     ACTIVE = "active"
     RETIRED = "retired"
+
+class MarketType(str, Enum):
+    STOCKS = "stocks"
+    CRYPTO = "crypto"
+    
+class TraderType(str, Enum):
+    SIMPLE_THRESHOLD = "simple_threshold"
+    VOLUME_PRICE_ANALYSIS = "vpa"
