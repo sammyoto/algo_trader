@@ -89,6 +89,7 @@
 
 .button-row button {
   background-color: var(--primary-bg-color); /* Dark bluish-gray */
+  color: inherit;
   font-family: inherit;
   font-size: medium;
   font-weight: bolder;
