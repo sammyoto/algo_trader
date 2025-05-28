@@ -36,6 +36,14 @@
                     (mouseleave)="clearHoveredField()">
             </div>
             <div>
+                <label for="market">Market:</label>
+                <select formControlName="market" id="market"
+                    (mouseenter)="setHoveredField('market')" 
+                    (mouseleave)="clearHoveredField()">
+                    <option *ngFor="let type of market_types" [value]="type">{{ type }}</option>
+                </select>   
+            </div>
+            <div>
                 <label for="data_frequency">Data Frequency:</label>
                 <div formGroupName="data_frequency"
                         (mouseenter)="setHoveredField('data_frequency')" 

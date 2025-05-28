@@ -13,6 +13,7 @@ import * as BotModels from '../../shared/bot-models';
 })
 export class CreateBotComponent {
   trader_types = Object.values(BotModels.TraderType);
+  market_types = Object.values(BotModels.MarketType);
   timespan_options: BotModels.Timespan[] = [
     'minute', 'hour', 'day', 'week', 'month', 'quarter', 'year'
   ];
@@ -38,6 +39,7 @@ export class CreateBotComponent {
     trader_type: "The type of trader logic to use.",
     name: "The display name for this trader instance.",
     cash: "The initial capital allocated to the trader.",
+    market: "Which market the trader will trade in. This will inform the algorithm of which account to use. (Coinbase or Brokerage)",
     paper: "Whether this trader is in paper (simulated) mode. Defaults to true.",
     init_data: "Optional data to initialize the trader's state.",
     data_frequency: "The frequency at which the trader will fetch data and run its algorithm.",
@@ -57,6 +59,7 @@ export class CreateBotComponent {
     trader_type: new FormControl(this.selected_option),
     name: new FormControl(''),
     cash: new FormControl(''),
+    market: new FormControl<BotModels.MarketType| null>(BotModels.MarketType.STOCKS),
     data_frequency: new FormGroup({
       days: new FormControl(0),
       hours: new FormControl(0),
@@ -96,6 +99,7 @@ export class CreateBotComponent {
       trader_type: this.trader_creation_form.value.trader_type,
       name: this.trader_creation_form.value.name,
       cash: this.trader_creation_form.value.cash,
+      market: this.trader_creation_form.value.market as BotModels.MarketType,
       paper: true,
       data_frequency:data_frequency,
       ticker: this.trader_creation_form.value.ticker!,

@@ -15,12 +15,12 @@
         @for (bot of bots; track bot.name) {
             <tr [routerLink]="['/bots', bot.name]" class="clickable-row">
             <td>{{ bot.name }}</td>
-            <td>Stocks</td>
+            <td>{{ bot.market }}</td>
             <td>{{ bot.type }}</td>
             <td>{{ bot.cash_basis }}</td>
             <td>{{ bot.cash }}</td>
             <td>{{ bot.profit }}</td>
-            <td>Active</td>
+            <td>{{ bot.status }}</td>
           </tr>
         }
       </tbody>

@@ -5,6 +5,7 @@ import { TraderState } from '../../shared/bot-models';
 import { Chart, ChartConfiguration, ChartEvent, ChartType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { NgIf } from '@angular/common';
+import * as BotModels from '../../shared/bot-models';
 
 @Component({
   selector: 'app-bot-page',
@@ -16,14 +17,14 @@ export class BotPageComponent {
   // This component is responsible for displaying the details of a specific bot
   // Fetch bot details and history and put here
   // Display bot profit on a graph
-  paper_clicked = false;
-  retired = false;
-  paper = true;
   showPopup: boolean = false;
   popupMessage: string = '';
   bot_name: string | null = '';
   bot_details: TraderState | null = null;
   bot_history: TraderState[] = [];
+  paper_clicked = !this.bot_details?.paper;
+  retired = false;
+  paper = true;
   chartData: ChartConfiguration['data'] = {
     datasets: [
       {
@@ -116,6 +117,8 @@ export class BotPageComponent {
           this.bot_history = data;
           this.init_chart();
           this.chart?.update();
+          this.paper = this.bot_details.paper;
+          this.retired = this.bot_details.status == BotModels.TraderStatus.RETIRED;
         }
       });
     }

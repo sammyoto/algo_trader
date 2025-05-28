@@ -6,11 +6,15 @@ from typing import Optional, Annotated
 from models.polygon_models import Timespan
 from uuid import uuid4
 from models.two_decimal import TwoDecimal, TwoDecimalType
+from models.api_models import MarketType
+from models.trader_models import TraderStatus
 
 class TraderState(SQLModel, table=True):
     __tablename__ = "trader_state"
     # Default for every trader
     id: str = Field(default_factory=lambda: str(uuid4()), primary_key=True)
+    market: MarketType = Field(default=MarketType.STOCKS)
+    status: Optional[TraderStatus] = Field(default=TraderStatus.ACTIVE)
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc),  sa_column=Column(DateTime, default=datetime.now(timezone.utc)))
     type: str = Field(default="base")
     name: str = Field(index=True)

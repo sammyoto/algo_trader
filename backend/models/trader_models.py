@@ -16,3 +16,7 @@ class VPADataSchema(BaseModel):
 class VPAInitializationDataSchema(BaseModel):
     sma: SMAIndicatorResults
     dailyAggs: List[DailyOpenCloseAgg]
+
+class TraderStatus(str, Enum):
+    ACTIVE = "active"
+    RETIRED = "retired"
