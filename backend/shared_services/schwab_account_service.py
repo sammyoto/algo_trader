@@ -1,7 +1,7 @@
 from models.schwab_models import BasicOrder
 
 class SchwabAccountService:
-    def __init__(self, paper: bool):
+    def __init__(self, paper: bool = True):
         # this tells the account to make a fake trade or a real trade
         self.paper = paper
 

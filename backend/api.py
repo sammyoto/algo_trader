@@ -27,7 +27,8 @@ api_service = ApiService()
 @app.get("/")
 async def root():
     return "Hello World!"
-    
+
+# TRADER ENDPOINTS
 @app.post("/trader")
 async def add_trader(trader_creation_request: TraderCreationRequest):
     try:
@@ -62,6 +63,14 @@ async def delete_trader(trader_name: str):
     except Exception as e:
         return APIResponse(status=Status.FAILED, message="Trader deletion failed.", body=str(e))
     
+# ACCOUNT ENDPOINTS
+@app.get("/account/crypto")
+async def get_crypto_account():
+    try:
+        account = api_service.get_crypto_account()
+        return APIResponse(status=Status.SUCCESS, message="Get crypto account succeeded.", body=account)
+    except Exception as e:
+        return APIResponse(status=Status.FAILED, message="Get crypto account failed.", body=str(e))
     
 if __name__ == "__main__":
     uvicorn.run("api:app", host="127.0.0.1", port=8000, reload=True)

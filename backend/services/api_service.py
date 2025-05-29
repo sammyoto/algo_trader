@@ -1,7 +1,10 @@
 import json
+import os
 from typing import List
 from services.trader_handler_service import TraderHandlerService
 from services.database_service import DatabaseService
+from shared_services.coinbase_account_service import CoinbaseAccountService
+from shared_services.schwab_account_service import SchwabAccountService
 from models.two_decimal import TwoDecimal
 from models.traders.trader import Trader
 from models.polygon_models import RestEndpoint, RestResponseKeys
@@ -13,6 +16,9 @@ from models.traders.state_models.trader_state import TraderState
 class ApiService:
     def __init__(self):
         self.db_service = DatabaseService()
+        self.coinbase_account_service = CoinbaseAccountService(api_key=os.getenv("COINBASE_API_KEY"),
+                                                               api_secret=os.getenv("COINBASE_SECRET_KEY"))
+        self.schwab_account_service = SchwabAccountService()
         self.trader_handler_service = TraderHandlerService(db_service=self.db_service)
 
     def add_trader(self, trader_creation_request: TraderCreationRequest):
@@ -77,3 +83,6 @@ class ApiService:
     
     def get_latest_traders(self):
         return self.db_service.get_latest_traders()
+    
+    def get_crypto_account(self):
+        return self.coinbase_account_service.get_account()
