@@ -67,7 +67,7 @@ async def delete_trader(trader_name: str):
 @app.get("/account/crypto")
 async def get_crypto_account():
     try:
-        account = api_service.get_crypto_account()
+        account = api_service.get_crypto_default_portfolio()
         return APIResponse(status=Status.SUCCESS, message="Get crypto account succeeded.", body=account)
     except Exception as e:
         return APIResponse(status=Status.FAILED, message="Get crypto account failed.", body=str(e))

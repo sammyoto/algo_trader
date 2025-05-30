@@ -9,10 +9,10 @@ class CoinbaseAccountService:
             api_key = api_key,
             api_secret = api_secret
         )
-
-    def get_account(self):
-        accounts = self.client.get_accounts()
-        print(dumps(accounts.to_dict(), indent=2))
+    
+    def get_default_portfolio(self):
+        portfolio = self.client.get_portfolio_breakdown(portfolio_uuid="5127c702-c631-58f2-a3e8-1a35f9af78fc")
+        return portfolio.to_dict()
 
     def execute_trade(self, order: MarketOrder):
         if self.debug:
