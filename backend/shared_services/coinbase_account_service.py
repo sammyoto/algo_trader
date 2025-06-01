@@ -1,4 +1,4 @@
-from models.coinbase_models import MarketOrder
+from models.coinbase_models import MarketOrder, PortfolioStats
 from coinbase.rest import RESTClient
 from json import dumps
 
@@ -10,9 +10,14 @@ class CoinbaseAccountService:
             api_secret = api_secret
         )
     
-    def get_default_portfolio(self):
-        portfolio = self.client.get_portfolio_breakdown(portfolio_uuid="5127c702-c631-58f2-a3e8-1a35f9af78fc")
-        return portfolio.to_dict()
+    def get_portoflio_stats(self):
+        portfolio = self.client.get_portfolio_breakdown(portfolio_uuid="5127c702-c631-58f2-a3e8-1a35f9af78fc").to_dict()
+        portoflio_stats: PortfolioStats = {
+            "total_balance": portfolio["breakdown"]["portfolio_balances"]["total_balance"]["value"],
+            "cash_balance": portfolio["breakdown"]["portfolio_balances"]["total_cash_equivalent_balance"]["value"],
+            "crypto_balance": portfolio["breakdown"]["portfolio_balances"]["total_crypto_balance"]["value"]
+        }
+        return portoflio_stats
 
     def execute_trade(self, order: MarketOrder):
         if self.debug:

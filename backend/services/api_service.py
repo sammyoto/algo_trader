@@ -84,5 +84,5 @@ class ApiService:
     def get_latest_traders(self):
         return self.db_service.get_latest_traders()
     
-    def get_crypto_default_portfolio(self):
-        return self.coinbase_account_service.get_default_portfolio()
+    def get_crypto_portfolio_stats(self):
+        return self.coinbase_account_service.get_portoflio_stats()

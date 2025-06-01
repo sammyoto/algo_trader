@@ -79,3 +79,9 @@ export interface TraderCreationRequest {
   selloff_percentage?: number;
   stoploss_percentage?: number;
 }
+
+export interface CryptoPortfolioStats {
+  total_balance: string;
+  cash_balance: string;
+  crypto_balance: string;
+}

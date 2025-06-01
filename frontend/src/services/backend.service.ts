@@ -1,12 +1,16 @@
 import { Injectable } from '@angular/core';
 import { TraderState } from '../shared/bot-models';
+import { TraderCreationRequest } from '../shared/bot-models';
+import { CryptoPortfolioStats } from '../shared/bot-models';
+import { HttpClient } from '@angular/common/http';
+import { Observable, map, catchError, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BackendService {
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   backend_url = 'http://localhost:8000';
 
@@ -19,69 +23,42 @@ export class BackendService {
   }
 
   get_all_bots() {
-    return fetch(this.backend_url + '/trader', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    }).then(json => {
-      var traders: TraderState[] = [];
-      for (const trader of json['body']) {
-        traders.push(this.json_to_trader(trader));
-      }
-      return traders;
-    })
-    .catch(error => {
-      console.error('There was a problem with the fetch operation:', error);
-    });
+    return this.http.get<any>(`${this.backend_url}/trader`).pipe(
+      map(json => {
+        const traders: TraderState[] = [];
+        for (const trader of json) {
+          traders.push(this.json_to_trader(trader));
+        }
+        return traders;
+      }),
+      catchError(error => {
+        console.error('There was a problem fetching traders:', error);
+        return of([]);
+      })
+    );
   }
 
-  get_bot_by_name(name: string) {
-    return fetch(this.backend_url + '/trader/' + name, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    }).then(json => {
-      var traders: TraderState[] = [];
-      for (const trader of json['body']) {
-        traders.push(this.json_to_trader(trader));
-      }
-      return traders;
-    })
-    .catch(error => {
-      console.error('There was a problem with the fetch operation:', error);
-    });
+  get_bot_by_name(name: string): Observable<TraderState[]> {
+    return this.http.get<any>(`${this.backend_url}/trader/${name}`).pipe(
+      map(json => {
+        const traders: TraderState[] = [];
+        for (const trader of json) {
+          traders.push(this.json_to_trader(trader));
+        }
+        return traders;
+      }),
+      catchError(error => {
+        console.error('There was a problem fetching the trader:', error);
+        return of([]);
+      })
+    );
   }
 
-  send_trader_creation_request(traderCreationRequest: any) {
-    return fetch(this.backend_url + '/trader', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(traderCreationRequest)
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    }).catch(error => {
-      console.error('There was a problem with the fetch operation:', error);
-    });
+  send_trader_creation_request(traderCreationRequest: TraderCreationRequest) {
+    return this.http.post<string>(`${this.backend_url}/trader`, traderCreationRequest);
   }
 
+  get_crypto_portfolio_stats(): Observable<CryptoPortfolioStats> {
+    return this.http.get<CryptoPortfolioStats>(`${this.backend_url}/account/crypto`);
+  }
 }

@@ -109,18 +109,19 @@ export class BotPageComponent {
 
   getBotDetails() {
     if (this.bot_name) {
-      this.backendService.get_bot_by_name(this.bot_name).then((data) => {
-        if (!data) {
-          console.error('No data received from backend');
-        } else {
+      this.backendService.get_bot_by_name(this.bot_name).subscribe({
+        next:data => {
           this.bot_details = data[0];
           this.bot_history = data;
           this.init_chart();
           this.chart?.update();
           this.paper = this.bot_details.paper;
           this.retired = this.bot_details.status == BotModels.TraderStatus.RETIRED;
+        },
+        error: err => {
+          console.error('Error fetching bot details:', err)
         }
-      });
+      })
     }
   }
 

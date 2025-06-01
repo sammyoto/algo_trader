@@ -18,14 +18,10 @@ export class BotListComponent {
   }
 
   getAllBots() {
-    this.backendService.get_all_bots().then((data) => {
-      if (!data) {
-        console.error('No data received from backend');
-      } else {
-        console.log(data)
-        this.bots = data;
-      }
-    });
+    this.backendService.get_all_bots().subscribe({
+      next: data => this.bots = data,
+      error: err => console.error('Failed to fetch stats', err)
+    })
   }
 
   selectBot(bot: any) {

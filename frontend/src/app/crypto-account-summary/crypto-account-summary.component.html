@@ -1,10 +1,8 @@
 <div class="account-summary">
     <p class="account-summary-title">Crypto</p>
     <ul class="highlight-list">
-        <li>Account Value: {{account_value}}</li>
-        <li>Cash: {{cash}}</li>
-        <li>Account Value: {{account_value}}</li>
-        <li>Cash: {{cash}}</li>
-        <li>Account Value: {{account_value}}</li>
+        <li>Account Value: {{portfolio_stats?.total_balance}}</li>
+        <li>Cash Value: {{portfolio_stats?.cash_balance}}</li>
+        <li>Crypto Value: {{portfolio_stats?.crypto_balance}}</li>
     </ul>
 </div>

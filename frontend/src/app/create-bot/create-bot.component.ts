@@ -112,7 +112,10 @@ export class CreateBotComponent {
       stoploss_percentage: this.trader_creation_form.value.stoploss_percentage!,
     }
 
-    this.backendService.send_trader_creation_request(traderCreationRequest).then(() => this.router.navigate(['/bots', traderCreationRequest.name]));
+    this.backendService.send_trader_creation_request(traderCreationRequest).subscribe({
+      next: () => this.router.navigate(['/bots', traderCreationRequest.name]),
+      error: err => console.error('Failed to create trader:', err)
+    })
   }
 
   is_ticker_visible(): boolean {
