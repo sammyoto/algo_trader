@@ -1,6 +1,5 @@
 from pydantic import BaseModel, PrivateAttr
 from typing import Union, Optional, List, Dict
-from shared_services.redis_service import RedisService
 from shared_services.polygon_rest_service import PolygonRESTService
 from shared_services.schwab_account_service import SchwabAccountService
 from shared_services.coinbase_account_service import CoinbaseAccountService
@@ -16,7 +15,6 @@ class Trader(BaseModel):
     state: TraderState
 
     _d: DatabaseService = PrivateAttr()
-    _r: RedisService = PrivateAttr()
     _p: PolygonRESTService = PrivateAttr()
     _a: SchwabAccountService = PrivateAttr()
     _current_order: BasicOrder|None = PrivateAttr()
@@ -69,7 +67,6 @@ class Trader(BaseModel):
     def set_paper(self, paper: bool):
         self.reset_trader()
         self.state.paper = paper
-        self._a.set_paper(paper)
 
     def reset_trader(self):
         self.state.cash = self.state.cash_basis

@@ -15,12 +15,10 @@ Pre-Hard Launch:
 - Finish Schwab Trader Class
 - Figure out Schwab Trader Secrets refresh
 - Security for only authorized users
-- Crypto Trading Support
 - Pretty up Frontend
 - README
 - Testing
 
 TODO:
 - Add paper, retired, and market functionality to backend and API
-- Look into adding crypto to algos, see if its easy
 - Fix VPA trader

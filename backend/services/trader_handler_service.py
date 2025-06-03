@@ -1,4 +1,3 @@
-from shared_services.redis_service import RedisService
 from typing import Union, Optional, List, Dict
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.interval import IntervalTrigger
