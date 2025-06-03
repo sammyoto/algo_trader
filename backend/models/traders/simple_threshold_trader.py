@@ -3,6 +3,8 @@ from models.two_decimal import TwoDecimal
 from models.polygon_models import RestEndpoint, RestEvents
 from models.schwab_models import BasicOrder
 from models.trader_models import SimpleThresholdDataSchema
+from shared_services.schwab_account_service import SchwabAccountService
+from shared_services.coinbase_account_service import CoinbaseAccountService
 from models.traders.state_models.trader_state import TraderState
 from polygon.rest.models import LastQuote
 from typing import Union, Optional, List, Dict
@@ -11,8 +13,8 @@ from services.database_service import DatabaseService
 class SimpleThresholdTrader(Trader):
     state: TraderState
 
-    def __init__(self, state: TraderState, db_service: DatabaseService = None, init_data: SimpleThresholdDataSchema = None):
-        super().__init__(state=state, db_service=db_service, init_data=init_data)
+    def __init__(self, state: TraderState, schwab_account: SchwabAccountService, coinbase_account: CoinbaseAccountService, db_service: DatabaseService = None, init_data: SimpleThresholdDataSchema = None):
+        super().__init__(state=state, schwab_account=schwab_account, coinbase_account=coinbase_account, db_service=db_service, init_data=init_data)
 
     def bsh(self):
         purchasable_quantity = int(self.state.cash.floored_div(self.state.current_price).root)

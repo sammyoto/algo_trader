@@ -26,18 +26,3 @@ class PolygonRESTService:
             
     def delete_endpoint(self, endpoint: RestEndpoint):
         self.endpoint_subs.remove(endpoint)
-
-    # Make an error class
-    def subscribe_to_endpoint(self, endpoint: RestEndpoint):
-        if endpoint not in self.endpoint_subs:
-            self.endpoint_subs.append(endpoint)
-            return f"Endpoint subscribed."
-        return f"No duplicate endpoints."
-    
-    def poll_subscribed_endpoints(self):
-        results = [(endpoint.get_channel_name(), self.get_endpoint(endpoint)) for endpoint in self.endpoint_subs]
-
-        if self.message_callback:
-            self.message_callback(results)
-        else:
-            print(results)

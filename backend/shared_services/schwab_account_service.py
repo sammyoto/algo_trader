@@ -1,15 +1,11 @@
 from models.schwab_models import BasicOrder
 
 class SchwabAccountService:
-    def __init__(self, paper: bool = True):
-        # this tells the account to make a fake trade or a real trade
-        self.paper = paper
+    def __init__(self):
+        pass
 
-    def set_paper(self, paper: bool):
-        self.paper = paper
-
-    def execute_trade(self, order: BasicOrder):
-        if self.paper:
+    def execute_trade(self, order: BasicOrder, paper: bool):
+        if paper:
             return "Filled"
         else:
             # This is where we would make the actual trade

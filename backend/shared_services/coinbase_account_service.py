@@ -3,8 +3,7 @@ from coinbase.rest import RESTClient
 from json import dumps
 
 class CoinbaseAccountService:
-    def __init__(self, api_key: str, api_secret: str, debug: bool = True):
-        self.debug = debug
+    def __init__(self, api_key: str, api_secret: str):
         self.client = RESTClient(
             api_key = api_key,
             api_secret = api_secret
@@ -19,8 +18,8 @@ class CoinbaseAccountService:
         }
         return portoflio_stats
 
-    def execute_trade(self, order: MarketOrder):
-        if self.debug:
+    def execute_trade(self, order: MarketOrder, paper: bool):
+        if paper:
             return "Filled"
         else:
             self.client.market_order_buy(**order)

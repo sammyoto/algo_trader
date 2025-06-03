@@ -3,6 +3,7 @@ from typing import Union, Optional, List, Dict
 from shared_services.redis_service import RedisService
 from shared_services.polygon_rest_service import PolygonRESTService
 from shared_services.schwab_account_service import SchwabAccountService
+from shared_services.coinbase_account_service import CoinbaseAccountService
 from models.polygon_models import RestEndpoint, RestResponseType, RestEvents
 from models.redis_models import RedisMessage
 from models.two_decimal import TwoDecimal
@@ -21,18 +22,14 @@ class Trader(BaseModel):
     _current_order: BasicOrder|None = PrivateAttr()
     _message_callback: callable = PrivateAttr()
 
-    def __init__(self, state: TraderState, db_service: DatabaseService = None, init_data = None):
+    def __init__(self, state: TraderState, schwab_account: SchwabAccountService, coinbase_account: CoinbaseAccountService, db_service: DatabaseService = None, init_data = None):
         super().__init__(state = state)
         self._d = db_service
-        self._r = RedisService(
-            os.getenv("REDIS_HOST"),
-            os.getenv("REDIS_USERNAME"),
-            os.getenv("REDIS_PASSWORD")
-        )
         self._p = PolygonRESTService(
             os.getenv("POLYGON_API_KEY")
         )
-        self._a = SchwabAccountService(paper=self.state.paper)
+        self._a = schwab_account
+        self._c = coinbase_account
         self._current_order = None
 
         # function used to initialize trader values if needed

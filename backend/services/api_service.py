@@ -37,7 +37,9 @@ class ApiService:
                             sell_threshold=TwoDecimal(trader_creation_request.sell_threshold),
                             ticker=trader_creation_request.ticker
                     ),
-                    db_service = self.db_service
+                    db_service = self.db_service,
+                    schwab_account=self.schwab_account_service,
+                    coinbase_account=self.coinbase_account_service
                 )                                        
             case TraderType.VOLUME_PRICE_ANALYSIS:
                 trader = VPATrader(
@@ -54,7 +56,9 @@ class ApiService:
                         selloff_percentage=trader_creation_request.selloff_percentage, 
                         stoploss_percentage =trader_creation_request.stoploss_percentage,
                     ),
-                    db_service = self.db_service 
+                    db_service = self.db_service,
+                    schwab_account=self.schwab_account_service,
+                    coinbase_account=self.coinbase_account_service
                 )
             case _:
                 trader = SimpleThresholdTrader(
@@ -67,7 +71,9 @@ class ApiService:
                         sell_threshold=TwoDecimal(0),
                         ticker="NVDA"
                     ),
-                    db_service = self.db_service
+                    db_service = self.db_service,
+                    schwab_account=self.schwab_account_service,
+                    coinbase_account=self.coinbase_account_service
                 )
         self.db_service.push_trader_state(trader.state)
         self.trader_handler_service.add_trader(trader, trader_creation_request.data_frequency)
