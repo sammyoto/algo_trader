@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, status
+from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
@@ -12,7 +13,17 @@ import json
 
 load_dotenv()
 
-app = FastAPI()
+api_service = ApiService()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup logic here (optional)
+    yield
+    print("Shutting down...")
+    api_service.retire_all_traders()
+    print("Shut down!")
+
+app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -21,8 +32,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-api_service = ApiService()
 
 @app.get("/")
 async def root():
@@ -51,20 +60,31 @@ async def get_all_traders():
             detail=f"Get all trader failed: {str(e)}"
         )
     
-@app.get("/trader/{name}")
-async def get_trader_by_name(name: str):
+@app.get("/trader/{trader_name}")
+async def get_trader_by_name(trader_name: str):
     try:
-        trader = api_service.get_trader_by_name(name)
+        trader = api_service.get_trader_by_name(trader_name)
         if trader == "Trader not found.":
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=trader)
         return trader
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Get crypto account failed: {str(e)}"
+            detail=f"Get trader by name failed: {str(e)}"
         )
     
-@app.delete("/trader/{name}")
+@app.get("/trader/live_switch/{trader_name}")
+async def trader_live_switch(trader_name: str):
+    try:
+        api_service.trader_live_switch(trader_name)
+        return "Trader is live."
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Trader live switch failed: {str(e)}"
+        )
+    
+@app.delete("/trader/{trader_name}")
 async def retire_trader(trader_name: str):
     try:
         api_service.retire_trader(trader_name)

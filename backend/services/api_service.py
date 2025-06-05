@@ -12,6 +12,7 @@ from models.api_models import TraderCreationRequest, TraderType
 from models.traders.simple_threshold_trader import SimpleThresholdTrader
 from models.traders.vpa_trader import VPATrader
 from models.traders.state_models.trader_state import TraderState
+from models.trader_models import TraderStatus
 
 class ApiService:
     def __init__(self):
@@ -78,9 +79,21 @@ class ApiService:
         self.db_service.push_trader_state(trader.state)
         self.trader_handler_service.add_trader(trader, trader_creation_request.data_frequency)
 
-    # Here we want to retire the trader. Stop trading, delete from trader_handler, sell all assets, make one last push to DB with retired status
     def retire_trader(self, trader_name: str):
-        self.trader_handler_service.delete_trader(trader_name)
+        trader = self.trader_handler_service.retire_trader(trader_name)
+        trader.state.status = "retired"
+        # Sell all assets?
+        self.db_service.push_trader_state(trader.state)
+
+    def retire_all_traders(self):
+        traders = list(self.trader_handler_service.traders.items())
+        for name, trader in traders:
+            if trader.state.status == TraderStatus.ACTIVE:
+                self.retire_trader(trader.state.name)
+
+    def trader_live_switch(self, trader_name: str):
+        state = self.trader_handler_service.trader_live_switch(trader_name=trader_name)
+        self.db_service.push_trader_state(state)
     
     def get_trader_by_name(self, trader_name: str):
         return self.db_service.get_trader_by_name(trader_name)

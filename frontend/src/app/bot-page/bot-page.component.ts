@@ -73,6 +73,7 @@ export class BotPageComponent {
 
   ngOnInit() {
     this.paper = this.bot_details!.paper
+    this.retired = this.bot_details!.status === BotModels.TraderStatus.RETIRED;
   }
 
   live_switch() {
@@ -96,15 +97,29 @@ export class BotPageComponent {
   }
 
   live_confirmation() {
-    this.popupMessage = 'Trader is live!'
-    this.paper = false;
-    this.showPopup = true;
+    this.backendService.live_switch(this.bot_name!).subscribe({
+      next: () => {
+        location.reload();
+      },
+      error: err => {
+        console.error('Failed to go live:', err);
+        this.popupMessage = 'Error going live.';
+        this.showPopup = true;
+    }
+    })
   }
 
   retire_confirmation() {
-    this.popupMessage = 'Trader retired!'
-    this.retired = true
-    this.showPopup = true
+    this.backendService.retire_bot(this.bot_name!).subscribe({
+      next: () => {
+        location.reload();
+      },
+      error: err => {
+        console.error('Failed to retire bot:', err);
+        this.popupMessage = 'Error retiring trader.';
+        this.showPopup = true;
+    }
+    })
   }
 
   getBotDetails() {

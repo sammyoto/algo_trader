@@ -20,5 +20,4 @@ Pre-Hard Launch:
 - Testing
 
 TODO:
-- Add paper, retired, and market functionality to backend and API
 - Fix VPA trader

@@ -28,10 +28,19 @@ class TraderHandlerService:
     def print_trader_message(self, message):
         print(message)
 
-    def delete_trader(self, trader_name: str):
+    def retire_trader(self, trader_name: str):
         if trader_name in self.traders.keys():
             self.scheduler.remove_job(trader_name)
+            trader = self.traders[trader_name]
             del self.traders[trader_name]
+            return trader
+        else:
+            raise KeyError("Trader not found.")
+        
+    def trader_live_switch(self, trader_name: str):
+        if trader_name in self.traders.keys():
+            self.traders[trader_name].set_paper(False)
+            return self.traders[trader_name].state
         else:
             raise KeyError("Trader not found.")
 

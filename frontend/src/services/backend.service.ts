@@ -54,8 +54,12 @@ export class BackendService {
     );
   }
 
-  delete_bot(name: string): Observable<String> {
+  retire_bot(name: string): Observable<String> {
     return this.http.delete<string>(`${this.backend_url}/trader/${name}`);
+  }
+
+  live_switch(name: string): Observable<String> {
+    return this.http.get<string>(`${this.backend_url}/trader/live_switch/${name}`);
   }
 
   send_trader_creation_request(traderCreationRequest: TraderCreationRequest): Observable<String> {
