@@ -54,7 +54,11 @@ export class BackendService {
     );
   }
 
-  send_trader_creation_request(traderCreationRequest: TraderCreationRequest) {
+  delete_bot(name: string): Observable<String> {
+    return this.http.delete<string>(`${this.backend_url}/trader/${name}`);
+  }
+
+  send_trader_creation_request(traderCreationRequest: TraderCreationRequest): Observable<String> {
     return this.http.post<string>(`${this.backend_url}/trader`, traderCreationRequest);
   }
 

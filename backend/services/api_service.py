@@ -78,7 +78,8 @@ class ApiService:
         self.db_service.push_trader_state(trader.state)
         self.trader_handler_service.add_trader(trader, trader_creation_request.data_frequency)
 
-    def delete_trader(self, trader_name: str):
+    # Here we want to retire the trader. Stop trading, delete from trader_handler, sell all assets, make one last push to DB with retired status
+    def retire_trader(self, trader_name: str):
         self.trader_handler_service.delete_trader(trader_name)
     
     def get_trader_by_name(self, trader_name: str):

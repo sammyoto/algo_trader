@@ -90,7 +90,7 @@ export class BotPageComponent {
     if (this.retired) {
       this.popupMessage = 'Trader is already retired!'
     } else {
-      this.popupMessage = 'Are you sure you want to retire this trader? The trader will sell all assets it currently  manages and stop trading!';
+      this.popupMessage = 'Are you sure you want to retire this trader? The trader will sell all assets it currently manages and stop trading!';
     }
     this.showPopup = true;
   }

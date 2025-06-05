@@ -64,11 +64,11 @@ async def get_trader_by_name(name: str):
             detail=f"Get crypto account failed: {str(e)}"
         )
     
-@app.delete("/trader")
-async def delete_trader(trader_name: str):
+@app.delete("/trader/{name}")
+async def retire_trader(trader_name: str):
     try:
-        api_service.delete_trader(trader_name)
-        return "Trader deleted."
+        api_service.retire_trader(trader_name)
+        return "Trader retired."
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
