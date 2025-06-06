@@ -21,3 +21,4 @@ Pre-Hard Launch:
 
 TODO:
 - Fix VPA trader
+- Support live schwab trading
