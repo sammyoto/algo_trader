@@ -1,0 +1,12 @@
+ body {
+    display: flex;
+    justify-content: center;  /* horizontal center */
+    align-items: center;      /* vertical center */
+    height: 100vh;            /* fill entire viewport height */
+    margin: 0;
+}
+
+#backtesting-message {
+    font-size: 1.2rem;
+    text-align: center;
+}
