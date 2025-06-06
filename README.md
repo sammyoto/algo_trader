@@ -28,6 +28,21 @@ Running Frontend
     ng serve
 ```
 
+<h2>Implemented Features</h2>
+<ul>
+<li>Two Algorithms</li>
+<li>Bot lifecycle (Creation, go live, retire)</li>
+<li>Bot states saved in DB</li>
+<li>Connection to Coinbase</li>
+</ul>
+
+<h2>Incomplete Features</h2>
+<ul>
+<li>Home Page</li>
+<li>Connection to Schwab</li>
+<li>Backtesting</li>
+</ul>
+
 <h2>Maintenance</h2>
 
 <h3>Tokens</h3>
