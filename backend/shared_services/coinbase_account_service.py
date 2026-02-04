@@ -10,7 +10,7 @@ class CoinbaseAccountService:
         )
     
     def get_portoflio_stats(self):
-        portfolio = self.client.get_portfolio_breakdown(portfolio_uuid="5127c702-c631-58f2-a3e8-1a35f9af78fc").to_dict()
+        portfolio = self.client.get_portfolio_breakdown(portfolio_uuid="xxxxxx").to_dict()
         portoflio_stats: PortfolioStats = {
             "total_balance": portfolio["breakdown"]["portfolio_balances"]["total_balance"]["value"],
             "cash_balance": portfolio["breakdown"]["portfolio_balances"]["total_cash_equivalent_balance"]["value"],
