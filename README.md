@@ -56,3 +56,16 @@ Running Frontend
 
 <h3>Tokens</h3>
 Every week your Schwab tokens will expire. Once a week you will have to replace the schwab_tokens secret with a new schwab_tokens secret with the updated tokens.json. You can generate new tokens by using get_tokens.py in local_testing_example.
+
+<h2>Page Screenshots</h2>
+Home Page
+<img width="2551" height="1205" alt="image" src="https://github.com/user-attachments/assets/6d8e4181-6ea5-44eb-831c-5b848dc44be0" />
+
+Bot List
+<img width="2550" height="933" alt="image" src="https://github.com/user-attachments/assets/a544c9d5-821e-4e83-b419-cd1e2094de70" />
+
+Bot Creation
+<img width="2528" height="1211" alt="image" src="https://github.com/user-attachments/assets/af368ad9-a7ef-4d4b-9811-c5369c8b1dcd" />
+
+
+
