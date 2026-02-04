@@ -13,6 +13,15 @@ To get started you will need the following:
 
 <h2>Running App</h2>
 
+You will want to have a .env file with the necessary variables set. There are a few secrets that are necessary:
+```
+POLYGON_API_KEY
+COINBASE_API_KEY
+COINBASE_SECRET_KEY
+SCHWAB_API_KEY
+SCHWAB_SECRET_KEY
+```
+
 Running backend
 ```
     source .venv/bin/activate
